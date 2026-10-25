@@ -163,7 +163,7 @@ export async function fetchGitHubCommits(page: number = 1, perPage: number = 30)
     });
 
     if (!response.ok) {
-      throw new Error(`GitHub API 请求失败: ${response.status} ${response.statusText}`);
+      throw new Error(`GitHub API request failed: ${response.status} ${response.statusText}`);
     }
 
     return await response.json();

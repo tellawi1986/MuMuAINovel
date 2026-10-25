@@ -99,7 +99,7 @@ class SessionManager {
       if (remaining <= this.WARNING_THRESHOLD && !this.warningShown) {
         this.warningShown = true;
         console.warn(`[会话] 登录状态将在 ${remainingMinutes} 分钟后过期`);
-        this.showWarningCallback?.(`您的登录状态将在 ${remainingMinutes} 分钟后过期，请注意保存数据`);
+        this.showWarningCallback?.(`Your session will expire in ${remainingMinutes} minute(s). Please save your work.`);
       }
       
       // 需要刷新会话

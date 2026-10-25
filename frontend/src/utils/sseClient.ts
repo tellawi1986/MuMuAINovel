@@ -52,7 +52,7 @@ export class SSEClient {
             this.options.onConnectionError(error);
           }
           this.close();
-          reject(new Error('SSE连接失败'));
+          reject(new Error('SSE connection failed'));
         };
 
       } catch (error) {
@@ -91,10 +91,10 @@ export class SSEClient {
 
       case 'error':
         if (this.options.onError) {
-          this.options.onError(message.error || '未知错误', message.code);
+          this.options.onError(message.error || 'Unknown error', message.code);
         }
         this.close();
-        reject(new Error(message.error || '未知错误'));
+        reject(new Error(message.error || 'Unknown error'));
         break;
 
       case 'done':
@@ -147,7 +147,7 @@ export class SSEPostClient {
   private async connectInternal(resolve: (value: any) => void, reject: (reason?: any) => void) {
       try {
         if (this.options.signal?.aborted) {
-          throw new DOMException('请求已取消', 'AbortError');
+          throw new DOMException('Request cancelled', 'AbortError');
         }
 
         this.abortController = new AbortController();
@@ -175,7 +175,7 @@ export class SSEPostClient {
         const decoder = new TextDecoder();
 
         if (!reader) {
-          throw new Error('无法获取响应流');
+          throw new Error('Could not get the response stream');
         }
 
         let buffer = '';
@@ -214,12 +214,12 @@ export class SSEPostClient {
 
       } catch (error: any) {
         if (error.name === 'AbortError') {
-          console.log('请求已取消');
+          console.log('Request cancelled');
           reject(error);
         } else {
           console.error('SSE POST请求失败:', error);
           if (this.options.onError) {
-            this.options.onError(error.message || '请求失败');
+            this.options.onError(error.message || 'Request failed');
           }
           reject(error);
         }
@@ -262,9 +262,9 @@ export class SSEPostClient {
 
       case 'error':
         if (this.options.onError) {
-          this.options.onError(message.error || '未知错误', message.code);
+          this.options.onError(message.error || 'Unknown error', message.code);
         }
-        reject(new Error(message.error || '未知错误'));
+        reject(new Error(message.error || 'Unknown error'));
         break;
 
       case 'done':

@@ -782,7 +782,7 @@ export default function BookshelfPage({
                                     lineHeight: isMobile ? '18px' : '20px',
                                     fontWeight: 500,
                                   }}>
-                                    未分类
+                                    Uncategorized
                                   </Tag>
                                 )}
                               </div>

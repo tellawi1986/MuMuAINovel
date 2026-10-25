@@ -653,7 +653,7 @@ export default function ProjectDetail() {
                       type="text"
                       icon={collapsedThemeIcon}
                       onClick={cycleThemeMode}
-                      title={`主题模式：${mode === 'light' ? '浅色' : mode === 'dark' ? '深色' : '跟随系统'}（点击切换）`}
+                      title={`Theme: ${mode === 'light' ? 'Light' : mode === 'dark' ? 'Dark' : 'Follow system'} (click to switch)`}
                       style={{
                         width: 40,
                         height: 40,

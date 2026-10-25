@@ -1068,7 +1068,7 @@ export default function Outline() {
       }
     } catch (error: unknown) {
       const apiError = error as ApiError;
-      message.error(apiError.response?.data?.detail || '删除章节失败');
+      message.error(apiError.response?.data?.detail || 'Failed to delete chapter');
     }
   };
 

@@ -39,7 +39,7 @@ export function useProjectSync() {
       return projects;
     } catch (error) {
       console.error('刷新项目列表失败:', error);
-      message.error('刷新项目列表失败');
+      message.error('Failed to refresh project list');
       return [];
     } finally {
       setLoading(false);
@@ -107,7 +107,7 @@ export function useCharacterSync() {
       return characters;
     } catch (error) {
       console.error('刷新角色列表失败:', error);
-      message.error('刷新角色列表失败');
+      message.error('Failed to refresh character list');
       return [];
     }
   }, [currentProject?.id, setCharacters]);
@@ -160,7 +160,7 @@ export function useOutlineSync() {
       return outlines;
     } catch (error) {
       console.error('刷新大纲列表失败:', error);
-      message.error('刷新大纲列表失败');
+      message.error('Failed to refresh outline list');
       return [];
     }
   }, [currentProject?.id, setOutlines]); // 添加 currentProject?.id 到依赖数组
@@ -240,7 +240,7 @@ export function useChapterSync() {
       return chapters;
     } catch (error) {
       console.error('刷新章节列表失败:', error);
-      message.error('刷新章节列表失败');
+      message.error('Failed to refresh chapter list');
       return [];
     }
   }, [currentProject?.id, setChapters]); // 添加 currentProject?.id 到依赖数组
@@ -315,7 +315,7 @@ export function useChapterSync() {
       const decoder = new TextDecoder();
 
       if (!reader) {
-        throw new Error('无法获取响应流');
+        throw new Error('Could not get the response stream');
       }
 
       let buffer = '';
@@ -348,13 +348,13 @@ export function useChapterSync() {
               if (message.type === 'start') {
                 // 开始生成
                 if (onProgressUpdate) {
-                  onProgressUpdate(message.message || '开始生成...', 0);
+                  onProgressUpdate(message.message || 'Starting generation...', 0);
                 }
               } else if (message.type === 'progress') {
                 // 进度更新
                 if (onProgressUpdate) {
                   onProgressUpdate(
-                    message.message || '生成中...',
+                    message.message || 'Generating...',
                     message.progress || 0
                   );
                 }
@@ -364,14 +364,14 @@ export function useChapterSync() {
                   onProgress(fullContent);
                 }
               } else if (message.type === 'error') {
-                throw new Error(message.error || '生成失败');
+                throw new Error(message.error || 'Generation failed');
               } else if (message.type === 'result') {
                 // 结果消息，包含分析任务ID
                 if (message.data?.analysis_task_id) {
                   analysisTaskId = message.data.analysis_task_id;
                 }
                 if (onProgressUpdate) {
-                  onProgressUpdate('生成完成', 100);
+                  onProgressUpdate('Generation complete', 100);
                 }
               } else if (message.type === 'done') {
                 // 生成完成，刷新章节数据
@@ -380,7 +380,7 @@ export function useChapterSync() {
                 // 分析已开始
                 analysisTaskId = message.task_id;
                 if (onProgressUpdate) {
-                  onProgressUpdate('章节分析已开始...', 100);
+                  onProgressUpdate('Chapter analysis started...', 100);
                 }
               } else if (message.type === 'analysis_queued') {
                 // 分析任务已加入队列

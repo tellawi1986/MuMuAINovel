@@ -102,7 +102,7 @@ api.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    let errorMessage = '请求失败';
+    let errorMessage = 'Request failed';
 
     if (error.response) {
       const status = error.response.status;
@@ -110,7 +110,7 @@ api.interceptors.response.use(
 
       switch (status) {
         case 400:
-          errorMessage = data?.detail || '请求参数错误';
+          errorMessage = data?.detail || 'Invalid request parameters';
           break;
         case 401: {
           const backendDetail = data?.detail || data?.message;
@@ -122,7 +122,7 @@ api.interceptors.response.use(
           ];
           const isUnauthenticated = unauthenticatedDetails.includes(backendDetail);
 
-          errorMessage = backendDetail || '登录状态已失效，请重新登录';
+          errorMessage = backendDetail || 'Your session has expired. Please log in again.';
 
           if (isUnauthenticated && window.location.pathname !== '/login') {
             window.location.href = '/login';
@@ -130,30 +130,30 @@ api.interceptors.response.use(
           break;
         }
         case 403:
-          errorMessage = data?.detail || '没有权限访问';
+          errorMessage = data?.detail || 'You do not have permission to access this';
           break;
         case 404:
-          errorMessage = data?.detail || '请求的资源不存在';
+          errorMessage = data?.detail || 'The requested resource was not found';
           break;
         case 422:
-          errorMessage = data?.detail || '请求参数验证失败';
+          errorMessage = data?.detail || 'Request validation failed';
           if (data?.errors) {
             console.error('验证错误详情:', data.errors);
           }
           break;
         case 500:
-          errorMessage = data?.detail || '服务器内部错误';
+          errorMessage = data?.detail || 'Internal server error';
           break;
         case 503:
-          errorMessage = '服务暂时不可用，请稍后重试';
+          errorMessage = 'Service temporarily unavailable. Please try again later.';
           break;
         default:
-          errorMessage = data?.detail || data?.message || `请求失败 (${status})`;
+          errorMessage = data?.detail || data?.message || `Request failed (${status})`;
       }
     } else if (error.request) {
-      errorMessage = '网络错误，请检查网络连接';
+      errorMessage = 'Network error. Please check your connection.';
     } else {
-      errorMessage = error.message || '请求失败';
+      errorMessage = error.message || 'Request failed';
     }
 
     message.error(errorMessage);
@@ -1451,7 +1451,7 @@ export const projectAgentApi = {
       signal,
     });
     if (!response.ok) {
-      let detail = `请求失败 (${response.status})`;
+      let detail = `Request failed (${response.status})`;
       try {
         const body = await response.json();
         detail = body.detail || detail;
@@ -1460,7 +1460,7 @@ export const projectAgentApi = {
       }
       throw new Error(detail);
     }
-    if (!response.body) throw new Error('无法读取木木创作助手响应流');
+    if (!response.body) throw new Error('Could not read the MuMu Writing Assistant response stream');
 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -1486,8 +1486,8 @@ export const projectAgentApi = {
         else if (event.type === 'final_done') callbacks.onFinalDone?.(event.data);
         else if (event.type === 'result') callbacks.onResult?.(event.data);
         else if (event.type === 'error') {
-          callbacks.onError?.(event.error || '木木创作助手执行失败');
-          throw new Error(event.error || '木木创作助手执行失败');
+          callbacks.onError?.(event.error || 'MuMu Writing Assistant run failed');
+          throw new Error(event.error || 'MuMu Writing Assistant run failed');
         }
       }
     }

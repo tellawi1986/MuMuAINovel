@@ -99,10 +99,10 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
       });
 
       if (!response.ok) {
-        throw new Error('应用新内容失败');
+        throw new Error('Failed to apply new content');
       }
 
-      message.success('新内容已应用！');
+      message.success('New content applied!');
 
       // 先调用 onApply 通知父组件刷新
       onApply();
@@ -118,13 +118,13 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
           });
 
           if (analysisResponse.ok) {
-            message.success('章节分析已开始，请稍后查看结果');
+            message.success('Chapter analysis started. Check back for results shortly.');
           } else {
-            message.warning('章节分析触发失败，您可以手动触发分析');
+            message.warning('Could not start chapter analysis. You can start it manually.');
           }
         } catch (analysisError) {
           console.error('触发分析失败:', analysisError);
-          message.warning('章节分析触发失败，您可以手动触发分析');
+          message.warning('Could not start chapter analysis. You can start it manually.');
         }
       }, 500);
 
@@ -157,7 +157,7 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
     <>
       {contextHolder}
       <Modal
-      title={`内容对比 - ${chapterTitle}`}
+      title={`Content Comparison - ${chapterTitle}`}
       open={visible}
       onCancel={onClose}
       width="95%"

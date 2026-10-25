@@ -68,7 +68,7 @@ export async function checkLatestVersion(): Promise<VersionCheckResult> {
       }
     }
     
-    throw new Error('无法从 Badge API 解析版本信息');
+    throw new Error('Could not parse version info from the Badge API');
   } catch {
     // 失败时返回无更新
     return {
