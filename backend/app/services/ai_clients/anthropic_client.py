@@ -1,6 +1,7 @@
 """Anthropic 客户端"""
 from typing import Any, AsyncGenerator, Dict, Optional
 
+import httpx
 from anthropic import AsyncAnthropic
 
 from app.logger import get_logger
@@ -14,9 +15,16 @@ class AnthropicClient:
 
     def __init__(self, api_key: str, base_url: Optional[str] = None, config: Optional[AIClientConfig] = None):
         self.config = config or default_config
-        kwargs = {"api_key": api_key}
+        kwargs: Dict[str, Any] = {"api_key": api_key}
         if base_url:
             kwargs["base_url"] = base_url
+        http_cfg = self.config.http
+        kwargs["timeout"] = httpx.Timeout(
+            connect=http_cfg.connect_timeout,
+            read=http_cfg.read_timeout,
+            write=http_cfg.write_timeout,
+            pool=http_cfg.pool_timeout,
+        )
         self.client = AsyncAnthropic(**kwargs)
 
     @staticmethod
@@ -63,7 +71,10 @@ class AnthropicClient:
             elif tool_choice == "auto":
                 kwargs["tool_choice"] = {"type": "auto"}
 
-        response = await self.client.messages.create(**kwargs)
+        # Stream internally and collect the final message: large max_tokens values
+        # (e.g. 32000) are rejected by the SDK for non-streaming requests.
+        async with self.client.messages.stream(**kwargs) as stream:
+            response = await stream.get_final_message()
 
         tool_calls = []
         content = ""
