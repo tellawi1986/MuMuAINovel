@@ -57,7 +57,7 @@ function AssistantLogo({ size }: { size: number }) {
   return (
     <img
       src="/logo.svg"
-      alt="木木创作助手"
+      alt="MuMu Writing Assistant"
       draggable={false}
       style={{ width: size, height: size, display: 'block', objectFit: 'contain' }}
     />
@@ -73,21 +73,21 @@ interface ProjectAgentPanelProps {
 }
 
 function formatValue(value: unknown): string {
-  if (value === null || value === undefined || value === '') return '（空）';
+  if (value === null || value === undefined || value === '') return '(empty)';
   if (typeof value === 'string') return value;
   return JSON.stringify(value, null, 2);
 }
 
 function fieldLabel(field: string): string {
   const labels: Record<string, string> = {
-    title: '标题', description: '简介', theme: '主题', genre: '类型',
-    target_words: '目标字数', status: '状态', content: '内容', summary: '摘要',
-    name: '名称', age: '年龄', gender: '性别', role_type: '角色类型',
-    personality: '性格', background: '背景', appearance: '外貌', traits: '特征',
-    world_time_period: '时代背景', world_location: '地点',
-    world_atmosphere: '世界氛围', world_rules: '世界规则',
-    chapter_count: '章节数', narrative_perspective: '叙事视角',
-    character_count: '角色数',
+    title: 'Title', description: 'Description', theme: 'Theme', genre: 'Genre',
+    target_words: 'Target words', status: 'Status', content: 'Content', summary: 'Summary',
+    name: 'Name', age: 'Age', gender: 'Gender', role_type: 'Role type',
+    personality: 'Personality', background: 'Background', appearance: 'Appearance', traits: 'Traits',
+    world_time_period: 'Time period', world_location: 'Location',
+    world_atmosphere: 'World atmosphere', world_rules: 'World rules',
+    chapter_count: 'Chapter count', narrative_perspective: 'Narrative perspective',
+    character_count: 'Character count',
   };
   return labels[field] || field;
 }
@@ -185,7 +185,7 @@ export default function ProjectAgentPanel({
           .map(step => step.assistant_message_id as string)
       ));
     } catch (error) {
-      console.error('加载木木创作助手对话失败:', error);
+      console.error('Failed to load assistant conversation:', error);
     } finally {
       setLoadingHistory(false);
     }
@@ -197,7 +197,7 @@ export default function ProjectAgentPanel({
       setConversations(items);
       if (selectLatest && items[0]) await loadConversation(items[0].id);
     } catch (error) {
-      console.error('加载木木创作助手会话列表失败:', error);
+      console.error('Failed to load assistant conversation list:', error);
     }
   }, [loadConversation, projectId]);
 
@@ -250,7 +250,7 @@ export default function ProjectAgentPanel({
       setExecutionSteps([]);
       setExpandedProcessIds(new Set());
     } catch (error) {
-      console.error('新建木木创作助手对话失败:', error);
+      console.error('Failed to create assistant conversation:', error);
     }
   };
 
@@ -265,7 +265,7 @@ export default function ProjectAgentPanel({
       setExpandedProcessIds(new Set());
       await loadConversations(true);
     } catch (error) {
-      console.error('删除木木创作助手对话失败:', error);
+      console.error('Failed to delete assistant conversation:', error);
     }
   };
 
@@ -357,7 +357,7 @@ export default function ProjectAgentPanel({
           ? {
               ...step,
               status: aborted ? 'cancelled' : 'failed',
-              content: aborted ? '本次执行已由用户停止。' : '本次执行因请求失败而中止。',
+              content: aborted ? 'This run was stopped by the user.' : 'This run was aborted because the request failed.',
               updated_at: new Date().toISOString(),
             }
           : step
@@ -365,15 +365,15 @@ export default function ProjectAgentPanel({
       if (aborted) {
         setMessages(items => items.map(item => (
           (item.id === streamAssistantId || item.id === assistantId) && !item.content
-            ? { ...item, content: '已停止生成。' }
+            ? { ...item, content: 'Generation stopped.' }
             : item
         )));
       } else {
-        const detail = (error as Error).message || '木木创作助手请求失败';
+        const detail = (error as Error).message || 'MuMu Writing Assistant request failed';
         message.error(detail);
         setMessages(items => items.map(item => (
           (item.id === streamAssistantId || item.id === assistantId) && !item.content
-            ? { ...item, content: `请求失败：${detail}` }
+            ? { ...item, content: `Request failed: ${detail}` }
             : item
         )));
       }
@@ -404,8 +404,8 @@ export default function ProjectAgentPanel({
       if (activeConversationId) await loadConversation(activeConversationId);
       await loadConversations();
     } catch (error) {
-      message.error((error as Error).message || '处理修改失败');
-      console.error('处理木木创作助手修改失败:', error);
+      message.error((error as Error).message || 'Failed to process changes');
+      console.error('Failed to process assistant changes:', error);
       if (activeConversationId) await loadConversation(activeConversationId);
     } finally {
       setDecidingId(undefined);
@@ -430,11 +430,11 @@ export default function ProjectAgentPanel({
       if (activeConversationId) await loadConversation(activeConversationId);
       await loadConversations();
       if (completed && !failures.length) {
-        message.success(`已批准并执行 ${completed} 项修改`);
+        message.success(`Approved and applied ${completed} change(s)`);
       } else if (completed) {
-        message.warning(`${completed} 项修改已执行，${failures.length} 项未执行`);
+        message.warning(`${completed} change(s) applied, ${failures.length} not applied`);
       } else if (failures.length) {
-        message.error('没有修改被执行，请检查预览后重试');
+        message.error('No changes were applied. Check the preview and try again.');
       }
     } finally {
       setApprovingAllMessageId(undefined);
@@ -444,7 +444,7 @@ export default function ProjectAgentPanel({
   const toggleAutoApprove = (enabled: boolean) => {
     setAutoApprove(enabled);
     localStorage.setItem(AUTO_APPROVE_KEY, String(enabled));
-    message.info(enabled ? '已开启自动批准修改' : '已切换为手动批准修改');
+    message.info(enabled ? 'Auto-approve changes enabled' : 'Switched to manual approval');
   };
 
   // 开启自动批准后，处理已经在历史对话中等待确认的修改。
@@ -482,7 +482,7 @@ export default function ProjectAgentPanel({
   const conversationMenu = useMemo(() => ({
     items: conversations.length
       ? conversations.map(item => ({ key: item.id, label: item.title }))
-      : [{ key: 'empty', label: '暂无历史对话', disabled: true }],
+      : [{ key: 'empty', label: 'No past conversations', disabled: true }],
     onClick: ({ key }: { key: string }) => key !== 'empty' && void loadConversation(key),
   }), [conversations, loadConversation]);
 
@@ -499,11 +499,11 @@ export default function ProjectAgentPanel({
   };
 
   const categoryLabel = (category: string) => ({
-    analysis: '思考摘要',
-    project: '项目工具',
+    analysis: 'Reasoning summary',
+    project: 'Project tools',
     mcp: 'MCP',
     skill: 'Skill',
-  }[category] || '工具');
+  }[category] || 'Tool');
 
   const renderChangePreview = (toolCall?: AgentToolCall) => {
     if (!toolCall?.preview) return null;
@@ -532,11 +532,11 @@ export default function ProjectAgentPanel({
               loading={decidingId === toolCall.id}
               disabled={Boolean(approvingAllMessageId)}
               onClick={() => void decideTool(toolCall, true)}
-            >确认修改</Button>
+            >Confirm Changes</Button>
             <Button
               size="small" icon={<CloseOutlined />} disabled={Boolean(decidingId || approvingAllMessageId)}
               onClick={() => void decideTool(toolCall, false)}
-            >取消</Button>
+            >Cancel</Button>
           </Space>
         )}
       </div>
@@ -571,14 +571,14 @@ export default function ProjectAgentPanel({
       && ordered.some(step => step.tool_call_id === toolCall.id)
     ));
     const statusTag = running
-      ? <Tag icon={<LoadingOutlined spin />} color="processing">执行中</Tag>
+      ? <Tag icon={<LoadingOutlined spin />} color="processing">Running</Tag>
       : waiting
-        ? <Tag color="orange">等待确认</Tag>
+        ? <Tag color="orange">Awaiting confirmation</Tag>
         : failed
-          ? <Tag color="error">部分失败</Tag>
+          ? <Tag color="error">Partially failed</Tag>
           : cancelled
-            ? <Tag>已停止</Tag>
-          : <Tag color="success">已完成</Tag>;
+            ? <Tag>Stopped</Tag>
+          : <Tag color="success">Done</Tag>;
 
     return (
       <div style={{ width: '100%', marginBottom: 10 }}>
@@ -600,8 +600,8 @@ export default function ProjectAgentPanel({
             label: (
               <Space size={6} wrap>
                 <BulbOutlined />
-                <Text style={{ fontSize: 12 }}>思考与调用过程</Text>
-                <Text type="secondary" style={{ fontSize: 11 }}>{ordered.length} 步</Text>
+                <Text style={{ fontSize: 12 }}>Reasoning and tool calls</Text>
+                <Text type="secondary" style={{ fontSize: 11 }}>{ordered.length} steps</Text>
                 <Text type="secondary" style={{ fontSize: 11 }}>{processElapsed}S</Text>
                 {statusTag}
               </Space>
@@ -617,7 +617,7 @@ export default function ProjectAgentPanel({
                     disabled={Boolean(decidingId || approvingAllMessageId)}
                     onClick={() => void approveAllTools(waitingToolCalls, messageId)}
                   >
-                    一键批准全部修改（{waitingToolCalls.length} 项）
+                    Approve all changes ({waitingToolCalls.length})
                   </Button>
                 )}
                 {ordered.map(step => {
@@ -645,7 +645,7 @@ export default function ProjectAgentPanel({
                       )}
                       {hasDetail && (
                         <details style={{ marginTop: 7, fontSize: 12 }}>
-                          <summary style={{ cursor: 'pointer', color: token.colorTextSecondary }}>查看参数与结果</summary>
+                          <summary style={{ cursor: 'pointer', color: token.colorTextSecondary }}>View parameters and results</summary>
                           <pre style={{
                             margin: '6px 0 0', padding: 8, borderRadius: 6,
                             background: token.colorFillQuaternary, whiteSpace: 'pre-wrap',
@@ -675,22 +675,22 @@ export default function ProjectAgentPanel({
       }}>
         <Space size={8}>
           <AssistantLogo size={28} />
-          <Title level={5} style={{ margin: 0 }}>木木创作助手</Title>
+          <Title level={5} style={{ margin: 0 }}>MuMu Writing Assistant</Title>
         </Space>
         <Space size={2}>
           <Dropdown menu={conversationMenu} trigger={['click']}>
-            <Tooltip title="历史对话"><Button type="text" icon={<HistoryOutlined />} /></Tooltip>
+            <Tooltip title="Conversation history"><Button type="text" icon={<HistoryOutlined />} /></Tooltip>
           </Dropdown>
-          <Tooltip title="新对话"><Button type="text" icon={<PlusOutlined />} onClick={() => void newConversation()} /></Tooltip>
+          <Tooltip title="New conversation"><Button type="text" icon={<PlusOutlined />} onClick={() => void newConversation()} /></Tooltip>
           {activeConversationId && (
-            <Popconfirm title="删除当前对话？" onConfirm={() => void removeConversation()}>
-              <Tooltip title="删除对话"><Button type="text" danger icon={<DeleteOutlined />} /></Tooltip>
+            <Popconfirm title="Delete this conversation?" onConfirm={() => void removeConversation()}>
+              <Tooltip title="Delete conversation"><Button type="text" danger icon={<DeleteOutlined />} /></Tooltip>
             </Popconfirm>
           )}
           {mobile ? (
             <Button type="text" icon={<CloseOutlined />} onClick={onMobileClose} />
           ) : (
-            <Tooltip title="收起"><Button type="text" icon={<MenuFoldOutlined />} onClick={() => changeExpanded(false)} /></Tooltip>
+            <Tooltip title="Collapse"><Button type="text" icon={<MenuFoldOutlined />} onClick={() => changeExpanded(false)} /></Tooltip>
           )}
         </Space>
       </div>
@@ -705,8 +705,8 @@ export default function ProjectAgentPanel({
           }}>
             <AssistantLogo size={72} />
             <div style={{ marginTop: 14 }}>
-              <Text strong>可以查询和修改当前项目</Text><br />
-              <Text type="secondary" style={{ fontSize: 12 }}>例如：“把第三条大纲标题改得更有悬念”</Text>
+              <Text strong>I can look up and edit the current project</Text><br />
+              <Text type="secondary" style={{ fontSize: 12 }}>For example: “Make the third outline title more suspenseful”</Text>
             </div>
           </div>
         ) : messages.filter(item => item.role === 'user' || item.role === 'assistant').map((item, index, visibleMessages) => {
@@ -766,7 +766,7 @@ export default function ProjectAgentPanel({
               void send();
             }
           }}
-          placeholder="询问或修改当前项目……"
+          placeholder="Ask about or edit the current project..."
           autoSize={{ minRows: 2, maxRows: 5 }}
           disabled={sending}
         />
@@ -774,14 +774,14 @@ export default function ProjectAgentPanel({
         <Space size={6}>
           <SafetyCertificateOutlined style={{ color: autoApprove ? token.colorSuccess : token.colorTextSecondary }} />
           <Text type="secondary" style={{ fontSize: 11 }}>
-            {autoApprove ? '自动批准修改' : '手动批准修改'}
+            {autoApprove ? 'Auto-approve changes' : 'Manually approve changes'}
           </Text>
           <Switch size="small" checked={autoApprove} onChange={toggleAutoApprove} />
         </Space>
           {sending ? (
-            <Button size="small" icon={<StopOutlined />} onClick={() => abortRef.current?.abort()}>停止</Button>
+            <Button size="small" icon={<StopOutlined />} onClick={() => abortRef.current?.abort()}>Stop</Button>
           ) : (
-            <Button type="primary" size="small" icon={<SendOutlined />} disabled={!input.trim()} onClick={() => void send()}>发送</Button>
+            <Button type="primary" size="small" icon={<SendOutlined />} disabled={!input.trim()} onClick={() => void send()}>Send</Button>
           )}
         </div>
       </div>
@@ -809,7 +809,7 @@ export default function ProjectAgentPanel({
         width: 48, flex: '0 0 48px', borderLeft: `1px solid ${token.colorBorderSecondary}`,
         display: 'flex', justifyContent: 'center', paddingTop: 10, background: token.colorBgContainer,
       }}>
-        <Tooltip title="展开木木创作助手" placement="left">
+        <Tooltip title="Open MuMu Writing Assistant" placement="left">
           <Button type="text" icon={<AssistantLogo size={20} />} onClick={() => changeExpanded(true)} />
         </Tooltip>
       </div>

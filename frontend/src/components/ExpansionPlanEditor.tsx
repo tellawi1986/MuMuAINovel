@@ -54,7 +54,7 @@ export default function ExpansionPlanEditor({
         }
       } else {
         console.error('角色API返回格式异常:', response);
-        message.warning('角色数据格式异常');
+        message.warning('Character data is in an unexpected format');
       }
       
       setAvailableCharacters(chars);
@@ -63,7 +63,7 @@ export default function ExpansionPlanEditor({
       console.error('加载角色列表失败:', error);
       setAvailableCharacters([]);
       const err = error as Error;
-      message.error('加载角色列表失败: ' + (err?.message || '未知错误'));
+      message.error('Failed to load characters: ' + (err?.message || 'Unknown error'));
     } finally {
       setLoadingCharacters(false);
     }
@@ -119,14 +119,14 @@ export default function ExpansionPlanEditor({
       
       // 验证至少有一个关键事件
       if (keyEvents.length === 0) {
-        message.warning('请至少添加一个关键事件');
+        message.warning('Please add at least one key event');
         setLoading(false);
         return;
       }
       
       // 验证至少有一个角色
       if (characters.length === 0) {
-        message.warning('请至少添加一个涉及角色');
+        message.warning('Please add at least one involved character');
         setLoading(false);
         return;
       }
@@ -143,10 +143,10 @@ export default function ExpansionPlanEditor({
       };
       
       await onSave(updatedPlan);
-      // message.success('规划信息保存成功');
+      // message.success('Plan saved');
     } catch (error) {
-      console.error('保存失败:', error);
-      message.error('保存失败，请重试');
+      console.error('Save failed:', error);
+      message.error('Save failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -162,17 +162,17 @@ export default function ExpansionPlanEditor({
 
   return (
     <Modal
-      title="编辑章节规划"
+      title="Edit Chapter Plan"
       open={visible}
       onCancel={handleCancel}
       width={700}
       centered
       footer={[
         <Button key="cancel" onClick={handleCancel} disabled={loading}>
-          取消
+          Cancel
         </Button>,
         <Button key="submit" type="primary" loading={loading} onClick={handleSubmit}>
-          保存
+          Save
         </Button>
       ]}
     >
@@ -180,37 +180,37 @@ export default function ExpansionPlanEditor({
         form={form}
         layout="vertical"
         initialValues={{
-          emotional_tone: '紧张激烈',
-          conflict_type: '人物冲突',
+          emotional_tone: 'Tense and intense',
+          conflict_type: 'Interpersonal conflict',
           estimated_words: 3000
         }}
       >
         {/* 情节概要 */}
         <Form.Item
-          label="情节概要"
+          label="Plot summary"
           name="summary"
-          tooltip="简要描述本章的主要情节和故事走向"
+          tooltip="Briefly describe this chapter's main plot and direction"
         >
           <TextArea
             rows={3}
-            placeholder="简要描述本章的主要情节，例如：主角遇到意外事件，开始了一段新的冒险..."
+            placeholder="Briefly describe the main plot, e.g. the protagonist faces an unexpected event and sets off on a new adventure..."
             maxLength={500}
             showCount
           />
         </Form.Item>
 
-        <Divider orientation="left">详细规划</Divider>
+        <Divider orientation="left">Detailed Plan</Divider>
 
         {/* 关键事件 */}
         <Form.Item
-          label="关键事件"
-          tooltip="至少添加一个关键事件"
+          label="Key events"
+          tooltip="Add at least one key event"
           required
         >
           <Space direction="vertical" style={{ width: '100%' }}>
             <Space.Compact style={{ width: '100%' }}>
               <Input
-                placeholder="输入关键事件后按回车或点击添加"
+                placeholder="Type a key event, then press Enter or click Add"
                 value={keyEventInput}
                 onChange={(e) => setKeyEventInput(e.target.value)}
                 onPressEnter={handleAddKeyEvent}
@@ -220,7 +220,7 @@ export default function ExpansionPlanEditor({
                 icon={<PlusOutlined />}
                 onClick={handleAddKeyEvent}
               >
-                添加
+                Add
               </Button>
             </Space.Compact>
             <Space wrap>
@@ -245,13 +245,13 @@ export default function ExpansionPlanEditor({
 
         {/* 涉及角色 */}
         <Form.Item
-          label="涉及角色"
-          tooltip="从项目现有角色中选择"
+          label="Characters involved"
+          tooltip="Choose from this project's characters"
           required
         >
           <Space direction="vertical" style={{ width: '100%' }}>
             <Select
-              placeholder="选择角色"
+              placeholder="Select characters"
               style={{ width: '100%' }}
               loading={loadingCharacters}
               onChange={handleAddCharacter}
@@ -270,10 +270,10 @@ export default function ExpansionPlanEditor({
                     }))
                 : []}
               notFoundContent={
-                loadingCharacters ? '加载中...' :
-                !Array.isArray(availableCharacters) ? '加载角色失败' :
-                availableCharacters.length === 0 ? '暂无角色，请先在角色管理中创建' :
-                '所有角色已添加'
+                loadingCharacters ? 'Loading...' :
+                !Array.isArray(availableCharacters) ? 'Failed to load characters' :
+                availableCharacters.length === 0 ? 'No characters yet. Create them in Character Management first.' :
+                'All characters added'
               }
             />
             <Space wrap>
@@ -293,55 +293,55 @@ export default function ExpansionPlanEditor({
 
         {/* 情感基调 */}
         <Form.Item
-          label="情感基调"
+          label="Emotional tone"
           name="emotional_tone"
-          rules={[{ required: true, message: '请输入情感基调' }]}
-          tooltip="例如：紧张激烈、温馨感人、悬疑惊悚等"
+          rules={[{ required: true, message: 'Please enter an emotional tone' }]}
+          tooltip="e.g. tense, heartwarming, suspenseful"
         >
           <Input
-            placeholder="输入情感基调，例如：紧张激烈、温馨感人等"
+            placeholder="Enter an emotional tone, e.g. tense, heartwarming"
             maxLength={20}
           />
         </Form.Item>
 
         {/* 冲突类型 */}
         <Form.Item
-          label="冲突类型"
+          label="Conflict type"
           name="conflict_type"
-          rules={[{ required: true, message: '请输入冲突类型' }]}
-          tooltip="例如：人物冲突、内心冲突、环境冲突等"
+          rules={[{ required: true, message: 'Please enter a conflict type' }]}
+          tooltip="e.g. interpersonal, internal, environmental"
         >
           <Input
-            placeholder="输入冲突类型，例如：人物冲突、内心冲突等"
+            placeholder="Enter a conflict type, e.g. interpersonal, internal"
             maxLength={20}
           />
         </Form.Item>
 
         {/* 预估字数 */}
         <Form.Item
-          label="预估字数"
+          label="Estimated words"
           name="estimated_words"
-          rules={[{ required: true, message: '请输入预估字数' }]}
+          rules={[{ required: true, message: 'Please enter estimated words' }]}
         >
           <InputNumber
             min={500}
             max={10000}
             step={100}
             style={{ width: '100%' }}
-            formatter={(value) => `${value} 字`}
-            parser={(value) => Number(value?.replace(' 字', '')) as 500 | 10000}
+            formatter={(value) => `${value} words`}
+            parser={(value) => Number(value?.replace(' words', '')) as 500 | 10000}
           />
         </Form.Item>
 
         {/* 叙事目标 */}
         <Form.Item
-          label="叙事目标"
+          label="Narrative goal"
           name="narrative_goal"
-          rules={[{ required: true, message: '请输入叙事目标' }]}
+          rules={[{ required: true, message: 'Please enter a narrative goal' }]}
         >
           <TextArea
             rows={3}
-            placeholder="描述本章要达成的叙事目标，例如：推进主线剧情、深化角色关系、揭示重要信息等..."
+            placeholder="Describe this chapter's narrative goal, e.g. advance the main plot, deepen relationships, reveal key information..."
             maxLength={500}
             showCount
           />
