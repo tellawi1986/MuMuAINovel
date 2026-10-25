@@ -28,10 +28,10 @@ interface SkillDetail {
 }
 
 const SKILL_CATEGORY_OPTIONS = [
-  { label: 'Skill·长篇', value: 'Skill·长篇' },
-  { label: 'Skill·短篇', value: 'Skill·短篇' },
-  { label: 'Skill·润色', value: 'Skill·润色' },
-  { label: 'Skill·工具', value: 'Skill·工具' },
+  { label: 'Long-form Skill', value: 'Skill·长篇' },
+  { label: 'Short-form Skill', value: 'Skill·短篇' },
+  { label: 'Editing Skill', value: 'Skill·润色' },
+  { label: 'Utility Skill', value: 'Skill·工具' },
   { label: 'Skill', value: 'Skill' },
 ];
 
@@ -72,7 +72,7 @@ export default function SkillManage() {
         setSkills(data);
       }
     } catch {
-      message.error('加载 Skill 列表失败');
+      message.error('Failed to load skills.');
     } finally {
       setLoading(false);
     }
@@ -100,10 +100,10 @@ export default function SkillManage() {
         });
         setEditModalVisible(true);
       } else {
-        message.error('获取 Skill 详情失败');
+        message.error('Failed to load skill details.');
       }
     } catch {
-      message.error('获取 Skill 详情失败');
+      message.error('Failed to load skill details.');
     }
   };
 
@@ -117,7 +117,7 @@ export default function SkillManage() {
         setViewModalVisible(true);
       }
     } catch {
-      message.error('获取内容失败');
+      message.error('Failed to load content.');
     }
   };
 
@@ -133,7 +133,7 @@ export default function SkillManage() {
         try {
           refs = JSON.parse(values.references);
         } catch {
-          message.error('参考资料 JSON 格式错误');
+          message.error('Invalid reference JSON.');
           setSaving(false);
           return;
         }
@@ -141,13 +141,13 @@ export default function SkillManage() {
 
       const triggers = parseTriggers(values.triggers);
       if (triggers.length === 0) {
-        message.error('请至少填写一个触发词');
+        message.error('Enter at least one trigger.');
         setSaving(false);
         return;
       }
       const category = normalizeCategory(values.category);
       if (!category) {
-        message.error('请选择或输入分类');
+        message.error('Select or enter a category.');
         setSaving(false);
         return;
       }
@@ -166,15 +166,15 @@ export default function SkillManage() {
       });
 
       if (response.ok) {
-        message.success('Skill 更新成功');
+        message.success('Skill updated successfully.');
         setEditModalVisible(false);
         loadSkills();
       } else {
         const err = await response.json();
-        message.error(err.detail || '更新失败');
+        message.error(err.detail || 'Update failed.');
       }
     } catch {
-      message.error('保存失败');
+      message.error('Failed to save.');
     } finally {
       setSaving(false);
     }
@@ -190,7 +190,7 @@ export default function SkillManage() {
         try {
           refs = JSON.parse(values.references);
         } catch {
-          message.error('参考资料 JSON 格式错误');
+          message.error('Invalid reference JSON.');
           setSaving(false);
           return;
         }
@@ -198,13 +198,13 @@ export default function SkillManage() {
 
       const triggers = parseTriggers(values.triggers);
       if (triggers.length === 0) {
-        message.error('请至少填写一个触发词');
+        message.error('Enter at least one trigger.');
         setSaving(false);
         return;
       }
       const category = normalizeCategory(values.category);
       if (!category) {
-        message.error('请选择或输入分类');
+        message.error('Select or enter a category.');
         setSaving(false);
         return;
       }
@@ -224,16 +224,16 @@ export default function SkillManage() {
       });
 
       if (response.ok) {
-        message.success('Skill 创建成功');
+        message.success('Skill created successfully.');
         setCreateModalVisible(false);
         createForm.resetFields();
         loadSkills();
       } else {
         const err = await response.json();
-        message.error(err.detail || '创建失败');
+        message.error(err.detail || 'Creation failed.');
       }
     } catch {
-      message.error('创建失败');
+      message.error('Creation failed.');
     } finally {
       setSaving(false);
     }
@@ -244,20 +244,20 @@ export default function SkillManage() {
     try {
       const response = await fetch(`/api/skills/delete/${skillKey}`, { method: 'DELETE' });
       if (response.ok) {
-        message.success('删除成功');
+        message.success('Deleted successfully.');
         loadSkills();
       } else {
         const err = await response.json();
-        message.error(err.detail || '删除失败');
+        message.error(err.detail || 'Deletion failed.');
       }
     } catch {
-      message.error('删除失败');
+      message.error('Deletion failed.');
     }
   };
 
   const columns = [
     {
-      title: '名称',
+      title: 'Name',
       dataIndex: 'display_name',
       key: 'display_name',
       width: 220,
@@ -276,7 +276,7 @@ export default function SkillManage() {
       ),
     },
     {
-      title: '分类',
+      title: 'Category',
       dataIndex: 'category',
       key: 'category',
       width: 120,
@@ -288,11 +288,12 @@ export default function SkillManage() {
           'Skill·工具': 'purple',
           'Skill': 'default',
         };
-        return <Tag color={colorMap[cat] || 'default'}>{cat}</Tag>;
+        const label = SKILL_CATEGORY_OPTIONS.find(option => option.value === cat)?.label || cat;
+        return <Tag color={colorMap[cat] || 'default'}>{label}</Tag>;
       },
     },
     {
-      title: '描述',
+      title: 'Description',
       dataIndex: 'description',
       key: 'description',
       width: 260,
@@ -316,7 +317,7 @@ export default function SkillManage() {
       ),
     },
     {
-      title: '触发词',
+      title: 'Triggers',
       dataIndex: 'triggers',
       key: 'triggers',
       width: 180,
@@ -330,7 +331,7 @@ export default function SkillManage() {
       ),
     },
     {
-      title: '操作',
+      title: 'Actions',
       key: 'actions',
       width: 200,
       render: (_: unknown, record: SkillItem) => (
@@ -341,7 +342,7 @@ export default function SkillManage() {
             onClick={() => handleViewRaw(record)}
             size="small"
           >
-            查看
+            View
           </Button>
           <Button
             type="text"
@@ -349,18 +350,18 @@ export default function SkillManage() {
             onClick={() => handleEdit(record)}
             size="small"
           >
-            编辑
+            Edit
           </Button>
           <Popconfirm
-            title="确定删除此 Skill？"
-            description="删除后无法恢复，相关文件将被永久删除。"
+            title="Delete this skill?"
+            description="This cannot be undone. Related files will be permanently deleted."
             onConfirm={() => handleDelete(record.template_key)}
-            okText="删除"
-            cancelText="取消"
+            okText="Delete"
+            cancelText="Cancel"
             okButtonProps={{ danger: true }}
           >
             <Button type="text" danger icon={<DeleteOutlined />} size="small">
-              删除
+              Delete
             </Button>
           </Popconfirm>
         </Space>
@@ -382,11 +383,11 @@ export default function SkillManage() {
         <div>
           <h2 style={{ margin: 0, fontSize: 20 }}>
             <ThunderboltOutlined style={{ marginRight: 8, color: token.colorPrimary }} />
-            Skill 管理
+            Skill Management
             <Badge count={skills.length} style={{ marginLeft: 8, backgroundColor: token.colorPrimary }} />
           </h2>
           <div style={{ fontSize: 12, color: token.colorTextSecondary, marginTop: 4 }}>
-            在线管理 Skill 工作流，添加、编辑或删除
+            Manage skill workflows online. Add, edit, or delete skills.
           </div>
         </div>
         <Space wrap>
@@ -395,7 +396,7 @@ export default function SkillManage() {
             onClick={loadSkills}
             loading={loading}
           >
-            刷新
+            Refresh
           </Button>
           <Button
             type="primary"
@@ -405,7 +406,7 @@ export default function SkillManage() {
               setCreateModalVisible(true);
             }}
           >
-            添加 Skill
+            Add Skill
           </Button>
         </Space>
       </div>
@@ -413,9 +414,9 @@ export default function SkillManage() {
       {/* Skill 列表 */}
       {skills.length === 0 && !loading ? (
         <Card>
-          <Empty description="暂无 Skill，点击「添加 Skill」创建">
+          <Empty description="No skills yet. Select “Add Skill” to create one.">
             <Button type="primary" icon={<PlusOutlined />} onClick={() => setCreateModalVisible(true)}>
-              添加 Skill
+              Add Skill
             </Button>
           </Empty>
         </Card>
@@ -435,11 +436,11 @@ export default function SkillManage() {
 
       {/* 查看原始内容弹窗 */}
       <Modal
-        title="SKILL.md 原始内容"
+        title="Raw SKILL.md Content"
         open={viewModalVisible}
         onCancel={() => setViewModalVisible(false)}
         width={800}
-        footer={<Button onClick={() => setViewModalVisible(false)}>关闭</Button>}
+        footer={<Button onClick={() => setViewModalVisible(false)}>Close</Button>}
         styles={{ body: { maxHeight: '60vh', overflowY: 'auto' } }}
       >
         <pre style={{
@@ -457,107 +458,107 @@ export default function SkillManage() {
 
       {/* 编辑 Skill 弹窗 */}
       <Modal
-        title="编辑 Skill"
+        title="Edit Skill"
         open={editModalVisible}
         onCancel={() => setEditModalVisible(false)}
         width={900}
         footer={
           <Space>
-            <Button onClick={() => setEditModalVisible(false)}>取消</Button>
-            <Button type="primary" onClick={handleSaveEdit} loading={saving}>保存</Button>
+            <Button onClick={() => setEditModalVisible(false)}>Cancel</Button>
+            <Button type="primary" onClick={handleSaveEdit} loading={saving}>Save</Button>
           </Space>
         }
         styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}
         destroyOnClose
       >
         <Form form={editForm} layout="vertical">
-          <Form.Item label="内部标识" name="name" tooltip="来自 SKILL.md 的 name 字段，编辑时不支持修改">
+          <Form.Item label="Internal Identifier" name="name" tooltip="The name field from SKILL.md. This cannot be changed when editing.">
             <Input disabled />
           </Form.Item>
-          <Form.Item label="显示名称" name="display_name" rules={[{ required: true, whitespace: true, message: '请输入显示名称' }]}
-            tooltip="表格和工具箱中展示的名称">
-            <Input placeholder="例如：长篇网文拆文" maxLength={60} />
+          <Form.Item label="Display Name" name="display_name" rules={[{ required: true, whitespace: true, message: 'Enter a display name' }]}
+            tooltip="The name shown in the table and toolbox.">
+            <Input placeholder="e.g., Long-Form Story Analysis" maxLength={60} />
           </Form.Item>
-          <Form.Item label="分类" name="category" rules={[{ required: true, message: '请选择分类' }]}
-            tooltip="表格和工具箱中展示的 Skill 分类">
+          <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Select a category' }]}
+            tooltip="The skill category shown in the table and toolbox.">
             <Select
               showSearch
               options={SKILL_CATEGORY_OPTIONS}
-              placeholder="请选择或输入分类"
+              placeholder="Select or enter a category"
               mode="tags"
               maxCount={1}
               tokenSeparators={[',', '，', '、']}
             />
           </Form.Item>
-          <Form.Item label="描述" name="description" rules={[{ required: true, whitespace: true, message: '请输入描述' }]}
-            tooltip="用于解释 Skill 的用途，不再承担名称和触发词配置">
-            <TextArea rows={4} placeholder="简要描述 Skill 功能、适用场景和使用方式..." />
+          <Form.Item label="Description" name="description" rules={[{ required: true, whitespace: true, message: 'Enter a description' }]}
+            tooltip="Describe the purpose of the skill. Use the name and trigger fields for those settings.">
+            <TextArea rows={4} placeholder="Briefly describe the skill, its use cases, and how to use it..." />
           </Form.Item>
-          <Form.Item label="触发词" name="triggers" rules={[{ required: true, whitespace: true, message: '请至少填写一个触发词' }]}
-            tooltip="每行一个，也支持用逗号、顿号分隔。建议包含 /skill-name">
-            <TextArea rows={4} placeholder={'/story-long-analyze\n/长篇拆文\n帮我拆这本书'} />
+          <Form.Item label="Triggers" name="triggers" rules={[{ required: true, whitespace: true, message: 'Enter at least one trigger' }]}
+            tooltip="Enter one trigger per line, or separate them with commas. Including /skill-name is recommended.">
+            <TextArea rows={4} placeholder={'/story-long-analyze\n/analyze-this-book\nHelp me analyze this book'} />
           </Form.Item>
-          <Form.Item label="工作流指令" name="body" rules={[{ required: true, message: '请输入工作流指令' }]}
-            tooltip="SKILL.md 中 YAML frontmatter 之后的 Markdown 正文">
-            <TextArea rows={15} placeholder="输入 Skill 的完整工作流指令..." style={{ fontFamily: 'monospace', fontSize: 13 }} />
+          <Form.Item label="Workflow Instructions" name="body" rules={[{ required: true, message: 'Enter workflow instructions' }]}
+            tooltip="The Markdown body in SKILL.md, following the YAML front matter.">
+            <TextArea rows={15} placeholder="Enter the complete skill workflow..." style={{ fontFamily: 'monospace', fontSize: 13 }} />
           </Form.Item>
-          <Form.Item label="参考资料 (JSON)" name="references"
-            tooltip='格式：{"文件名": "内容"}。留空则保留原有参考资料'>
-            <TextArea rows={8} placeholder='{"anti-ai-tips": "去AI味的技巧...", "quality-check": "质量检查清单..."}' style={{ fontFamily: 'monospace', fontSize: 12 }} />
+          <Form.Item label="References (JSON)" name="references"
+            tooltip='Format: {"filename": "content"}. Leave blank to keep the existing references.'>
+            <TextArea rows={8} placeholder='{"anti-ai-tips": "Writing tips...", "quality-check": "Quality checklist..."}' style={{ fontFamily: 'monospace', fontSize: 12 }} />
           </Form.Item>
         </Form>
       </Modal>
 
       {/* 创建 Skill 弹窗 */}
       <Modal
-        title="添加新 Skill"
+        title="Add New Skill"
         open={createModalVisible}
         onCancel={() => setCreateModalVisible(false)}
         width={900}
         footer={
           <Space>
-            <Button onClick={() => setCreateModalVisible(false)}>取消</Button>
-            <Button type="primary" onClick={handleCreate} loading={saving}>创建</Button>
+            <Button onClick={() => setCreateModalVisible(false)}>Cancel</Button>
+            <Button type="primary" onClick={handleCreate} loading={saving}>Create</Button>
           </Space>
         }
         styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}
         destroyOnClose
       >
         <Form form={createForm} layout="vertical">
-          <Form.Item label="Skill 名称（英文）" name="name" rules={[{ required: true, message: '请输入名称' }]}
-            tooltip="英文小写+短横线，如 my-new-skill。将作为目录名和内部标识">
+          <Form.Item label="Skill Name (English)" name="name" rules={[{ required: true, message: 'Enter a name' }]}
+            tooltip="Use lowercase English letters and hyphens, e.g., my-new-skill. This will be the directory name and internal identifier.">
             <Input placeholder="my-new-skill" />
           </Form.Item>
-          <Form.Item label="显示名称" name="display_name" rules={[{ required: true, whitespace: true, message: '请输入显示名称' }]}
-            tooltip="表格和工具箱中展示的名称">
-            <Input placeholder="例如：我的新 Skill" maxLength={60} />
+          <Form.Item label="Display Name" name="display_name" rules={[{ required: true, whitespace: true, message: 'Enter a display name' }]}
+            tooltip="The name shown in the table and toolbox.">
+            <Input placeholder="e.g., My New Skill" maxLength={60} />
           </Form.Item>
-          <Form.Item label="分类" name="category" rules={[{ required: true, message: '请选择分类' }]}
-            tooltip="表格和工具箱中展示的 Skill 分类">
+          <Form.Item label="Category" name="category" rules={[{ required: true, message: 'Select a category' }]}
+            tooltip="The skill category shown in the table and toolbox.">
             <Select
               showSearch
               options={SKILL_CATEGORY_OPTIONS}
-              placeholder="请选择或输入分类"
+              placeholder="Select or enter a category"
               mode="tags"
               maxCount={1}
               tokenSeparators={[',', '，', '、']}
             />
           </Form.Item>
-          <Form.Item label="描述" name="description" rules={[{ required: true, whitespace: true, message: '请输入描述' }]}
-            tooltip="用于解释 Skill 的用途，不再承担名称和触发词配置">
-            <TextArea rows={4} placeholder="简要描述 Skill 功能、适用场景和使用方式..." />
+          <Form.Item label="Description" name="description" rules={[{ required: true, whitespace: true, message: 'Enter a description' }]}
+            tooltip="Describe the purpose of the skill. Use the name and trigger fields for those settings.">
+            <TextArea rows={4} placeholder="Briefly describe the skill, its use cases, and how to use it..." />
           </Form.Item>
-          <Form.Item label="触发词" name="triggers" rules={[{ required: true, whitespace: true, message: '请至少填写一个触发词' }]}
-            tooltip="每行一个，也支持用逗号、顿号分隔。建议包含 /skill-name">
-            <TextArea rows={4} placeholder={'/my-new-skill\n我的新 Skill'} />
+          <Form.Item label="Triggers" name="triggers" rules={[{ required: true, whitespace: true, message: 'Enter at least one trigger' }]}
+            tooltip="Enter one trigger per line, or separate them with commas. Including /skill-name is recommended.">
+            <TextArea rows={4} placeholder={'/my-new-skill\nMy new skill'} />
           </Form.Item>
-          <Form.Item label="工作流指令" name="body" rules={[{ required: true, message: '请输入工作流指令' }]}
-            tooltip="Skill 的核心 Markdown 内容">
-            <TextArea rows={15} placeholder={"# my-new-skill：Skill 标题\n\n你是 xxx 专家。你的任务是帮用户完成 xxx。\n\n## 核心原则\n\n- 原则1...\n\n## 工作流程\n\n### Phase 1：需求确认\n..."} style={{ fontFamily: 'monospace', fontSize: 13 }} />
+          <Form.Item label="Workflow Instructions" name="body" rules={[{ required: true, message: 'Enter workflow instructions' }]}
+            tooltip="The core Markdown content for the skill.">
+            <TextArea rows={15} placeholder={"# my-new-skill: Skill Title\n\nYou are an expert in [topic]. Your task is to help the user [task].\n\n## Core Principles\n\n- Principle 1...\n\n## Workflow\n\n### Phase 1: Requirements\n..."} style={{ fontFamily: 'monospace', fontSize: 13 }} />
           </Form.Item>
-          <Form.Item label="参考资料 (JSON，可选)" name="references"
-            tooltip='格式：{"文件名": "内容"}'>
-            <TextArea rows={8} placeholder='{"tips": "参考技巧...", "examples": "示例..."}' style={{ fontFamily: 'monospace', fontSize: 12 }} />
+          <Form.Item label="References (Optional JSON)" name="references"
+            tooltip='Format: {"filename": "content"}.'>
+            <TextArea rows={8} placeholder='{"tips": "Reference tips...", "examples": "Examples..."}' style={{ fontFamily: 'monospace', fontSize: 12 }} />
           </Form.Item>
         </Form>
       </Modal>

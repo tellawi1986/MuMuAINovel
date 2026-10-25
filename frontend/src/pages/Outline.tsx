@@ -495,7 +495,7 @@ export default function Outline() {
   const handleDeleteOutline = async (id: string) => {
     try {
       await deleteOutline(id);
-      message.success('删除成功');
+      message.success('Deleted successfully.');
       // 删除后刷新大纲列表和项目信息，更新字数显示
       await refreshOutlines();
       if (currentProject?.id) {
@@ -503,7 +503,7 @@ export default function Outline() {
         setCurrentProject(updatedProject);
       }
     } catch {
-      message.error('删除失败');
+      message.error('Failed to delete.');
     }
   };
 
@@ -572,23 +572,23 @@ export default function Outline() {
           // 进度更新由悬浮任务框处理，无需额外操作
         },
         (result) => {
-          message.success(result.task_result?.message as string || '大纲生成完成！');
+          message.success(result.task_result?.message as string || 'Outline generation complete!');
           setIsGenerating(false);
           refreshOutlines();
         },
         (error) => {
-          message.error(`生成失败: ${error}`);
+          message.error(`Generation failed: ${error}`);
           setIsGenerating(false);
         }
       );
 
-      message.info('大纲生成任务已提交，可在右下角任务面板查看进度');
+      message.info('Outline generation task submitted. Track its progress in the task panel at the bottom right.');
       // 通知悬浮任务框刷新
       eventBus.emit('background-task-created');
 
     } catch (error) {
       console.error('AI生成失败:', error);
-      message.error('AI生成失败');
+      message.error('AI generation failed.');
       setIsGenerating(false);
     }
   };
@@ -1059,7 +1059,7 @@ export default function Outline() {
         await chapterApi.deleteChapter(chapter.id);
       }
 
-      message.success(`已删除《${outlineTitle}》展开的所有 ${chapters.length} 个章节`);
+      message.success(`Deleted all ${chapters.length} chapters expanded from “${outlineTitle}”.`);
       await refreshOutlines();
       // 刷新项目信息以更新字数显示
       if (currentProject?.id) {
@@ -1100,7 +1100,7 @@ export default function Outline() {
       title: (
         <Space style={{ flexWrap: 'wrap' }}>
           <CheckCircleOutlined style={{ color: token.colorSuccess }} />
-          <span>《{outlineTitle}》展开信息</span>
+          <span>Expansion Details: “{outlineTitle}”</span>
         </Space>
       ),
       width: isMobile ? '95%' : 900,
@@ -1125,33 +1125,33 @@ export default function Outline() {
             onClick={() => {
               Modal.destroyAll();
               modalApi.confirm({
-                title: '确认删除',
+                title: 'Confirm Deletion',
                 icon: <ExclamationCircleOutlined />,
                 centered: true,
                 content: (
                   <div>
-                    <p>此操作将删除大纲《{outlineTitle}》展开的所有 <strong>{data.chapter_count}</strong> 个章节。</p>
+                    <p>This will delete all <strong>{data.chapter_count}</strong> chapters expanded from the outline “{outlineTitle}”.</p>
                     <p style={{ color: token.colorPrimary, marginTop: 8 }}>
-                      📝 注意：大纲本身会保留，您可以重新展开
+                      📝 Note: The outline itself will be kept and can be expanded again.
                     </p>
                     <p style={{ color: token.colorError, marginTop: 8 }}>
-                      ⚠️ 警告：章节内容将永久删除且无法恢复！
+                      ⚠️ Warning: Chapter content will be permanently deleted and cannot be recovered.
                     </p>
                   </div>
                 ),
-                okText: '确认删除',
+                okText: 'Delete',
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: 'Cancel',
                 onOk: () => handleDeleteExpandedChapters(outlineTitle, data.chapters || []),
               });
             }}
             block={isMobile}
             size={isMobile ? 'middle' : undefined}
           >
-            删除所有展开的章节 ({data.chapter_count}章)
+            Delete All Expanded Chapters ({data.chapter_count})
           </Button>
           <Button onClick={() => Modal.destroyAll()}>
-            关闭
+            Close
           </Button>
         </Space>
       ),
@@ -1169,10 +1169,10 @@ export default function Outline() {
                   padding: '4px 8px'
                 }}
               >
-                大纲: {outlineTitle}
+                Outline: {outlineTitle}
               </Tag>
-              <Tag color="green">章节数: {data.chapter_count}</Tag>
-              <Tag color="orange">已创建章节</Tag>
+              <Tag color="green">Chapters: {data.chapter_count}</Tag>
+              <Tag color="orange">Chapters Created</Tag>
             </Space>
           </div>
           <Tabs
@@ -1197,7 +1197,7 @@ export default function Outline() {
               children: (
                 <div style={{ maxHeight: '500px', overflowY: 'auto', padding: '8px 0' }}>
                   <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                    <Card size="small" title="基本信息">
+                    <Card size="small" title="Basic Information">
                       <Space wrap style={{ maxWidth: '100%' }}>
                         <Tag
                           color="blue"
@@ -1223,11 +1223,11 @@ export default function Outline() {
                         >
                           {plan.conflict_type}
                         </Tag>
-                        <Tag color="green">约{plan.estimated_words}字</Tag>
+                        <Tag color="green">About {plan.estimated_words} words</Tag>
                       </Space>
                     </Card>
 
-                    <Card size="small" title="情节概要">
+                    <Card size="small" title="Plot Summary">
                       <div style={{
                         wordBreak: 'break-word',
                         whiteSpace: 'normal',
@@ -1237,7 +1237,7 @@ export default function Outline() {
                       </div>
                     </Card>
 
-                    <Card size="small" title="叙事目标">
+                    <Card size="small" title="Narrative Goal">
                       <div style={{
                         wordBreak: 'break-word',
                         whiteSpace: 'normal',
@@ -1247,7 +1247,7 @@ export default function Outline() {
                       </div>
                     </Card>
 
-                    <Card size="small" title="关键事件">
+                    <Card size="small" title="Key Events">
                       <Space direction="vertical" size="small" style={{ width: '100%' }}>
                         {plan.key_events.map((event, eventIdx) => (
                           <div
@@ -1264,7 +1264,7 @@ export default function Outline() {
                       </Space>
                     </Card>
 
-                    <Card size="small" title="涉及角色">
+                    <Card size="small" title="Characters Involved">
                       <Space wrap style={{ maxWidth: '100%' }}>
                         {plan.character_focus.map((char, charIdx) => (
                           <Tag
@@ -1284,7 +1284,7 @@ export default function Outline() {
                     </Card>
 
                     {plan.scenes && plan.scenes.length > 0 && (
-                      <Card size="small" title="场景">
+                      <Card size="small" title="Scenes">
                         <Space direction="vertical" size="small" style={{ width: '100%' }}>
                           {plan.scenes.map((scene, sceneIdx) => (
                             <Card
@@ -1301,21 +1301,21 @@ export default function Outline() {
                                 whiteSpace: 'normal',
                                 overflowWrap: 'break-word'
                               }}>
-                                <strong>地点：</strong>{scene.location}
+                                <strong>Location:</strong>{scene.location}
                               </div>
                               <div style={{
                                 wordBreak: 'break-word',
                                 whiteSpace: 'normal',
                                 overflowWrap: 'break-word'
                               }}>
-                                <strong>角色：</strong>{scene.characters.join('、')}
+                                <strong>Characters:</strong>{scene.characters.join(', ')}
                               </div>
                               <div style={{
                                 wordBreak: 'break-word',
                                 whiteSpace: 'normal',
                                 overflowWrap: 'break-word'
                               }}>
-                                <strong>目的：</strong>{scene.purpose}
+                                <strong>Purpose:</strong>{scene.purpose}
                               </div>
                             </Card>
                           ))}
@@ -1336,7 +1336,7 @@ export default function Outline() {
   // 批量展开所有大纲 - 提交后台任务并在悬浮任务面板显示进度
   const handleBatchExpandOutlines = () => {
     if (!currentProject?.id || outlines.length === 0) {
-      message.warning('没有可展开的大纲');
+      message.warning('There are no outlines to expand.');
       return;
     }
 
@@ -1344,7 +1344,7 @@ export default function Outline() {
       title: (
         <Space>
           <AppstoreAddOutlined />
-          <span>批量展开所有大纲</span>
+          <span>Expand All Outlines</span>
         </Space>
       ),
       width: 600,
@@ -1361,7 +1361,7 @@ export default function Outline() {
             }}
           >
             <div style={{ color: token.colorWarningText }}>
-              ⚠️ 将对当前项目的所有 {outlines.length} 个大纲进行展开
+              ⚠️ This will expand all {outlines.length} outlines in the current project.
             </div>
           </div>
           <Form
@@ -1373,34 +1373,34 @@ export default function Outline() {
             }}
           >
             <Form.Item
-              label="每个大纲展开章节数"
+              label="Chapters per Outline"
               name="chapters_per_outline"
-              rules={[{ required: true, message: '请输入章节数' }]}
-              tooltip="每个大纲将被展开为几章"
+              rules={[{ required: true, message: 'Enter the number of chapters' }]}
+              tooltip="The number of chapters to expand each outline into."
             >
               <InputNumber
                 min={2}
                 max={10}
                 style={{ width: '100%' }}
-                placeholder="建议2-5章"
+                placeholder="Recommended: 2–5 chapters"
               />
             </Form.Item>
 
             <Form.Item
-              label="展开策略"
+              label="Expansion Strategy"
               name="expansion_strategy"
             >
               <Radio.Group>
-                <Radio.Button value="balanced">均衡分配</Radio.Button>
-                <Radio.Button value="climax">高潮重点</Radio.Button>
-                <Radio.Button value="detail">细节丰富</Radio.Button>
+                <Radio.Button value="balanced">Balanced</Radio.Button>
+                <Radio.Button value="climax">Emphasize Climaxes</Radio.Button>
+                <Radio.Button value="detail">Rich in Detail</Radio.Button>
               </Radio.Group>
             </Form.Item>
           </Form>
         </div>
       ),
-      okText: '提交后台任务',
-      cancelText: '取消',
+      okText: 'Submit Background Task',
+      cancelText: 'Cancel',
       okButtonProps: { type: 'primary' },
       onOk: async () => {
         try {
@@ -1424,16 +1424,16 @@ export default function Outline() {
 
           if (!response.ok) {
             const err = await response.json().catch(() => ({ detail: response.statusText }));
-            throw new Error(err.detail || '创建批量展开任务失败');
+            throw new Error(err.detail || 'Failed to create the batch expansion task');
           }
 
-          message.success('批量展开任务已提交，可在右下角任务面板查看进度');
+          message.success('Batch expansion task submitted. Track its progress in the task panel at the bottom right.');
           eventBus.emit('background-task-created');
           setIsExpanding(false);
 
         } catch (error) {
           console.error('批量展开失败:', error);
-          message.error(error instanceof Error ? error.message : '批量展开失败');
+          message.error(error instanceof Error ? error.message : 'Batch expansion failed.');
           setIsExpanding(false);
         }
       },
@@ -1452,10 +1452,10 @@ export default function Outline() {
     setIsExporting(true);
     try {
       await outlineApi.exportOutlines(currentProject.id);
-      message.success(`已导出 ${outlines.length} 条大纲`);
+      message.success(`Exported ${outlines.length} outlines.`);
     } catch (error) {
       console.error('导出大纲失败:', error);
-      message.error('导出大纲失败，请稍后重试');
+      message.error('Failed to export outlines. Try again later.');
     } finally {
       setIsExporting(false);
     }
@@ -1463,7 +1463,7 @@ export default function Outline() {
 
   const handlePreviewImport = async () => {
     if (!currentProject?.id || !importFile) {
-      message.warning('请先选择要导入的 JSON 文件');
+      message.warning('Select a JSON file to import first.');
       return;
     }
 
@@ -1486,7 +1486,7 @@ export default function Outline() {
     try {
       const result = await outlineApi.importOutlines(currentProject.id, importMode, importFile);
       const chapterMessage = result.created_chapters > 0
-        ? `，同步创建 ${result.created_chapters} 个章节`
+        ? ` and created ${result.created_chapters} chapter(s)`
         : '';
       message.success(`${result.message}${chapterMessage}`);
       setImportModalOpen(false);
@@ -1734,9 +1734,9 @@ export default function Outline() {
         {/* 可滚动内容区域 */}
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {outlines.length === 0 ? (
-            <Empty description="还没有大纲，开始创建吧！" />
+            <Empty description="No outlines yet. Create one to get started!" />
           ) : filteredOutlines.length === 0 ? (
-            <Empty description="未找到匹配大纲" />
+            <Empty description="No matching outlines found." />
           ) : (
             <List
               dataSource={pagedOutlines}
@@ -1788,17 +1788,17 @@ export default function Outline() {
                             <Space size="small" style={{ fontSize: isMobile ? 13 : 16, flexWrap: 'wrap', lineHeight: isMobile ? '1.4' : '1.5' }}>
                               <span style={{ color: token.colorPrimary, fontWeight: 'bold', fontSize: isMobile ? 13 : 16 }}>
                                 {currentProject?.outline_mode === 'one-to-one'
-                                  ? `第${item.order_index || '?'}章`
-                                  : `第${item.order_index || '?'}卷`
+                                  ? `Chapter ${item.order_index || '?'}`
+                                  : `Volume ${item.order_index || '?'}`
                                 }
                               </span>
                               <span style={{ fontSize: isMobile ? 13 : 16 }}>{item.title}</span>
                               {/* ✅ 新增：展开状态标识 - 仅在一对多模式显示 */}
                               {currentProject?.outline_mode === 'one-to-many' && (
                                 outlineExpandStatus[item.id] ? (
-                                  <Tag color="success" icon={<CheckCircleOutlined />} style={{ fontSize: isMobile ? 11 : 12 }}>已展开</Tag>
+                                  <Tag color="success" icon={<CheckCircleOutlined />} style={{ fontSize: isMobile ? 11 : 12 }}>Expanded</Tag>
                                 ) : (
-                                  <Tag color="default" style={{ fontSize: isMobile ? 11 : 12 }}>未展开</Tag>
+                                  <Tag color="default" style={{ fontSize: isMobile ? 11 : 12 }}>Not Expanded</Tag>
                                 )
                               )}
                             </Space>
@@ -1829,7 +1829,7 @@ export default function Outline() {
                                     color: token.colorTextSecondary,
                                     fontSize: isMobile ? 12 : 13
                                   }}>
-                                    📝 大纲内容
+                                    📝 Outline Content
                                   </div>
                                   <Button
                                     type="link"
@@ -1844,7 +1844,7 @@ export default function Outline() {
                                       fontSize: isMobile ? 12 : 13
                                     }}
                                   >
-                                    {isOutlineExpanded ? '收起' : '展开'}
+                                    {isOutlineExpanded ? 'Collapse' : 'Expand'}
                                   </Button>
                                 </div>
                                 <div style={{
@@ -1858,7 +1858,7 @@ export default function Outline() {
                                   whiteSpace: isOutlineExpanded ? 'pre-wrap' : 'normal',
                                   wordBreak: 'break-word'
                                 }}>
-                                  {isOutlineExpanded ? item.content : previewContent.text || '暂无内容'}
+                                  {isOutlineExpanded ? item.content : previewContent.text || 'No content'}
                                 </div>
                               </div>
 
@@ -1887,7 +1887,7 @@ export default function Outline() {
                                       alignItems: 'center',
                                       gap: 4
                                     }}>
-                                      👥 涉及角色
+                                      👥 Characters Involved
                                       <Tag
                                         color="purple"
                                         style={{
@@ -1951,7 +1951,7 @@ export default function Outline() {
                                       alignItems: 'center',
                                       gap: 4
                                     }}>
-                                      🏛️ 涉及组织
+                                      🏛️ Organizations Involved
                                       <Tag
                                         color="orange"
                                         style={{
@@ -2023,7 +2023,7 @@ export default function Outline() {
                                         alignItems: 'center',
                                         gap: 4
                                       }}>
-                                        🎬 场景设定
+                                        🎬 Scene Details
                                         <Tag
                                           color="cyan"
                                           style={{
@@ -2051,7 +2051,7 @@ export default function Outline() {
                                             color: token.colorInfo
                                           }}
                                         >
-                                          {isExpanded ? '收起 ▲' : `展开 (${structureData.scenes!.length - maxVisibleScenes}+) ▼`}
+                                          {isExpanded ? 'Collapse ▲' : `Expand (${structureData.scenes!.length - maxVisibleScenes}+) ▼`}
                                         </Button>
                                       )}
                                     </div>
@@ -2164,7 +2164,7 @@ export default function Outline() {
                                                   borderRadius: 4
                                                 }}
                                               >
-                                                场景{idx + 1}
+                                                Scene {idx + 1}
                                               </Tag>
                                               <span style={{
                                                 fontWeight: 600,
@@ -2188,7 +2188,7 @@ export default function Outline() {
                                                 textOverflow: 'ellipsis',
                                                 whiteSpace: 'nowrap'
                                               }}>
-                                                <span style={{ fontWeight: 500 }}>👤 角色：</span>
+                                                <span style={{ fontWeight: 500 }}>👤 Characters:</span>
                                                 {scene.characters.join(' · ')}
                                               </div>
                                             )}
@@ -2202,7 +2202,7 @@ export default function Outline() {
                                                 textOverflow: 'ellipsis',
                                                 whiteSpace: 'nowrap'
                                               }}>
-                                                <span style={{ fontWeight: 500 }}>🎯 目的：</span>
+                                                <span style={{ fontWeight: 500 }}>🎯 Purpose:</span>
                                                 {scene.purpose}
                                               </div>
                                             )}
@@ -2238,7 +2238,7 @@ export default function Outline() {
                                     alignItems: 'center',
                                     gap: 4
                                   }}>
-                                    ⚡ 关键事件
+                                    ⚡ Key Events
                                     <Tag
                                       color="orange"
                                       style={{
@@ -2315,7 +2315,7 @@ export default function Outline() {
                                     alignItems: 'center',
                                     gap: 4
                                   }}>
-                                    💡 情节要点
+                                    💡 Plot Points
                                     <Tag
                                       color="green"
                                       style={{
@@ -2410,7 +2410,7 @@ export default function Outline() {
                                   fontWeight: 600,
                                   color: token.colorWarning
                                 }}>
-                                  💫 情感基调：
+                                  💫 Emotional Tone:
                                 </span>
                                 <Tag
                                   color="gold"
@@ -2444,7 +2444,7 @@ export default function Outline() {
                                   color: token.colorInfo,
                                   marginBottom: 6
                                 }}>
-                                  🎯 叙事目标
+                                  🎯 Narrative Goal
                                 </div>
                                 <div style={{
                                   fontSize: 12,
@@ -2484,7 +2484,7 @@ export default function Outline() {
                               loading={isExpanding}
                               size={isMobile ? 'middle' : 'small'}
                             >
-                              展开
+                              Expand
                             </Button>
                           )}
                           <Button
@@ -2492,20 +2492,20 @@ export default function Outline() {
                             onClick={() => handleOpenEditModal(item.id)}
                             size={isMobile ? 'middle' : 'small'}
                           >
-                            编辑
+                            Edit
                           </Button>
                           <Popconfirm
-                            title="确定删除这条大纲吗？"
+                            title="Are you sure you want to delete this outline?"
                             onConfirm={() => handleDeleteOutline(item.id)}
-                            okText="确定"
-                            cancelText="取消"
+                            okText="Confirm"
+                            cancelText="Cancel"
                           >
                             <Button
                               danger
                               icon={<DeleteOutlined />}
                               size={isMobile ? 'middle' : 'small'}
                             >
-                              删除
+                              Delete
                             </Button>
                           </Popconfirm>
                         </div>
@@ -2545,7 +2545,7 @@ export default function Outline() {
                   setOutlinePage(1);
                 }
               }}
-              showTotal={(total) => `共 ${total} 条`}
+              showTotal={(total) => `${total} total`}
               size={isMobile ? 'small' : 'default'}
             />
           </div>

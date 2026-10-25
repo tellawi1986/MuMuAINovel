@@ -64,7 +64,7 @@ export default function PromptTemplates() {
 
   const isMobile = window.innerWidth <= 768;
 
-  // 加载模板数据
+  // Load template data.
   const loadTemplates = async () => {
     try {
       setLoading(true);
@@ -72,7 +72,7 @@ export default function PromptTemplates() {
       setCategories(response.data);
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
-      message.error(err.response?.data?.detail || '加载失败');
+      message.error(err.response?.data?.detail || 'Failed to load');
     } finally {
       setLoading(false);
     }
@@ -82,7 +82,7 @@ export default function PromptTemplates() {
     loadTemplates();
   }, []);
 
-  // 获取当前分类的模板
+  // Get templates in the selected category.
   const getCurrentTemplates = (): PromptTemplate[] => {
     const index = parseInt(selectedCategory);
     if (index === 0) {
@@ -91,13 +91,13 @@ export default function PromptTemplates() {
     return categories[index - 1]?.templates || [];
   };
 
-  // 编辑模板
+  // Edit a template.
   const handleEdit = (template: PromptTemplate) => {
     setEditingTemplate({ ...template });
     setEditorVisible(true);
   };
 
-  // 保存模板
+  // Save a template.
   const handleSave = async () => {
     if (!editingTemplate) return;
 
@@ -113,34 +113,34 @@ export default function PromptTemplates() {
         parameters: editingTemplate.parameters,
         is_active: editingTemplate.is_active
       });
-      message.success(createsAccountCopy ? '已保存为当前账户的自定义副本' : '保存成功');
+      message.success(createsAccountCopy ? 'Saved as a custom copy for the current account' : 'Saved successfully');
       setEditorVisible(false);
       loadTemplates();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
-      message.error(err.response?.data?.detail || '保存失败');
+      message.error(err.response?.data?.detail || 'Save failed');
     } finally {
       setLoading(false);
     }
   };
 
-  // 重置为系统默认
+  // Restore the system default.
   const handleReset = async (templateKey: string) => {
     modal.confirm({
-      title: '确认重置',
-      content: '确定要删除当前账户的自定义副本并恢复系统默认吗？这不会影响其他账户。',
-      okText: '确定',
-      cancelText: '取消',
+      title: 'Confirm Reset',
+      content: 'Delete this account’s custom copy and restore the system default? This will not affect other accounts.',
+      okText: 'Confirm',
+      cancelText: 'Cancel',
       centered: true,
       onOk: async () => {
         try {
           setLoading(true);
           await axios.post(`/api/prompt-templates/${templateKey}/reset`);
-          message.success('已重置为系统默认');
+          message.success('Restored the system default');
           loadTemplates();
         } catch (error: unknown) {
           const err = error as { response?: { data?: { detail?: string } } };
-          message.error(err.response?.data?.detail || '重置失败');
+          message.error(err.response?.data?.detail || 'Reset failed');
         } finally {
           setLoading(false);
         }
@@ -148,7 +148,7 @@ export default function PromptTemplates() {
     });
   };
 
-  // 切换启用状态
+  // Toggle the enabled state.
   const handleToggleActive = async (template: PromptTemplate, checked: boolean) => {
     try {
       await axios.put(`/api/prompt-templates/${template.template_key}`, {
@@ -157,11 +157,11 @@ export default function PromptTemplates() {
       loadTemplates();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
-      message.error(err.response?.data?.detail || '操作失败');
+      message.error(err.response?.data?.detail || 'Operation failed');
     }
   };
 
-  // 导出所有模板
+  // Export all templates.
   const handleExport = async () => {
     try {
       const response = await axios.post('/api/prompt-templates/export');
@@ -177,19 +177,19 @@ export default function PromptTemplates() {
       
       if (stats) {
         message.success(
-          `成功导出 ${stats.total} 个提示词配置（${stats.customized} 个自定义，${stats.system_default} 个系统默认）`,
+          `Exported ${stats.total} prompt configurations (${stats.customized} custom, ${stats.system_default} system defaults)`,
           5
         );
       } else {
-        message.success('导出成功');
+        message.success('Exported successfully');
       }
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
-      message.error(err.response?.data?.detail || '导出失败');
+      message.error(err.response?.data?.detail || 'Export failed');
     }
   };
 
-  // 导入模板
+  // Import templates.
   const handleImport = async (file: File) => {
     try {
       const text = await file.text();
@@ -199,21 +199,21 @@ export default function PromptTemplates() {
       const result = response.data;
       const stats = result.statistics;
       
-      // 构建详细的成功消息
-      let successMsg = `导入成功！\n`;
+      // Build a detailed success message.
+      let successMsg = `Import successful!\n`;
       if (stats) {
-        successMsg += `• 保持系统默认：${stats.kept_system_default} 个\n`;
-        successMsg += `• 创建/更新自定义：${stats.created_or_updated} 个`;
+        successMsg += `• Kept system defaults: ${stats.kept_system_default}\n`;
+        successMsg += `• Created/updated custom templates: ${stats.created_or_updated}`;
         
         if (stats.converted_to_custom > 0) {
-          successMsg += `\n• 检测到修改（已转为自定义）：${stats.converted_to_custom} 个`;
+          successMsg += `\n• Modified defaults converted to custom: ${stats.converted_to_custom}`;
         }
       }
       
-      // 如果有被转换的模板，显示详细信息
+      // Show details if any templates were converted.
       if (result.converted_templates && result.converted_templates.length > 0) {
         modal.info({
-          title: '导入完成',
+          title: 'Import Complete',
           width: 600,
           centered: true,
           content: (
@@ -221,7 +221,7 @@ export default function PromptTemplates() {
               <p style={{ marginBottom: 16 }}>{successMsg}</p>
               {result.converted_templates.length > 0 && (
                 <div>
-                  <p style={{ fontWeight: 'bold', marginBottom: 8 }}>以下模板内容与系统默认不一致，已转为自定义：</p>
+                  <p style={{ fontWeight: 'bold', marginBottom: 8 }}>The following templates differ from the system defaults and were converted to custom templates:</p>
                   <ul style={{ marginLeft: 20 }}>
                     {result.converted_templates.map((t: { template_key: string; template_name: string }) => (
                       <li key={t.template_key}>
@@ -233,7 +233,7 @@ export default function PromptTemplates() {
               )}
             </div>
           ),
-          okText: '确定'
+          okText: 'OK'
         });
       } else {
         message.success(successMsg, 5);
@@ -242,9 +242,9 @@ export default function PromptTemplates() {
       loadTemplates();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
-      message.error(err.response?.data?.detail || '导入失败');
+      message.error(err.response?.data?.detail || 'Import failed');
     }
-    return false; // 阻止默认上传行为
+    return false; // Prevent the default upload behavior.
   };
 
   const currentTemplates = getCurrentTemplates();
@@ -269,7 +269,7 @@ export default function PromptTemplates() {
         display: 'flex',
         flexDirection: 'column',
       }}>
-        {/* 顶部导航卡片 */}
+        {/* Top navigation card */}
         <Card
           variant="borderless"
           style={{
@@ -282,7 +282,7 @@ export default function PromptTemplates() {
             overflow: 'hidden'
           }}
         >
-          {/* 装饰性背景元素 */}
+          {/* Decorative background elements */}
           <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: token.colorWhite, opacity: 0.08, pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', bottom: -40, left: '30%', width: 120, height: 120, borderRadius: '50%', background: token.colorWhite, opacity: 0.05, pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', top: '50%', right: '15%', width: 80, height: 80, borderRadius: '50%', background: token.colorWhite, opacity: 0.06, pointerEvents: 'none' }} />
@@ -292,10 +292,10 @@ export default function PromptTemplates() {
               <Space direction="vertical" size={4}>
                 <Title level={isMobile ? 3 : 2} style={{ margin: 0, color: token.colorWhite, textShadow: `0 2px 4px ${token.colorBgMask}` }}>
                   <FileSearchOutlined style={{ color: token.colorWhite, opacity: 0.9, marginRight: 8 }} />
-                  提示词模板管理
+                  Prompt Template Management
                 </Title>
                 <Text style={{ fontSize: isMobile ? 12 : 14, color: token.colorTextLightSolid, opacity: 0.85, marginLeft: isMobile ? 40 : 48 }}>
-                  按账户隔离自定义AI生成提示词
+                  Manage custom AI prompts separately for each account
                 </Text>
               </Space>
             </Col>
@@ -316,7 +316,7 @@ export default function PromptTemplates() {
                     transition: 'all 0.3s ease'
                   }}
                 >
-                  导出配置
+                  Export Configuration
                 </Button>
                 <Upload
                   accept=".json"
@@ -336,28 +336,28 @@ export default function PromptTemplates() {
                       backdropFilter: 'blur(10px)',
                     }}
                   >
-                    导入配置
+                    Import Configuration
                   </Button>
                 </Upload>
               </Space>
             </Col>
           </Row>
 
-          {/* 使用提示 */}
+          {/* Usage guidance */}
           <Alert
             message={
               <Space align="center">
                 <InfoCircleOutlined style={{ fontSize: 16, color: token.colorPrimary }} />
-                <Text strong style={{ fontSize: isMobile ? 13 : 14 }}>使用说明</Text>
+                <Text strong style={{ fontSize: isMobile ? 13 : 14 }}>Instructions</Text>
               </Space>
             }
             description={
               <div>
                 <Text style={{ fontSize: isMobile ? 12 : 13, display: 'block', marginBottom: 8 }}>
-                  • <strong>系统默认模板</strong>（灰色头部）：始终启用，无需手动开关。点击"编辑"后将创建仅当前账户生效的自定义副本。
+                  • <strong>System default templates</strong> (gray header): Always enabled; no toggle is needed. Editing creates a custom copy for the current account only.
                 </Text>
                 <Text style={{ fontSize: isMobile ? 12 : 13, display: 'block' }}>
-                  • <strong>已自定义模板</strong>（紫色头部）：仅当前账户生效，可通过开关控制启用/禁用，使用 <Text code>{'{variable_name}'}</Text> 格式表示变量占位符。点击"重置"可恢复为系统默认。
+                  • <strong>Custom templates</strong> (purple header): Apply only to the current account and can be enabled or disabled with the toggle. Use <Text code>{'{variable_name}'}</Text> for variable placeholders. Select "Reset" to restore the system default.
                 </Text>
               </div>
             }
@@ -372,10 +372,10 @@ export default function PromptTemplates() {
           />
         </Card>
 
-        {/* 主内容区 */}
+        {/* Main content */}
         <div style={{ flex: 1 }}>
           <Spin spinning={loading}>
-            {/* 分类标签 */}
+            {/* Category tabs */}
             {categories.length > 0 && (
               <Card
                 variant="borderless"
@@ -391,7 +391,7 @@ export default function PromptTemplates() {
                   activeKey={selectedCategory}
                   onChange={setSelectedCategory}
                   items={[
-                    { key: '0', label: `全部 (${categories.reduce((sum, cat) => sum + cat.count, 0)})` },
+                    { key: '0', label: `All (${categories.reduce((sum, cat) => sum + cat.count, 0)})` },
                     ...categories.map((cat, index) => ({
                       key: (index + 1).toString(),
                       label: `${cat.category} (${cat.count})`
@@ -401,7 +401,7 @@ export default function PromptTemplates() {
               </Card>
             )}
 
-            {/* 模板列表 */}
+            {/* Template list */}
             {currentTemplates.length === 0 ? (
               <Card
                 variant="borderless"
@@ -412,7 +412,7 @@ export default function PromptTemplates() {
                 }}
               >
                 <Empty
-                  description="暂无模板数据"
+                  description="No templates available"
                   style={{ padding: '80px 0' }}
                 />
               </Card>
@@ -427,7 +427,7 @@ export default function PromptTemplates() {
                       styles={{ body: { padding: 0, overflow: 'hidden' } }}
                       {...promptTemplateCardHoverHandlers}
                     >
-                      {/* 头部 */}
+                      {/* Header */}
                       <div style={{
                         background: template.is_system_default
                           ? token.colorFillTertiary
@@ -454,20 +454,20 @@ export default function PromptTemplates() {
                               {template.category}
                             </Tag>
                             <Tag color={template.is_system_default ? 'default' : 'rgba(255,255,255,0.3)'} style={{ color: template.is_system_default ? token.colorTextSecondary : token.colorWhite, border: 'none' }}>
-                              {template.is_system_default ? '系统默认' : '已自定义'}
+                              {template.is_system_default ? 'System Default' : 'Custom'}
                             </Tag>
                           </Space>
                         </Space>
                       </div>
 
-                      {/* 内容 */}
+                      {/* Content */}
                       <div style={{ padding: isMobile ? '16px' : '20px' }}>
                         <Paragraph
                           type="secondary"
                           ellipsis={{ rows: 3 }}
                           style={{ minHeight: 66, marginBottom: 16 }}
                         >
-                          {template.description || '暂无描述'}
+                          {template.description || 'No description'}
                         </Paragraph>
 
                         <Space wrap style={{ marginBottom: 16 }}>
@@ -475,15 +475,15 @@ export default function PromptTemplates() {
                             icon={<CheckCircleOutlined />}
                             color={template.is_system_default || template.is_active ? 'success' : 'default'}
                           >
-                            {template.is_system_default ? '始终启用' : (template.is_active ? '已启用' : '已禁用')}
+                            {template.is_system_default ? 'Always enabled' : (template.is_active ? 'Enabled' : 'Disabled')}
                           </Tag>
                         </Space>
 
                         <Text type="secondary" style={{ fontSize: 12, display: 'block', marginBottom: 16 }}>
-                          模板键: {template.template_key}
+                          Template key: {template.template_key}
                         </Text>
 
-                        {/* 操作按钮 */}
+                        {/* Actions */}
                         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
                           <Button
                             type="primary"
@@ -492,7 +492,7 @@ export default function PromptTemplates() {
                             size={isMobile ? 'small' : 'middle'}
                             style={{ borderRadius: 6 }}
                           >
-                            编辑
+                            Edit
                           </Button>
                           <Button
                             icon={<ReloadOutlined />}
@@ -500,7 +500,7 @@ export default function PromptTemplates() {
                             size={isMobile ? 'small' : 'middle'}
                             style={{ borderRadius: 6 }}
                           >
-                            重置
+                            Reset
                           </Button>
                         </Space>
                       </div>
@@ -513,17 +513,17 @@ export default function PromptTemplates() {
         </div>
       </div>
 
-      {/* 编辑对话框 */}
+      {/* Edit dialog */}
       <Modal
-        title={`编辑模板: ${editingTemplate?.template_name}`}
+        title={`Edit Template: ${editingTemplate?.template_name}`}
         open={editorVisible}
         onCancel={() => setEditorVisible(false)}
         onOk={handleSave}
         width={isMobile ? '100%' : 900}
         centered={!isMobile}
         confirmLoading={loading}
-        okText="保存"
-        cancelText="取消"
+        okText="Save"
+        cancelText="Cancel"
         style={isMobile ? { top: 0, paddingBottom: 0, maxWidth: '100vw' } : undefined}
         styles={isMobile ? {
           body: {
@@ -535,37 +535,37 @@ export default function PromptTemplates() {
       >
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>模板名称</label>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>Template Name</label>
             <Input
               value={editingTemplate?.template_name || ''}
               onChange={(e) => setEditingTemplate(prev => prev ? { ...prev, template_name: e.target.value } : null)}
-              placeholder="输入模板名称"
+              placeholder="Enter a template name"
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>描述</label>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>Description</label>
             <TextArea
               value={editingTemplate?.description || ''}
               onChange={(e) => setEditingTemplate(prev => prev ? { ...prev, description: e.target.value } : null)}
               rows={2}
-              placeholder="简要描述模板用途"
+              placeholder="Briefly describe what this template is for"
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>模板内容</label>
+            <label style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}>Template Content</label>
             <TextArea
               value={editingTemplate?.template_content || ''}
               onChange={(e) => setEditingTemplate(prev => prev ? { ...prev, template_content: e.target.value } : null)}
               rows={isMobile ? 15 : 20}
               style={{ fontFamily: 'monospace', fontSize: '13px' }}
-              placeholder="输入提示词模板内容..."
+              placeholder="Enter the prompt template..."
             />
           </div>
 
           <Alert
-            message="提示：使用 {variable_name} 格式表示变量占位符"
+            message="Tip: Use {variable_name} for variable placeholders"
             type="info"
             showIcon
             style={{ borderRadius: 8 }}

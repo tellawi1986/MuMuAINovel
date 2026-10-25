@@ -31,20 +31,20 @@ export default function WorldSetting() {
   const [modal, contextHolder] = Modal.useModal();
   const { token } = theme.useToken();
 
-  // AI重新生成世界观
+  // Regenerate worldbuilding with AI.
   const handleRegenerate = async () => {
     if (!currentProject) return;
 
     modal.confirm({
-      title: '确认重新生成',
-      content: '确定要使用AI重新生成世界观设定吗？这将替换当前的世界观内容。',
+      title: 'Confirm regeneration',
+      content: 'Are you sure you want AI to regenerate the worldbuilding? This will replace the current content.',
       centered: true,
-      okText: '确认重新生成',
-      cancelText: '取消',
+      okText: 'Regenerate',
+      cancelText: 'Cancel',
       onOk: async () => {
         setIsRegenerating(true);
         setRegenerateProgress(0);
-        setRegenerateMessage('准备重新生成世界观...');
+        setRegenerateMessage('Preparing to regenerate worldbuilding...');
 
         try {
           await wizardStreamApi.regenerateWorldBuildingStream(
@@ -56,11 +56,11 @@ export default function WorldSetting() {
                 setRegenerateMessage(msg);
               },
               onChunk: (chunk: string) => {
-                // 可以在这里显示生成的内容片段（可选）
-                console.log('生成片段:', chunk);
+                // Optionally display the generated content fragment here.
+                console.log('Generated fragment:', chunk);
               },
               onResult: (result: { time_period: string; location: string; atmosphere: string; rules: string }) => {
-                // 保存新生成的数据
+                // Save the regenerated data.
                 const newData = {
                   time_period: result.time_period,
                   location: result.location,
@@ -70,21 +70,21 @@ export default function WorldSetting() {
                 setNewWorldData(newData);
               },
               onError: (errorMsg: string) => {
-                console.error('重新生成失败:', errorMsg);
-                message.error(errorMsg || '重新生成失败，请重试');
+                console.error('Worldbuilding regeneration failed:', errorMsg);
+                message.error(errorMsg || 'Regeneration failed. Please try again.');
               },
               onComplete: () => {
                 setIsRegenerating(false);
                 setRegenerateProgress(0);
                 setRegenerateMessage('');
-                // 显示预览对话框
+                // Show the preview dialog.
                 setIsPreviewModalVisible(true);
               }
             }
           );
         } catch (error) {
-          console.error('重新生成出错:', error);
-          message.error('重新生成出错，请重试');
+          console.error('Error regenerating worldbuilding:', error);
+          message.error('An error occurred while regenerating. Please try again.');
           setIsRegenerating(false);
           setRegenerateProgress(0);
           setRegenerateMessage('');
@@ -93,7 +93,7 @@ export default function WorldSetting() {
     });
   };
 
-  // 确认保存重新生成的内容
+  // Confirm and save the regenerated content.
   const handleConfirmSave = async () => {
     if (!currentProject || !newWorldData) return;
 
@@ -107,27 +107,27 @@ export default function WorldSetting() {
       });
 
       setCurrentProject(updatedProject);
-      message.success('世界观已更新！');
+      message.success('Worldbuilding updated!');
       setIsPreviewModalVisible(false);
       setNewWorldData(null);
     } catch (error) {
-      console.error('保存失败:', error);
-      message.error('保存失败，请重试');
+      console.error('Failed to save:', error);
+      message.error('Save failed. Please try again.');
     } finally {
       setIsSavingPreview(false);
     }
   };
 
-  // 取消保存，关闭预览
+  // Cancel saving and close the preview.
   const handleCancelSave = () => {
     setIsPreviewModalVisible(false);
     setNewWorldData(null);
-    message.info('已取消，保持原有内容');
+    message.info('Cancelled. The existing content was kept.');
   };
 
   if (!currentProject) return null;
 
-  // 检查是否有世界设定信息
+  // Check whether worldbuilding information exists.
   const hasWorldSetting = currentProject.world_time_period ||
     currentProject.world_location ||
     currentProject.world_atmosphere ||
@@ -136,7 +136,7 @@ export default function WorldSetting() {
   if (!hasWorldSetting) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        {/* 固定头部 */}
+        {/* Fixed header */}
         <div style={{
           position: 'sticky',
           top: 0,
@@ -149,17 +149,17 @@ export default function WorldSetting() {
           alignItems: 'center'
         }}>
           <GlobalOutlined style={{ fontSize: 24, marginRight: 12, color: token.colorPrimary }} />
-          <h2 style={{ margin: 0 }}>世界设定</h2>
+          <h2 style={{ margin: 0 }}>Worldbuilding</h2>
         </div>
 
-        {/* 可滚动内容区域 */}
+        {/* Scrollable content area */}
         <div style={{ flex: 1, overflowY: 'auto' }}>
           <Empty
-            description="暂无世界设定信息"
+            description="No worldbuilding information yet"
             style={{ marginTop: 60 }}
           >
             <Paragraph type="secondary">
-              世界设定信息在创建项目向导中生成，用于构建小说的世界观背景。
+              Worldbuilding is generated in the project setup wizard and provides the setting for your novel.
             </Paragraph>
           </Empty>
         </div>
@@ -170,7 +170,7 @@ export default function WorldSetting() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {contextHolder}
-      {/* 固定头部 */}
+      {/* Fixed header */}
       <div style={{
         position: 'sticky',
         top: 0,
@@ -188,7 +188,7 @@ export default function WorldSetting() {
         >
           <div style={{ display: 'flex', alignItems: 'center', minWidth: 'fit-content' }}>
             <GlobalOutlined style={{ fontSize: 24, marginRight: 12, color: token.colorPrimary }} />
-            <h2 style={{ margin: 0, whiteSpace: 'nowrap' }}>世界设定</h2>
+            <h2 style={{ margin: 0, whiteSpace: 'nowrap' }}>Worldbuilding</h2>
           </div>
           <Flex gap={8} wrap="wrap" style={{ flex: '0 1 auto' }}>
             <Button
@@ -200,7 +200,7 @@ export default function WorldSetting() {
                 flex: '1 1 auto'
               }}
             >
-              <span className="button-text-mobile">AI重新生成</span>
+              <span className="button-text-mobile">Regenerate with AI</span>
             </Button>
             <Button
               type="primary"
@@ -221,7 +221,7 @@ export default function WorldSetting() {
                 flex: '1 1 auto'
               }}
             >
-              <span className="button-text-mobile">编辑基础信息</span>
+              <span className="button-text-mobile">Edit Basic Information</span>
             </Button>
             <Button
               type="primary"
@@ -240,13 +240,13 @@ export default function WorldSetting() {
                 flex: '1 1 auto'
               }}
             >
-              <span className="button-text-mobile">编辑世界观</span>
+              <span className="button-text-mobile">Edit Worldbuilding</span>
             </Button>
           </Flex>
         </Flex>
       </div>
 
-      {/* 可滚动内容区域 */}
+      {/* Scrollable content area */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
         <Card
           style={{
@@ -255,20 +255,20 @@ export default function WorldSetting() {
           }}
           title={
             <span style={{ fontSize: 18, fontWeight: 500 }}>
-              基础信息
+              Basic Information
             </span>
           }
         >
           <Descriptions bordered column={1} styles={{ label: { width: 120, fontWeight: 500 } }}>
-            <Descriptions.Item label="小说名称">{currentProject.title}</Descriptions.Item>
+            <Descriptions.Item label="Novel Title">{currentProject.title}</Descriptions.Item>
             {currentProject.description && (
-              <Descriptions.Item label="小说简介">{currentProject.description}</Descriptions.Item>
+              <Descriptions.Item label="Synopsis">{currentProject.description}</Descriptions.Item>
             )}
-            <Descriptions.Item label="小说主题">{currentProject.theme || '未设定'}</Descriptions.Item>
-            <Descriptions.Item label="小说类型">{currentProject.genre || '未设定'}</Descriptions.Item>
-            <Descriptions.Item label="叙事视角">{currentProject.narrative_perspective || '未设定'}</Descriptions.Item>
-            <Descriptions.Item label="目标字数">
-              {currentProject.target_words ? `${currentProject.target_words.toLocaleString()} 字` : '未设定'}
+            <Descriptions.Item label="Theme">{currentProject.theme || 'Not set'}</Descriptions.Item>
+            <Descriptions.Item label="Genre">{currentProject.genre || 'Not set'}</Descriptions.Item>
+            <Descriptions.Item label="Narrative Perspective">{currentProject.narrative_perspective || 'Not set'}</Descriptions.Item>
+            <Descriptions.Item label="Target Word Count">
+              {currentProject.target_words ? `${currentProject.target_words.toLocaleString()} words` : 'Not set'}
             </Descriptions.Item>
           </Descriptions>
         </Card>
@@ -281,7 +281,7 @@ export default function WorldSetting() {
           title={
             <span style={{ fontSize: 18, fontWeight: 500 }}>
               <GlobalOutlined style={{ marginRight: 8 }} />
-              小说世界观
+              Worldbuilding
             </span>
           }
         >
@@ -289,7 +289,7 @@ export default function WorldSetting() {
             {currentProject.world_time_period && (
               <div style={{ marginBottom: 24 }}>
                 <Title level={5} style={{ color: token.colorPrimary, marginBottom: 12 }}>
-                  时间设定
+                  Time Period
                 </Title>
                 <Paragraph style={{
                   fontSize: 15,
@@ -307,7 +307,7 @@ export default function WorldSetting() {
             {currentProject.world_location && (
               <div style={{ marginBottom: 24 }}>
                 <Title level={5} style={{ color: token.colorSuccess, marginBottom: 12 }}>
-                  地点设定
+                  Location
                 </Title>
                 <Paragraph style={{
                   fontSize: 15,
@@ -325,7 +325,7 @@ export default function WorldSetting() {
             {currentProject.world_atmosphere && (
               <div style={{ marginBottom: 24 }}>
                 <Title level={5} style={{ color: token.colorWarning, marginBottom: 12 }}>
-                  氛围设定
+                  Atmosphere
                 </Title>
                 <Paragraph style={{
                   fontSize: 15,
@@ -343,7 +343,7 @@ export default function WorldSetting() {
             {currentProject.world_rules && (
               <div style={{ marginBottom: 0 }}>
                 <Title level={5} style={{ color: token.colorError, marginBottom: 12 }}>
-                  规则设定
+                  Rules
                 </Title>
                 <Paragraph style={{
                   fontSize: 15,
@@ -361,9 +361,9 @@ export default function WorldSetting() {
         </Card>
       </div>
 
-      {/* 编辑世界观模态框 */}
+      {/* Edit worldbuilding modal */}
       <Modal
-        title="编辑世界观"
+        title="Edit Worldbuilding"
         open={isEditModalVisible}
         centered
         onCancel={() => {
@@ -383,20 +383,20 @@ export default function WorldSetting() {
             });
 
             setCurrentProject(updatedProject);
-            message.success('世界观更新成功');
+            message.success('Worldbuilding updated successfully');
             setIsEditModalVisible(false);
             editForm.resetFields();
           } catch (error) {
-            console.error('更新世界观失败:', error);
-            message.error('更新失败，请重试');
+            console.error('Failed to update worldbuilding:', error);
+            message.error('Update failed. Please try again.');
           } finally {
             setIsSaving(false);
           }
         }}
         confirmLoading={isSaving}
         width={800}
-        okText="保存"
-        cancelText="取消"
+        okText="Save"
+        cancelText="Cancel"
       >
         <Form
           form={editForm}
@@ -404,52 +404,52 @@ export default function WorldSetting() {
           style={{ marginTop: 16 }}
         >
           <Form.Item
-            label="时间设定"
+            label="Time Period"
             name="world_time_period"
-            rules={[{ required: true, message: '请输入时间设定' }]}
+            rules={[{ required: true, message: 'Enter the time period' }]}
           >
             <TextArea
               rows={4}
-              placeholder="描述故事发生的时代背景..."
+              placeholder="Describe the era in which the story takes place..."
               showCount
               maxLength={1000}
             />
           </Form.Item>
 
           <Form.Item
-            label="地点设定"
+            label="Location"
             name="world_location"
-            rules={[{ required: true, message: '请输入地点设定' }]}
+            rules={[{ required: true, message: 'Enter the location' }]}
           >
             <TextArea
               rows={4}
-              placeholder="描述故事发生的地理位置和环境..."
+              placeholder="Describe the geography and environment where the story takes place..."
               showCount
               maxLength={1000}
             />
           </Form.Item>
 
           <Form.Item
-            label="氛围设定"
+            label="Atmosphere"
             name="world_atmosphere"
-            rules={[{ required: true, message: '请输入氛围设定' }]}
+            rules={[{ required: true, message: 'Enter the atmosphere' }]}
           >
             <TextArea
               rows={4}
-              placeholder="描述故事的整体氛围和基调..."
+              placeholder="Describe the story's overall mood and tone..."
               showCount
               maxLength={1000}
             />
           </Form.Item>
 
           <Form.Item
-            label="规则设定"
+            label="Rules"
             name="world_rules"
-            rules={[{ required: true, message: '请输入规则设定' }]}
+            rules={[{ required: true, message: 'Enter the world rules' }]}
           >
             <TextArea
               rows={4}
-              placeholder="描述这个世界的特殊规则和设定..."
+              placeholder="Describe the world's special rules and conventions..."
               showCount
               maxLength={1000}
             />
@@ -457,9 +457,9 @@ export default function WorldSetting() {
         </Form>
       </Modal>
 
-      {/* 编辑项目基础信息模态框 */}
+      {/* Edit project basics modal */}
       <Modal
-        title="编辑项目基础信息"
+        title="Edit Project Information"
         open={isEditProjectModalVisible}
         centered
         onCancel={() => {
@@ -481,20 +481,20 @@ export default function WorldSetting() {
             });
 
             setCurrentProject(updatedProject);
-            message.success('项目基础信息更新成功');
+            message.success('Project information updated successfully');
             setIsEditProjectModalVisible(false);
             editProjectForm.resetFields();
           } catch (error) {
-            console.error('更新项目基础信息失败:', error);
-            message.error('更新失败，请重试');
+            console.error('Failed to update project information:', error);
+            message.error('Update failed. Please try again.');
           } finally {
             setIsSavingProject(false);
           }
         }}
         confirmLoading={isSavingProject}
         width={800}
-        okText="保存"
-        cancelText="取消"
+        okText="Save"
+        cancelText="Cancel"
       >
         <Form
           form={editProjectForm}
@@ -502,130 +502,130 @@ export default function WorldSetting() {
           style={{ marginTop: 16 }}
         >
           <Form.Item
-            label="小说名称"
+            label="Novel Title"
             name="title"
             rules={[
-              { required: true, message: '请输入小说名称' },
-              { max: 200, message: '名称不能超过200字' }
+              { required: true, message: 'Enter a novel title' },
+              { max: 200, message: 'The title cannot exceed 200 characters' }
             ]}
           >
             <Input
-              placeholder="请输入小说名称"
+              placeholder="Enter a novel title"
               showCount
               maxLength={200}
             />
           </Form.Item>
 
           <Form.Item
-            label="小说简介"
+            label="Synopsis"
             name="description"
             rules={[
-              { max: 1000, message: '简介不能超过1000字' }
+              { max: 1000, message: 'The synopsis cannot exceed 1,000 characters' }
             ]}
           >
             <TextArea
               rows={4}
-              placeholder="请输入小说简介（选填）"
+              placeholder="Enter a synopsis (optional)"
               showCount
               maxLength={1000}
             />
           </Form.Item>
 
           <Form.Item
-            label="小说主题"
+            label="Theme"
             name="theme"
             rules={[
-              { max: 500, message: '主题不能超过500字' }
+              { max: 500, message: 'The theme cannot exceed 500 characters' }
             ]}
           >
             <TextArea
               rows={3}
-              placeholder="请输入小说主题（选填）"
+              placeholder="Enter a theme (optional)"
               showCount
               maxLength={500}
             />
           </Form.Item>
 
           <Form.Item
-            label="小说类型"
+            label="Genre"
             name="genre"
             rules={[
-              { max: 100, message: '类型不能超过100字' }
+              { max: 100, message: 'The genre cannot exceed 100 characters' }
             ]}
           >
             <Input
-              placeholder="请输入小说类型，如：玄幻、都市、科幻等（选填）"
+              placeholder="Enter a genre, e.g., fantasy, contemporary, or science fiction (optional)"
               showCount
               maxLength={100}
             />
           </Form.Item>
 
           <Form.Item
-            label="叙事视角"
+            label="Narrative Perspective"
             name="narrative_perspective"
           >
             <Select
-              placeholder="请选择叙事视角（选填）"
+              placeholder="Select a narrative perspective (optional)"
               allowClear
               options={[
-                { label: '第一人称', value: '第一人称' },
-                { label: '第三人称', value: '第三人称' },
-                { label: '全知视角', value: '全知视角' }
+                { label: 'First person', value: '第一人称' },
+                { label: 'Third person', value: '第三人称' },
+                { label: 'Omniscient', value: '全知视角' }
               ]}
             />
           </Form.Item>
 
           <Form.Item
-            label="目标字数"
+            label="Target Word Count"
             name="target_words"
             rules={[
-              { type: 'number', min: 0, message: '目标字数不能为负数' },
-              { type: 'number', max: 2147483647, message: '目标字数超出范围' }
+              { type: 'number', min: 0, message: 'Target word count cannot be negative' },
+              { type: 'number', max: 2147483647, message: 'Target word count is out of range' }
             ]}
           >
             <InputNumber
               style={{ width: '100%' }}
-              placeholder="请输入目标字数（选填，最大21亿字）"
+              placeholder="Enter a target word count (optional, maximum 2.1 billion)"
               min={0}
               max={2147483647}
               step={1000}
-              addonAfter="字"
+              addonAfter="words"
             />
           </Form.Item>
         </Form>
       </Modal>
 
-      {/* AI重新生成加载遮罩 */}
+      {/* AI regeneration loading overlay */}
       <SSELoadingOverlay
         loading={isRegenerating}
         progress={regenerateProgress}
         message={regenerateMessage}
       />
 
-      {/* 预览重新生成的内容模态框 */}
+      {/* Preview regenerated content modal */}
       <Modal
-        title="预览重新生成的世界观"
+        title="Preview Regenerated Worldbuilding"
         open={isPreviewModalVisible}
         centered
         width={900}
         onOk={handleConfirmSave}
         onCancel={handleCancelSave}
         confirmLoading={isSavingPreview}
-        okText="确认替换"
-        cancelText="取消"
+        okText="Replace"
+        cancelText="Cancel"
         okButtonProps={{ danger: true }}
       >
         {newWorldData && (
           <div style={{ maxHeight: '60vh', overflowY: 'auto' }}>
             <div style={{ marginBottom: 24, padding: 16, background: token.colorWarningBg, border: `1px solid ${token.colorWarningBorder}`, borderRadius: 8 }}>
               <Typography.Text type="warning" strong>
-                ⚠️ 注意：点击"确认替换"将会用新内容替换当前的世界观设定
+                ⚠️ Note: Clicking "Replace" will replace the current worldbuilding.
               </Typography.Text>
             </div>
 
             <div style={{ marginBottom: 24 }}>
               <Title level={5} style={{ color: token.colorPrimary, marginBottom: 12 }}>
-                时间设定
+                Time Period
               </Title>
               <Paragraph style={{
                 fontSize: 15,
@@ -641,7 +641,7 @@ export default function WorldSetting() {
 
             <div style={{ marginBottom: 24 }}>
               <Title level={5} style={{ color: token.colorSuccess, marginBottom: 12 }}>
-                地点设定
+                Location
               </Title>
               <Paragraph style={{
                 fontSize: 15,
@@ -657,7 +657,7 @@ export default function WorldSetting() {
 
             <div style={{ marginBottom: 24 }}>
               <Title level={5} style={{ color: token.colorWarning, marginBottom: 12 }}>
-                氛围设定
+                Atmosphere
               </Title>
               <Paragraph style={{
                 fontSize: 15,
@@ -673,7 +673,7 @@ export default function WorldSetting() {
 
             <div style={{ marginBottom: 0 }}>
               <Title level={5} style={{ color: token.colorError, marginBottom: 12 }}>
-                规则设定
+                Rules
               </Title>
               <Paragraph style={{
                 fontSize: 15,

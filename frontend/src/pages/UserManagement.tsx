@@ -150,7 +150,7 @@ export default function UserManagement() {
       setUsers(res.users);
     } catch (error) {
       console.error('加载用户列表失败:', error);
-      message.error('加载用户列表失败');
+      message.error('Failed to load the user list.');
     } finally {
       setLoading(false);
     }
@@ -173,18 +173,18 @@ export default function UserManagement() {
   const handleCreate = async (values: CreateUserValues) => {
     try {
       const res = await adminApi.createUser(values);
-      message.success('用户创建成功');
+      message.success('User created successfully.');
 
       // 如果有默认密码，显示给管理员
       if (res.default_password) {
         modal.info({
-          title: '用户创建成功',
+          title: 'User Created',
           content: (
             <div>
-              <p>用户名：<Text strong>{values.username}</Text></p>
-              <p>初始密码：<Text strong copyable>{res.default_password}</Text></p>
+              <p>Username: <Text strong>{values.username}</Text></p>
+              <p>Initial password: <Text strong copyable>{res.default_password}</Text></p>
               <p style={{ color: token.colorError, marginTop: 16 }}>
-                ⚠️ 请复制密码并告知用户，此密码仅显示一次！
+                ⚠️ Copy and share this password with the user. It will only be shown once.
               </p>
             </div>
           ),
@@ -198,7 +198,7 @@ export default function UserManagement() {
       loadUsers();
     } catch (error) {
       console.error('创建用户失败:', error);
-      message.error('创建用户失败');
+      message.error('Failed to create user.');
     }
   };
 
@@ -226,28 +226,28 @@ export default function UserManagement() {
 
     try {
       await adminApi.updateUser(currentUser.user_id, values);
-      message.success('用户信息更新成功');
+      message.success('User information updated successfully.');
       setEditModalVisible(false);
       editForm.resetFields();
       loadUsers();
     } catch (error) {
       console.error('更新用户失败:', error);
-      message.error('更新用户失败');
+      message.error('Failed to update user.');
     }
   };
 
   // 切换用户状态
   const handleToggleStatus = async (user: UserWithStatus) => {
     const isActive = user.is_active !== false;
-    const action = isActive ? '禁用' : '启用';
+    const action = isActive ? 'disable' : 'enable';
 
     try {
       await adminApi.toggleUserStatus(user.user_id, !isActive);
-      message.success(`用户已${action}`);
+      message.success(`User ${action}d.`);
       loadUsers();
     } catch (error) {
       console.error(`${action}用户失败:`, error);
-      message.error(`${action}用户失败`);
+      message.error(`Failed to ${action} the user.`);
     }
   };
 
@@ -268,13 +268,13 @@ export default function UserManagement() {
       );
 
       modal.info({
-        title: '密码重置成功',
+        title: 'Password Reset',
         content: (
           <div>
-            <p>用户：<Text strong>{currentUser.username}</Text></p>
-            <p>新密码：<Text strong copyable>{res.new_password}</Text></p>
+            <p>User: <Text strong>{currentUser.username}</Text></p>
+            <p>New password: <Text strong copyable>{res.new_password}</Text></p>
             <p style={{ color: token.colorError, marginTop: 16 }}>
-              ⚠️ 请复制密码并告知用户！
+              ⚠️ Copy and share this password with the user.
             </p>
           </div>
         ),
@@ -286,7 +286,7 @@ export default function UserManagement() {
       setNewPassword('');
     } catch (error) {
       console.error('重置密码失败:', error);
-      message.error('重置密码失败');
+      message.error('Failed to reset password.');
     }
   };
 
@@ -294,11 +294,11 @@ export default function UserManagement() {
   const handleDelete = async (user: UserWithStatus) => {
     try {
       await adminApi.deleteUser(user.user_id);
-      message.success('用户已删除');
+      message.success('User deleted.');
       loadUsers();
     } catch (error) {
       console.error('删除用户失败:', error);
-      message.error('删除用户失败');
+      message.error('Failed to delete user.');
     }
   };
 
@@ -307,7 +307,7 @@ export default function UserManagement() {
   // 表格列定义
   const columns = [
     {
-      title: '用户名',
+      title: 'Username',
       dataIndex: 'username',
       key: 'username',
       width: 150,
@@ -321,7 +321,7 @@ export default function UserManagement() {
       ),
     },
     {
-      title: '显示名称',
+      title: 'Display Name',
       dataIndex: 'display_name',
       key: 'display_name',
       width: 150,
@@ -329,7 +329,7 @@ export default function UserManagement() {
       sortOrder: sortField === 'display_name' ? sortOrder : null,
     },
     {
-      title: '状态',
+      title: 'Status',
       dataIndex: 'is_active',
       key: 'is_active',
       width: 100,
@@ -338,12 +338,12 @@ export default function UserManagement() {
       render: (isActive: boolean) => (
         <Badge
           status={isActive !== false ? 'success' : 'error'}
-          text={isActive !== false ? '正常' : '已禁用'}
+          text={isActive !== false ? 'Active' : 'Disabled'}
         />
       ),
     },
     {
-      title: '角色',
+      title: 'Role',
       dataIndex: 'is_admin',
       key: 'is_admin',
       width: 100,
@@ -351,12 +351,12 @@ export default function UserManagement() {
       sortOrder: sortField === 'is_admin' ? sortOrder : null,
       render: (isAdmin: boolean) => (
         <Tag color={isAdmin ? 'gold' : 'blue'}>
-          {isAdmin ? '👑 管理员' : '普通用户'}
+          {isAdmin ? '👑 Administrator' : 'Standard User'}
         </Tag>
       ),
     },
     {
-      title: '信任等级',
+      title: 'Trust Level',
       dataIndex: 'trust_level',
       key: 'trust_level',
       width: 100,
@@ -364,12 +364,12 @@ export default function UserManagement() {
       sortOrder: sortField === 'trust_level' ? sortOrder : null,
       render: (level: number) => (
         <Tag color={level === -1 ? 'default' : level >= 5 ? 'green' : 'blue'}>
-          {level === -1 ? '已禁用' : `Level ${level}`}
+          {level === -1 ? 'Disabled' : `Level ${level}`}
         </Tag>
       ),
     },
     {
-      title: '创建时间',
+      title: 'Created',
       dataIndex: 'created_at',
       key: 'created_at',
       width: 180,
@@ -378,16 +378,16 @@ export default function UserManagement() {
       render: (date: string) => date ? new Date(date).toLocaleString('zh-CN') : '-',
     },
     {
-      title: '最后登录',
+      title: 'Last Login',
       dataIndex: 'last_login',
       key: 'last_login',
       width: 180,
       sorter: true,
       sortOrder: sortField === 'last_login' ? sortOrder : null,
-      render: (date: string) => date ? new Date(date).toLocaleString('zh-CN') : '从未登录',
+      render: (date: string) => date ? new Date(date).toLocaleString('en-US') : 'Never',
     },
     {
-      title: '操作',
+      title: 'Actions',
       key: 'action',
       width: isMobile ? 80 : 300,
       fixed: 'right' as const,
@@ -399,41 +399,41 @@ export default function UserManagement() {
           const menuItems = [
             {
               key: 'edit',
-              label: '编辑用户',
+              label: 'Edit User',
               icon: <EditOutlined />,
               onClick: () => handleEdit(record),
             },
             {
               key: 'reset',
-              label: '重置密码',
+              label: 'Reset Password',
               icon: <KeyOutlined />,
               onClick: () => handleResetPassword(record),
             },
             {
               key: 'toggle',
-              label: isActive ? '禁用用户' : '启用用户',
+              label: isActive ? 'Disable User' : 'Enable User',
               icon: isActive ? <StopOutlined /> : <CheckCircleOutlined />,
               danger: isActive,
               onClick: () => {
                 modal.confirm({
-                  title: `确定${isActive ? '禁用' : '启用'}该用户吗？`,
+                  title: `Are you sure you want to ${isActive ? 'disable' : 'enable'} this user?`,
                   onOk: () => handleToggleStatus(record),
-                  okText: '确定',
-                  cancelText: '取消',
+                  okText: 'Confirm',
+                  cancelText: 'Cancel',
                 });
               },
             },
             ...(!record.is_admin ? [{
               key: 'delete',
-              label: '删除用户',
+              label: 'Delete User',
               icon: <DeleteOutlined />,
               danger: true,
               onClick: () => {
                 modal.confirm({
-                  title: '确定删除该用户吗？此操作不可恢复！',
+                  title: 'Are you sure you want to delete this user? This cannot be undone.',
                   onOk: () => handleDelete(record),
-                  okText: '确定',
-                  cancelText: '取消',
+                  okText: 'Confirm',
+                  cancelText: 'Cancel',
                   okButtonProps: { danger: true },
                 });
               },
@@ -456,7 +456,7 @@ export default function UserManagement() {
               icon={<EditOutlined />}
               onClick={() => handleEdit(record)}
             >
-              编辑
+              Edit
             </Button>
 
             <Button
@@ -465,14 +465,14 @@ export default function UserManagement() {
               icon={<KeyOutlined />}
               onClick={() => handleResetPassword(record)}
             >
-              重置密码
+              Reset Password
             </Button>
 
             <Popconfirm
-              title={`确定${isActive ? '禁用' : '启用'}该用户吗？`}
+              title={`Are you sure you want to ${isActive ? 'disable' : 'enable'} this user?`}
               onConfirm={() => handleToggleStatus(record)}
-              okText="确定"
-              cancelText="取消"
+              okText="Confirm"
+              cancelText="Cancel"
             >
               <Button
                 type="link"
@@ -480,16 +480,16 @@ export default function UserManagement() {
                 danger={isActive}
                 icon={isActive ? <StopOutlined /> : <CheckCircleOutlined />}
               >
-                {isActive ? '禁用' : '启用'}
+                {isActive ? 'Disable' : 'Enable'}
               </Button>
             </Popconfirm>
 
             {!record.is_admin && (
               <Popconfirm
-                title="确定删除该用户吗？此操作不可恢复！"
+                title="Are you sure you want to delete this user? This cannot be undone."
                 onConfirm={() => handleDelete(record)}
-                okText="确定"
-                cancelText="取消"
+                okText="Confirm"
+                cancelText="Cancel"
                 okButtonProps={{ danger: true }}
               >
                 <Button
@@ -498,7 +498,7 @@ export default function UserManagement() {
                   danger
                   icon={<DeleteOutlined />}
                 >
-                  删除
+                  Delete
                 </Button>
               </Popconfirm>
             )}
@@ -550,10 +550,10 @@ export default function UserManagement() {
               <Space direction="vertical" size={4}>
                 <Title level={isMobile ? 3 : 2} style={{ margin: 0, color: token.colorWhite, textShadow: `0 2px 4px ${alphaColor(token.colorText, 0.2)}` }}>
                   <TeamOutlined style={{ color: alphaColor(token.colorWhite, 0.9), marginRight: 12 }} />
-                  用户管理
+                  User Management
                 </Title>
                 <Text style={{ fontSize: isMobile ? 12 : 14, color: alphaColor(token.colorWhite, 0.85) }}>
-                  管理系统用户和权限
+                  Manage system users and permissions
                 </Text>
               </Space>
             </Col>
@@ -580,7 +580,7 @@ export default function UserManagement() {
                     e.currentTarget.style.transform = 'none';
                   }}
                 >
-                  返回主页
+                  Back to Home
                 </Button>
                 <Button
                   type="primary"
@@ -595,7 +595,7 @@ export default function UserManagement() {
                     fontWeight: 600
                   }}
                 >
-                  添加用户
+                  Add User
                 </Button>
                 <UserMenu />
               </Space>
@@ -631,7 +631,7 @@ export default function UserManagement() {
             borderBottom: `1px solid ${alphaColor(token.colorText, 0.06)}`,
           }}>
             <Input
-              placeholder="搜索用户名、显示名称或用户ID"
+              placeholder="Search by username, display name, or user ID"
               prefix={<SearchOutlined style={{ color: token.colorTextTertiary }} />}
               value={searchText}
               onChange={(e) => {
@@ -689,7 +689,7 @@ export default function UserManagement() {
               pageSize={pageSize}
               total={filteredUsers.length}
               showSizeChanger
-              showTotal={(total) => `共 ${total} 个用户${searchText ? ' (已过滤)' : ''}`}
+              showTotal={(total) => `${total} users${searchText ? ' (filtered)' : ''}`}
               pageSizeOptions={[20, 50, 100]}
               onChange={(page, size) => {
                 setCurrentPage(page);
@@ -706,7 +706,7 @@ export default function UserManagement() {
 
       {/* 添加用户对话框 */}
       <Modal
-        title={<span><PlusOutlined style={{ marginRight: 8 }} />添加用户</span>}
+        title={<span><PlusOutlined style={{ marginRight: 8 }} />Add User</span>}
         open={modalVisible}
         onCancel={() => {
           setModalVisible(false);
@@ -715,8 +715,8 @@ export default function UserManagement() {
         onOk={() => form.submit()}
         width={isMobile ? '90%' : 600}
         centered
-        okText="创建"
-        cancelText="取消"
+        okText="Create"
+        cancelText="Cancel"
       >
         <Form
           form={form}
@@ -724,48 +724,48 @@ export default function UserManagement() {
           onFinish={handleCreate}
         >
           <Form.Item
-            label="用户名"
+            label="Username"
             name="username"
             rules={[
-              { required: true, message: '请输入用户名' },
-              { min: 3, max: 20, message: '用户名长度3-20位' },
-              { pattern: /^[a-zA-Z0-9_]+$/, message: '只能包含字母、数字和下划线' },
+              { required: true, message: 'Enter a username' },
+              { min: 3, max: 20, message: 'Username must be 3–20 characters' },
+              { pattern: /^[a-zA-Z0-9_]+$/, message: 'Only letters, numbers, and underscores are allowed' },
             ]}
           >
-            <Input placeholder="请输入用户名" />
+            <Input placeholder="Enter a username" />
           </Form.Item>
 
           <Form.Item
-            label="显示名称"
+            label="Display Name"
             name="display_name"
             rules={[
-              { required: true, message: '请输入显示名称' },
-              { min: 2, max: 50, message: '显示名称长度2-50位' },
+              { required: true, message: 'Enter a display name' },
+              { min: 2, max: 50, message: 'Display name must be 2–50 characters' },
             ]}
           >
-            <Input placeholder="请输入显示名称" />
+            <Input placeholder="Enter a display name" />
           </Form.Item>
 
           <Form.Item
-            label="初始密码"
+            label="Initial Password"
             name="password"
-            extra="留空则自动生成 username@666"
+            extra="Leave blank to generate username@666 automatically"
             rules={[
-              { min: 6, message: '密码长度至少6位' },
+              { min: 6, message: 'Password must be at least 6 characters' },
             ]}
           >
-            <Input.Password placeholder="留空则自动生成" />
+            <Input.Password placeholder="Leave blank to generate automatically" />
           </Form.Item>
 
           <Form.Item
-            label="头像URL"
+            label="Avatar URL"
             name="avatar_url"
           >
-            <Input placeholder="请输入头像URL（可选）" />
+            <Input placeholder="Enter an avatar URL (optional)" />
           </Form.Item>
 
           <Form.Item
-            label="信任等级"
+            label="Trust Level"
             name="trust_level"
             initialValue={0}
           >
@@ -773,7 +773,7 @@ export default function UserManagement() {
           </Form.Item>
 
           <Form.Item
-            label="设为管理员"
+            label="Make Administrator"
             name="is_admin"
             valuePropName="checked"
             initialValue={false}
@@ -793,7 +793,7 @@ export default function UserManagement() {
 
       {/* 编辑用户对话框 */}
       <Modal
-        title={<span><EditOutlined style={{ marginRight: 8 }} />编辑用户</span>}
+        title={<span><EditOutlined style={{ marginRight: 8 }} />Edit User</span>}
         open={editModalVisible}
         onCancel={() => {
           setEditModalVisible(false);
@@ -802,8 +802,8 @@ export default function UserManagement() {
         onOk={() => editForm.submit()}
         width={isMobile ? '90%' : 600}
         centered
-        okText="保存"
-        cancelText="取消"
+        okText="Save"
+        cancelText="Cancel"
       >
         <Form
           form={editForm}
@@ -811,32 +811,32 @@ export default function UserManagement() {
           onFinish={handleUpdate}
         >
           <Form.Item
-            label="显示名称"
+            label="Display Name"
             name="display_name"
             rules={[
-              { required: true, message: '请输入显示名称' },
-              { min: 2, max: 50, message: '显示名称长度2-50位' },
+              { required: true, message: 'Enter a display name' },
+              { min: 2, max: 50, message: 'Display name must be 2–50 characters' },
             ]}
           >
-            <Input placeholder="请输入显示名称" />
+            <Input placeholder="Enter a display name" />
           </Form.Item>
 
           <Form.Item
-            label="头像URL"
+            label="Avatar URL"
             name="avatar_url"
           >
-            <Input placeholder="请输入头像URL（可选）" />
+            <Input placeholder="Enter an avatar URL (optional)" />
           </Form.Item>
 
           <Form.Item
-            label="信任等级"
+            label="Trust Level"
             name="trust_level"
           >
             <InputNumber min={0} max={9} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
-            label="设为管理员"
+            label="Make Administrator"
             name="is_admin"
             valuePropName="checked"
           >
@@ -855,7 +855,7 @@ export default function UserManagement() {
 
       {/* 重置密码对话框 */}
       <Modal
-        title={<span><KeyOutlined style={{ marginRight: 8 }} />重置密码</span>}
+        title={<span><KeyOutlined style={{ marginRight: 8 }} />Reset Password</span>}
         open={resetPasswordModalVisible}
         onCancel={() => {
           setResetPasswordModalVisible(false);
@@ -864,21 +864,21 @@ export default function UserManagement() {
         onOk={handleResetPasswordConfirm}
         width={isMobile ? '90%' : 500}
         centered
-        okText="确认重置"
-        cancelText="取消"
+        okText="Confirm Reset"
+        cancelText="Cancel"
       >
         <div style={{ marginBottom: 16 }}>
-          <Text>用户：<Text strong>{currentUser?.username}</Text></Text>
+          <Text>User: <Text strong>{currentUser?.username}</Text></Text>
         </div>
         <Form layout="vertical">
           <Form.Item
-            label="新密码"
-            extra="留空则重置为默认密码 username@666"
+            label="New Password"
+            extra="Leave blank to reset to the default password username@666"
           >
             <Input.Password
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="留空则使用默认密码"
+              placeholder="Leave blank to use the default password"
             />
           </Form.Item>
         </Form>
