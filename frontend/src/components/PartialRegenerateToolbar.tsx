@@ -10,8 +10,8 @@ interface PartialRegenerateToolbarProps {
 }
 
 /**
- * 局部重写浮动工具栏
- * 当用户在章节内容编辑器中选中文本时显示
+ * Floating toolbar for partial rewrites
+ * Displayed when the user selects text in the chapter editor
  */
 export const PartialRegenerateToolbar: React.FC<PartialRegenerateToolbarProps> = ({
   visible,
@@ -23,7 +23,7 @@ export const PartialRegenerateToolbar: React.FC<PartialRegenerateToolbarProps> =
 
   if (!visible || !selectedText) return null;
 
-  // 限制显示的选中文本长度
+  // Limit displayed selected text length
   const displayText = selectedText.length > 20 
     ? selectedText.substring(0, 20) + '...' 
     : selectedText;
@@ -47,7 +47,7 @@ export const PartialRegenerateToolbar: React.FC<PartialRegenerateToolbarProps> =
       }}
     >
       <Tooltip
-        title={`AI重写选中内容: "${displayText}"`}
+        title={`AI rewrite selected text: "${displayText}"`}
         placement="top"
       >
         <Button
@@ -60,7 +60,7 @@ export const PartialRegenerateToolbar: React.FC<PartialRegenerateToolbarProps> =
             onRegenerate();
           }}
           style={{
-            // 使用当前 Ant Design 主题 token，避免明暗主题下 CSS 变量失效或对比度不足。
+            // Use the current Ant Design token to avoid CSS variable issues in light/dark mode.
             background: `linear-gradient(135deg, ${token.colorPrimary} 0%, ${token.colorPrimaryHover} 100%)`,
             color: token.colorTextLightSolid,
             borderColor: token.colorPrimary,
@@ -68,7 +68,7 @@ export const PartialRegenerateToolbar: React.FC<PartialRegenerateToolbarProps> =
             boxShadow: token.boxShadowSecondary,
           }}
         >
-          AI重写
+          AI Rewrite
         </Button>
       </Tooltip>
       <span style={{ 
@@ -79,7 +79,7 @@ export const PartialRegenerateToolbar: React.FC<PartialRegenerateToolbarProps> =
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
       }}>
-        已选 {selectedText.length} 字
+        Selected {selectedText.length} chars
       </span>
     </div>
   );

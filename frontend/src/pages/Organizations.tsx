@@ -80,7 +80,7 @@ export default function Organizations() {
         loadMembers(res.data[0].id);
       }
     } catch (error) {
-      message.error('加载组织列表失败');
+      message.error('Failed to load organizations');
       console.error(error);
     } finally {
       setLoading(false);
@@ -93,7 +93,7 @@ export default function Organizations() {
       const res = await axios.get(`/api/characters?project_id=${projectId}`);
       setCharacters(res.data.items || []);
     } catch (error) {
-      console.error('加载角色列表失败', error);
+      console.error('Failed to load characters', error);
     }
   }, [projectId]);
 
@@ -123,7 +123,7 @@ export default function Organizations() {
       const res = await axios.get(`/api/organizations/${orgId}/members`);
       setMembers(res.data);
     } catch (error) {
-      message.error('加载成员列表失败');
+      message.error('Failed to load members');
       console.error(error);
     }
   };
@@ -138,35 +138,35 @@ export default function Organizations() {
 
     try {
       await axios.post(`/api/organizations/${selectedOrg.id}/members`, values);
-      message.success('成员添加成功');
+      message.success('Member added successfully');
       setIsAddMemberModalOpen(false);
       form.resetFields();
       loadMembers(selectedOrg.id);
-      loadOrganizations(); // 刷新成员计数
+      loadOrganizations(); // Refresh member counts.
     } catch (error) {
-      message.error('添加成员失败');
+      message.error('Failed to add member');
       console.error(error);
     }
   };
 
   const handleRemoveMember = async (memberId: string) => {
     modal.confirm({
-      title: '确认移除',
-      content: '确定要移除该成员吗？',
+      title: 'Confirm removal',
+      content: 'Are you sure you want to remove this member?',
       centered: true,
-      okText: '移除',
+      okText: 'Remove',
       okType: 'danger',
-      cancelText: '取消',
+      cancelText: 'Cancel',
       onOk: async () => {
         try {
           await axios.delete(`/api/organizations/members/${memberId}`);
-          message.success('成员移除成功');
+          message.success('Member removed successfully');
           if (selectedOrg) {
             loadMembers(selectedOrg.id);
-            loadOrganizations(); // 刷新成员计数
+            loadOrganizations(); // Refresh member counts.
           }
         } catch (error) {
-          message.error('移除失败');
+          message.error('Failed to remove member');
           console.error(error);
         }
       }
@@ -192,7 +192,7 @@ export default function Organizations() {
 
     try {
       await axios.put(`/api/organizations/members/${editingMember.id}`, values);
-      message.success('成员信息更新成功');
+      message.success('Member information updated successfully');
       setIsEditMemberModalOpen(false);
       editMemberForm.resetFields();
       setEditingMember(null);
@@ -200,7 +200,7 @@ export default function Organizations() {
         loadMembers(selectedOrg.id);
       }
     } catch (error) {
-      message.error('更新失败');
+      message.error('Update failed');
       console.error(error);
     }
   };
@@ -217,17 +217,17 @@ export default function Organizations() {
 
   const getStatusText = (status: string) => {
     const texts: Record<string, string> = {
-      active: '在职',
-      retired: '退休',
-      expelled: '除名',
-      deceased: '已故'
+      active: 'Active',
+      retired: 'Retired',
+      expelled: 'Expelled',
+      deceased: 'Deceased'
     };
     return texts[status] || status;
   };
 
   const memberColumns = [
     {
-      title: '姓名',
+      title: 'Name',
       dataIndex: 'character_name',
       key: 'name',
       render: (name: string) => (
@@ -239,16 +239,16 @@ export default function Organizations() {
       width: isMobile ? 100 : undefined,
     },
     {
-      title: '职位',
+      title: 'Position',
       dataIndex: 'position',
       key: 'position',
       render: (position: string, record: OrganizationMember) => (
-        <Tag color="blue">{position} {!isMobile && `(级别 ${record.rank})`}</Tag>
+        <Tag color="blue">{position} {!isMobile && `(Rank ${record.rank})`}</Tag>
       ),
       width: isMobile ? 120 : undefined,
     },
     {
-      title: '忠诚度',
+      title: 'Loyalty',
       dataIndex: 'loyalty',
       key: 'loyalty',
       render: (loyalty: number) => (
@@ -259,14 +259,14 @@ export default function Organizations() {
       width: isMobile ? 80 : undefined,
     },
     {
-      title: '贡献度',
+      title: 'Contribution',
       dataIndex: 'contribution',
       key: 'contribution',
       render: (contribution: number) => `${contribution}%`,
       width: isMobile ? 80 : undefined,
     },
     {
-      title: '状态',
+      title: 'Status',
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
@@ -275,14 +275,14 @@ export default function Organizations() {
       width: isMobile ? 80 : undefined,
     },
     {
-      title: '加入时间',
+      title: 'Joined',
       dataIndex: 'joined_at',
       key: 'joined_at',
       render: (time: string) => time || '-',
       width: isMobile ? 120 : undefined,
     },
     {
-      title: '操作',
+      title: 'Actions',
       key: 'action',
       render: (_: unknown, record: OrganizationMember) => (
         <Space size={isMobile ? 0 : 'small'}>
@@ -293,7 +293,7 @@ export default function Organizations() {
             onClick={() => handleEditMember(record)}
             style={isMobile ? { padding: '4px' } : undefined}
           >
-            {isMobile ? '' : '编辑'}
+            {isMobile ? '' : 'Edit'}
           </Button>
           <Button
             type="link"
@@ -303,7 +303,7 @@ export default function Organizations() {
             onClick={() => handleRemoveMember(record.id)}
             style={isMobile ? { padding: '4px' } : undefined}
           >
-            {isMobile ? '' : '移除'}
+            {isMobile ? '' : 'Remove'}
           </Button>
         </Space>
       ),
@@ -312,7 +312,7 @@ export default function Organizations() {
     },
   ];
 
-  // 过滤掉已是成员的角色
+  // Filter out characters who are already members.
   const availableCharacters = characters.filter(
     c => !c.is_organization && !members.some(m => m.character_id === c.id)
   );
@@ -321,7 +321,7 @@ export default function Organizations() {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {contextHolder}
       
-      {/* 页面标题 - 仅桌面端显示 */}
+      {/* Page title - desktop only */}
       {!isMobile && (
         <div style={{
           padding: '16px 0',
@@ -330,7 +330,7 @@ export default function Organizations() {
         }}>
           <h2 style={{ margin: 0, fontSize: 24 }}>
             <BankOutlined style={{ marginRight: 8 }} />
-            组织管理
+            Organization Management
           </h2>
         </div>
       )}
@@ -342,17 +342,17 @@ export default function Organizations() {
         flexDirection: isMobile ? 'column' : 'row',
         overflow: 'hidden'
       }}>
-        {/* 左侧组织列表 - 桌面端 */}
+        {/* Organization list - desktop */}
         {!isMobile && (
         <Card
-          title={`组织列表 (${organizations.length})`}
+          title={`Organizations (${organizations.length})`}
           style={{ width: 300, height: '100%', overflow: 'hidden' }}
           bodyStyle={{ padding: 0, height: 'calc(100% - 57px)', overflow: 'auto' }}
           loading={loading}
         >
           {organizations.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px 20px', color: token.colorTextTertiary }}>
-              暂无组织
+              No organizations yet
             </div>
           ) : (
             <Space direction="vertical" style={{ width: '100%', padding: '12px' }}>
@@ -372,7 +372,7 @@ export default function Organizations() {
                     <strong style={{ fontSize: 14 }}>{org.name}</strong>
                     <Tag color="blue">{org.type}</Tag>
                     <div style={{ fontSize: '12px', color: token.colorTextSecondary }}>
-                      成员: {org.member_count} | 势力: {org.power_level}
+                      Members: {org.member_count} | Influence: {org.power_level}
                     </div>
                   </Space>
                 </Card>
@@ -382,10 +382,10 @@ export default function Organizations() {
         </Card>
         )}
 
-        {/* 移动端组织列表抽屉 */}
+        {/* Organization list drawer - mobile */}
       {isMobile && (
         <Drawer
-          title="组织列表"
+          title="Organizations"
           placement="left"
           onClose={() => setOrgListVisible(false)}
           open={orgListVisible}
@@ -394,7 +394,7 @@ export default function Organizations() {
         >
           {organizations.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px 20px', color: token.colorTextTertiary }}>
-              暂无组织
+              No organizations yet
             </div>
           ) : (
             <Space direction="vertical" style={{ width: '100%', padding: '12px' }}>
@@ -417,7 +417,7 @@ export default function Organizations() {
                     <strong style={{ fontSize: 14 }}>{org.name}</strong>
                     <Tag color="blue">{org.type}</Tag>
                     <div style={{ fontSize: '12px', color: token.colorTextSecondary }}>
-                      成员: {org.member_count} | 势力: {org.power_level}
+                      Members: {org.member_count} | Influence: {org.power_level}
                     </div>
                   </Space>
                 </Card>
@@ -427,7 +427,7 @@ export default function Organizations() {
         </Drawer>
         )}
 
-        {/* 右侧内容区域 */}
+        {/* Main content area */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
         {!selectedOrg ? (
           <Card style={{ height: '100%' }}>
@@ -439,22 +439,22 @@ export default function Organizations() {
                   onClick={() => setOrgListVisible(true)}
                   style={{ marginBottom: 20 }}
                 >
-                  选择组织
+                  Select an organization
                 </Button>
               )}
-              <div>请选择一个组织查看详情</div>
+              <div>Select an organization to view its details</div>
             </div>
           </Card>
         ) : (
           <>
-            {/* 工具栏 - 移动端显示项目标题和组织列表按钮 */}
+            {/* Toolbar - shows the project title and organization list button on mobile */}
             {isMobile && (
               <Card size="small" style={{ marginBottom: 8 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <Space>
                     <BankOutlined />
                     <span style={{ fontSize: 14, fontWeight: 600 }}>
-                      组织管理
+                      Organization Management
                     </span>
                     <Tag color="blue">{currentProject?.title}</Tag>
                   </Space>
@@ -463,13 +463,13 @@ export default function Organizations() {
                     onClick={() => setOrgListVisible(true)}
                     size="small"
                   >
-                    列表
+                    List
                   </Button>
                 </div>
               </Card>
             )}
 
-            {/* 内容区域 */}
+            {/* Content area */}
             <div style={{
               flex: 1,
               display: 'flex',
@@ -482,7 +482,7 @@ export default function Organizations() {
               >
                 <Space direction="vertical" style={{ width: '100%' }} size={isMobile ? 'middle' : 'large'}>
                 <Card
-                  title="组织详情"
+                  title="Organization Details"
                   size="small"
                   extra={
                     <Button
@@ -499,42 +499,42 @@ export default function Organizations() {
                         setIsEditOrgModalOpen(true);
                       }}
                     >
-                      编辑
+                      Edit
                     </Button>
                   }
                 >
                   <Descriptions column={isMobile ? 1 : 2} size="small">
-                    <Descriptions.Item label="组织名称">{selectedOrg.name}</Descriptions.Item>
-                    <Descriptions.Item label="类型">{selectedOrg.type}</Descriptions.Item>
-                    <Descriptions.Item label="成员数量">{selectedOrg.member_count}</Descriptions.Item>
-                    <Descriptions.Item label="势力等级">
+                    <Descriptions.Item label="Organization Name">{selectedOrg.name}</Descriptions.Item>
+                    <Descriptions.Item label="Type">{selectedOrg.type}</Descriptions.Item>
+                    <Descriptions.Item label="Member Count">{selectedOrg.member_count}</Descriptions.Item>
+                    <Descriptions.Item label="Influence Level">
                       <Tag color={selectedOrg.power_level >= 70 ? 'red' : selectedOrg.power_level >= 50 ? 'orange' : 'default'}>
                         {selectedOrg.power_level}
                       </Tag>
                     </Descriptions.Item>
                     {selectedOrg.location && (
-                      <Descriptions.Item label="所在地" span={isMobile ? 1 : 2}>
+                      <Descriptions.Item label="Location" span={isMobile ? 1 : 2}>
                         {selectedOrg.location}
                       </Descriptions.Item>
                     )}
                     {selectedOrg.color && (
-                      <Descriptions.Item label="代表颜色">
+                      <Descriptions.Item label="Representative Color">
                         {selectedOrg.color}
                       </Descriptions.Item>
                     )}
                     {selectedOrg.motto && (
-                      <Descriptions.Item label="格言/口号" span={2}>
+                      <Descriptions.Item label="Motto / Slogan" span={2}>
                         {selectedOrg.motto}
                       </Descriptions.Item>
                     )}
-                    <Descriptions.Item label="组织目的" span={2}>
+                    <Descriptions.Item label="Organization Purpose" span={2}>
                       {selectedOrg.purpose}
                     </Descriptions.Item>
                   </Descriptions>
                 </Card>
 
                 <Card
-                  title={`组织成员 (${members.length})`}
+                  title={`Organization Members (${members.length})`}
                   extra={
                     <Button
                       type="primary"
@@ -543,7 +543,7 @@ export default function Organizations() {
                       onClick={() => setIsAddMemberModalOpen(true)}
                       disabled={availableCharacters.length === 0}
                     >
-                      添加成员
+                      Add Member
                     </Button>
                   }
                 >
@@ -557,7 +557,7 @@ export default function Organizations() {
                           defaultPageSize: 5,
                           showSizeChanger: true,
                           showQuickJumper: !isMobile,
-                          showTotal: (total) => `共 ${total} 名成员`,
+                          showTotal: (total) => `${total} members`,
                           pageSizeOptions: [5, 10, 20],
                           simple: isMobile,
                           position: ['bottomCenter'],
@@ -579,9 +579,9 @@ export default function Organizations() {
         </div>
       </div>
 
-      {/* 添加成员模态框 */}
+      {/* Add member modal */}
       <Modal
-        title="添加组织成员"
+        title="Add Organization Member"
         open={isAddMemberModalOpen}
         onCancel={() => {
           setIsAddMemberModalOpen(false);
@@ -600,11 +600,11 @@ export default function Organizations() {
         >
           <Form.Item
             name="character_id"
-            label="选择角色"
-            rules={[{ required: true, message: '请选择角色' }]}
+            label="Select Character"
+            rules={[{ required: true, message: 'Select a character' }]}
           >
             <Select
-              placeholder="选择要加入的角色"
+              placeholder="Select a character to add"
               showSearch
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
@@ -618,24 +618,24 @@ export default function Organizations() {
 
           <Form.Item
             name="position"
-            label="职位"
-            rules={[{ required: true, message: '请输入职位' }]}
+            label="Position"
+            rules={[{ required: true, message: 'Enter a position' }]}
           >
-            <Input placeholder="如：掌门、长老、弟子" />
+            <Input placeholder="e.g., Leader, Elder, Member" />
           </Form.Item>
 
           <Form.Item
             name="rank"
-            label="职位等级"
+            label="Position Rank"
             initialValue={5}
-            tooltip="数字越大等级越高"
+            tooltip="Higher numbers indicate a higher rank"
           >
             <InputNumber min={0} max={10} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
             name="loyalty"
-            label="初始忠诚度"
+            label="Initial Loyalty"
             initialValue={50}
           >
             <InputNumber min={0} max={100} style={{ width: '100%' }} addonAfter="%" />
@@ -643,37 +643,37 @@ export default function Organizations() {
 
           <Form.Item
             name="status"
-            label="状态"
+            label="Status"
             initialValue="active"
           >
             <Select>
-              <Select.Option value="active">在职</Select.Option>
-              <Select.Option value="retired">退休</Select.Option>
-              <Select.Option value="expelled">除名</Select.Option>
+              <Select.Option value="active">Active</Select.Option>
+              <Select.Option value="retired">Retired</Select.Option>
+              <Select.Option value="expelled">Expelled</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
             name="joined_at"
-            label="加入时间"
+            label="Joined"
           >
-            <Input placeholder="如：开山大典时、三年前、建立之初等" />
+            <Input placeholder="e.g., At the founding, three years ago, or when the organization was created" />
           </Form.Item>
 
           <Form.Item>
             <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-              <Button onClick={() => setIsAddMemberModalOpen(false)}>取消</Button>
+              <Button onClick={() => setIsAddMemberModalOpen(false)}>Cancel</Button>
               <Button type="primary" htmlType="submit">
-                添加
+                Add
               </Button>
             </Space>
           </Form.Item>
         </Form>
       </Modal>
 
-      {/* 编辑成员模态框 */}
+      {/* Edit member modal */}
       <Modal
-        title="编辑成员信息"
+        title="Edit Member Information"
         open={isEditMemberModalOpen}
         onCancel={() => {
           setIsEditMemberModalOpen(false);
@@ -702,58 +702,58 @@ export default function Organizations() {
         >
           <Form.Item
             name="position"
-            label="职位"
-            rules={[{ required: true, message: '请输入职位' }]}
+            label="Position"
+            rules={[{ required: true, message: 'Enter a position' }]}
           >
-            <Input placeholder="如：掌门、长老、弟子" />
+            <Input placeholder="e.g., Leader, Elder, Member" />
           </Form.Item>
 
           <Form.Item
             name="rank"
-            label="职位等级"
-            tooltip="数字越大等级越高"
+            label="Position Rank"
+            tooltip="Higher numbers indicate a higher rank"
           >
             <InputNumber min={0} max={10} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
             name="loyalty"
-            label="忠诚度"
+            label="Loyalty"
           >
             <InputNumber min={0} max={100} style={{ width: '100%' }} addonAfter="%" />
           </Form.Item>
 
           <Form.Item
             name="contribution"
-            label="贡献度"
+            label="Contribution"
           >
             <InputNumber min={0} max={100} style={{ width: '100%' }} addonAfter="%" />
           </Form.Item>
 
           <Form.Item
             name="status"
-            label="状态"
+            label="Status"
           >
             <Select>
-              <Select.Option value="active">在职</Select.Option>
-              <Select.Option value="retired">退休</Select.Option>
-              <Select.Option value="expelled">除名</Select.Option>
-              <Select.Option value="deceased">已故</Select.Option>
+              <Select.Option value="active">Active</Select.Option>
+              <Select.Option value="retired">Retired</Select.Option>
+              <Select.Option value="expelled">Expelled</Select.Option>
+              <Select.Option value="deceased">Deceased</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
             name="joined_at"
-            label="加入时间"
+            label="Joined"
           >
-            <Input placeholder="如：开山大典时、三年前、建立之初等" />
+            <Input placeholder="e.g., At the founding, three years ago, or when the organization was created" />
           </Form.Item>
 
           <Form.Item
             name="notes"
-            label="备注"
+            label="Notes"
           >
-            <Input.TextArea rows={3} placeholder="成员相关的备注信息" />
+            <Input.TextArea rows={3} placeholder="Notes about this member" />
           </Form.Item>
 
           <Form.Item>
@@ -763,19 +763,19 @@ export default function Organizations() {
                 editMemberForm.resetFields();
                 setEditingMember(null);
               }}>
-                取消
+                Cancel
               </Button>
               <Button type="primary" htmlType="submit">
-                保存
+                Save
               </Button>
             </Space>
           </Form.Item>
         </Form>
       </Modal>
 
-      {/* 编辑组织模态框 */}
+      {/* Edit organization modal */}
       <Modal
-        title="编辑组织信息"
+        title="Edit Organization Information"
         open={isEditOrgModalOpen}
         onCancel={() => {
           setIsEditOrgModalOpen(false);
@@ -794,63 +794,63 @@ export default function Organizations() {
             if (!selectedOrg) return;
             try {
               await axios.put(`/api/organizations/${selectedOrg.id}`, values);
-              message.success('组织信息更新成功');
+              message.success('Organization information updated successfully');
               setIsEditOrgModalOpen(false);
               editOrgForm.resetFields();
 
-              // 重新获取更新后的组织列表
+              // Reload the updated organization list.
               const res = await axios.get(`/api/organizations/project/${projectId}`);
               setOrganizations(res.data);
 
-              // 更新当前选中的组织详情
+              // Update the selected organization's details.
               const updatedOrg = res.data.find((org: Organization) => org.id === selectedOrg.id);
               if (updatedOrg) {
                 setSelectedOrg(updatedOrg);
               }
 
-              // 刷新全局 store
+              // Refresh the global store.
               await refreshCharacters();
             } catch (error) {
-              message.error('更新失败');
+              message.error('Update failed');
               console.error(error);
             }
           }}
         >
           <Form.Item
             name="power_level"
-            label="势力等级"
-            rules={[{ required: true, message: '请输入势力等级' }]}
-            tooltip="0-100的数值，表示组织的影响力"
+            label="Influence Level"
+            rules={[{ required: true, message: 'Enter an influence level' }]}
+            tooltip="A value from 0 to 100 representing the organization's influence"
           >
             <InputNumber min={0} max={100} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
             name="location"
-            label="所在地"
+            label="Location"
           >
-            <Input placeholder="组织的主要活动区域或总部位置" />
+            <Input placeholder="The organization's main area of operation or headquarters" />
           </Form.Item>
 
           <Form.Item
             name="motto"
-            label="格言/口号"
+            label="Motto / Slogan"
           >
-            <Input placeholder="组织的宗旨、格言或口号" />
+            <Input placeholder="The organization's purpose, motto, or slogan" />
           </Form.Item>
 
           <Form.Item
             name="color"
-            label="代表颜色"
+            label="Representative Color"
           >
-            <Input placeholder="如：深红色、金色、黑色等" />
+            <Input placeholder="e.g., crimson, gold, or black" />
           </Form.Item>
 
           <Form.Item>
             <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-              <Button onClick={() => setIsEditOrgModalOpen(false)}>取消</Button>
+              <Button onClick={() => setIsEditOrgModalOpen(false)}>Cancel</Button>
               <Button type="primary" htmlType="submit">
-                保存
+                Save
               </Button>
             </Space>
           </Form.Item>

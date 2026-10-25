@@ -10,216 +10,172 @@
 ![React](https://img.shields.io/badge/react-18.3.1-blue.svg)
 ![License](https://img.shields.io/badge/license-GPL%20v3-blue.svg)
 
-**基于 AI 的智能小说创作助手**
+**AI-powered novel writing assistant**
 
-[特性](#-特性) • [快速开始](#-快速开始) • [配置说明](#%EF%B8%8F-配置说明) • [项目结构](#-项目结构)
-
-</div>
-
----
-
-<div align="center">
-
-## 💬 加入交流群
-
-欢迎扫码加入 QQ 交流群，一起交流 AI 小说创作心得、反馈问题、获取最新动态！
-
-<img src="frontend/public/qq.jpg" alt="QQ交流群二维码" width="300" />
+[Features](#-features) • [Quick start](#-quick-start) • [Configuration](#-configuration) • [Project structure](#-project-structure)
 
 </div>
 
 ---
 
-<div align="center">
+## ✨ Features
 
-## 💖 支持项目
+- 🤖 **Multiple AI models** - support for OpenAI, Gemini, Claude, and other major providers
+- 📝 **Smart writing guide** - AI-generated outlines, characters, and worldbuilding
+- 👥 **Character management** - visual management of relationships and organizations
+- 📖 **Chapter editing** - create, edit, regenerate, and polish chapters
+- 🌐 **Worldbuilding** - build immersive story settings and lore
+- 🔐 **Multiple login methods** - LinuxDO OAuth or local account login
+- 💾 **PostgreSQL support** - production-ready database with multi-user separation
+- 🐳 **Docker deployment** - quick startup and easy setup
 
-如果这个项目对你有帮助，欢迎通过以下方式支持开发：
-
-**[☕ 请我喝杯咖啡](https://mumuverse.space:1588/)**
-
-**[🌐 MuMuのAPI站点](https://zhongzhuan.mumuverse.space/register?aff=gt7d)**
-
-> 在 MuMu の API 站点充值满 50 元及以上，也可以获得下方赞助专属权益。
-
-### 🎁 赞助专属权益
-
-| 权益 | 说明 |
-|------|------|
-| 📋 **优先需求响应** | 您的功能需求和问题反馈将获得优先处理 |
-| 🚀 **Windows一键启动** | 获取免安装 EXE 程序，双击即可使用 |
-| 💬 **专属技术支持** | 加入赞助者内部群，获得远程协助和配置指导 |
-
-您的支持是我持续开发的动力！🙏
-
-</div>
-
----
-
-## 🤝 赞助商
-
-> [希望合作或赞助本项目？](https://qm.qq.com/q/B5N2BgEmbu)
-
-<table>
-<tr>
-<td width="200" align="center" valign="middle"><a href="https://www.aiyoyoo.com/register?aff=4AXY9WGE2C5Q"><img src="images/CrazyToken.png" alt="CrazyToken" width="180"></a></td>
-<td valign="middle">感谢 <strong>CrazyToken</strong> 赞助支持本项目！CrazyToken 提供 Claude、GPT、Gemini、Kimi、GLM、DeepSeek、Qwen、Grok 等全系主流模型，覆盖大纲构思、正文续写、爽点打磨、润色改稿，针对不同环节选择最合适的模型。全模型低至官方价格的 5%（<code>0.05×</code>），Token 级账单透明可查；官方原生通道，不掺水、不混模、不压缩长上下文，保持模型原生输出体验；稳定高速、高并发不限流，支持多书创作和章节批量生成。新用户通过 <a href="https://www.aiyoyoo.com/register?aff=4AXY9WGE2C5Q">专属链接</a> 注册即送 <code>$20</code> 体验额度，充值额外加赠，并提供独家 1 对 1 远程配置服务，全程真人协助，开箱即用。</td>
-</tr>
-</table>
-
-<br>
-
----
-
-## ✨ 特性
-
-- 🤖 **多 AI 模型** - 支持 OpenAI、Gemini、Claude 等主流模型
-- 📝 **智能向导** - AI 自动生成大纲、角色和世界观
-- 👥 **角色管理** - 人物关系、组织架构可视化管理
-- 📖 **章节编辑** - 支持创建、编辑、重新生成和润色
-- 🌐 **世界观设定** - 构建完整的故事背景
-- 🔐 **多种登录** - LinuxDO OAuth 或本地账户登录
-- 💾 **PostgreSQL** - 生产级数据库，多用户数据隔离
-- 🐳 **Docker 部署** - 一键启动，开箱即用
-
-## 📸 项目预览
+## 📸 Screenshots
 
 <details>
 
-<summary>多图预警</summary>
+<summary>Image-heavy preview</summary>
 
 <div align="center">
 
-### 登录界面
-![登录界面](images/1.png)
+### Login UI
+![Login UI](images/1.png)
 
-![登录界面](images/1-1.png)
+![Login UI](images/1-1.png)
 
-### 主界面
-![主界面](images/2.png)
+### Main dashboard
+![Main dashboard](images/2.png)
 
-![主界面（暗色）](images/2-1.png)
+![Main dashboard (dark mode)](images/2-1.png)
 
-### 项目管理
-![项目管理](images/3.png)
+### Project management
+![Project management](images/3.png)
 
-![项目管理](images/3-1.png)
+![Project management](images/3-1.png)
 
-### 赞助我 💖
-![赞助我](images/4.png)
+### Support the project 💖
+![Support the project](images/4.png)
 
-![赞助我](images/4-1.png)
+![Support the project](images/4-1.png)
 
 </div>
 
 </details>
 
-## 📋 TODO List
+## ✅ Completed features
 
-### ✅ 已完成功能
+- [x] **Inspiration mode** - generate creative ideas and writing prompts
+- [x] **Custom writing style** - define custom AI writing styles
+- [x] **Data import/export** - import and export project data
+- [x] **Prompt editor** - visual editing of prompt templates
+- [x] **Chapter word limits** - users can configure target output length
+- [x] **Thought-chain and chapter relationship mapping** - visualize story logic
+- [x] **One-click rewrite based on analysis** - regenerate content from analysis feedback
+- [x] **Linux DO auto-account creation** - OAuth login creates accounts automatically
+- [x] **Career progression system** - custom job and rank systems for cultivation, magic tiers, and other settings
+- [x] **Character/organization card import/export** - export and share cards across projects
+- [x] **Foreshadowing management** - track story clues and unresolved plot threads
+- [x] **Prompt workshop** - community-driven prompt sharing with one-click import
+- [x] **Book splitting feature** - one-click restructuring to provide a satisfying ending
 
-- [x] **灵感模式** - 创作灵感和点子生成
-- [x] **自定义写作风格** - 支持自定义 AI 写作风格
-- [x] **数据导入导出** - 项目数据的导入导出
-- [x] **Prompt 调整界面** - 可视化编辑 Prompt 模板
-- [x] **章节字数限制** - 用户可设置生成字数
-- [x] **思维链与章节关系图谱** - 可视化章节逻辑关系
-- [x] **根据分析一键重写** - 根据分析建议重新生成
-- [x] **Linux DO 自动创建账号** - OAuth 登录自动生成账号
-- [x] **职业等级体系** - 自定义职业和等级系统，支持修仙境界、魔法等级等多种体系
-- [x] **角色/组织卡片导入导出** - 单独导出角色和组织卡片，支持跨项目数据共享
-- [x] **伏笔管理** - 智能追踪剧情伏笔，提醒未回收线索，可视化伏笔时间线
-- [x] **提示词工坊** - 社区驱动的 Prompt 模板分享平台，一键导入优质提示词
-- [x] **拆书功能** - 目前呼声比较高的功能，一键拆书，给当年的ta一个圆满的结局
+## 💻 Hardware requirements
 
-### 📝 规划中功能
+### Minimum configuration
 
-......
+| Component | Requirement |
+|----------|------------|
+| **CPU** | 2 cores |
+| **Memory** | 2 GB RAM |
+| **Storage** | 10 GB free space |
+| **Network** | Stable internet access for AI API calls |
 
-> 💡 欢迎提交 Issue 或 Pull Request！
+### Recommended configuration
 
-## 💻 硬件配置要求
+| Component | Requirement |
+|----------|------------|
+| **CPU** | 4 cores |
+| **Memory** | 8 GB RAM |
+| **Storage** | 20 GB SSD |
+| **Network** | Stable internet access |
 
-### 最低配置（个人使用/开发环境）
+### High-concurrency configuration
 
-| 组件 | 要求 |
-|------|------|
-| **CPU** | 2 核 |
-| **内存** | 2 GB RAM |
-| **存储** | 10 GB 可用空间 |
-| **网络** | 稳定互联网连接（用于调用 AI API） |
+| Component | Requirement |
+|----------|------------|
+| **CPU** | 8 cores |
+| **Memory** | 16 GB RAM |
+| **Storage** | 50 GB+ SSD |
+| **Network** | High-bandwidth connection |
 
-### 推荐配置（小型团队/生产环境）
+> **Note**
+> - **Embedding model**: approximately 400 MB of disk space, loaded into memory at runtime
+> - **PostgreSQL**: default configuration uses 256 MB shared_buffers and 1 GB effective_cache_size
+> - **Docker deployment**: allocate an extra 1–2 GB of memory for the runtime
+> - This project relies on external AI APIs (OpenAI/Claude/Gemini) rather than local GPU processing
 
-| 组件 | 要求 |
-|------|------|
-| **CPU** | 4 核 |
-| **内存** | 8 GB RAM |
-| **存储** | 20 GB SSD |
-| **网络** | 稳定互联网连接 |
+## 🚀 Quick start
 
-### 高并发配置（80-150 用户）
+### Prerequisites
 
-| 组件 | 要求 |
-|------|------|
-| **CPU** | 8 核 |
-| **内存** | 16 GB RAM |
-| **存储** | 50 GB+ SSD |
-| **网络** | 高带宽连接 |
+- Docker and Docker Compose
+- At least one AI provider API key (OpenAI/Gemini/Claude)
 
-> **📌 说明**
-> - **Embedding 模型**：约 400 MB 磁盘空间，运行时加载到内存
-> - **PostgreSQL**：默认配置使用 256 MB shared_buffers，1 GB effective_cache_size
-> - **Docker 部署**：建议预留额外 1-2 GB 内存给容器运行时
-> - 本项目主要依赖外部 AI API（OpenAI/Claude/Gemini），不需要本地 GPU
-
-## 🚀 快速开始
-
-### 前置要求
-
-- Docker 和 Docker Compose
-- 至少一个 AI 服务的 API Key（OpenAI/Gemini/Claude）
-
-### Docker Compose 部署（推荐）
+### Docker Compose deployment
 
 ```bash
-# 1. 克隆项目
+# 1. Clone the project
 git clone https://github.com/xiamuceer-j/MuMuAINovel.git
 cd MuMuAINovel
 
-# 2. 配置环境变量（必需）
+# 2. Configure environment variables (required)
 cp backend/.env.example .env
-# 编辑 .env 文件，填入必要配置（API Key、数据库密码等）
+# Edit .env and add the required configuration (API key, database password, etc.)
 
-# 3. 确保文件准备完整
-# ⚠️ 重要：确保以下文件存在
-# - .env（配置文件，必需挂载到容器）
-# - backend/scripts/init_postgres.sql（数据库初始化脚本）
+# 3. Ensure required files are present
+# ⚠️ Important: verify the following files exist
+# - .env (required runtime config mounted into the container)
+# - backend/scripts/init_postgres.sql (database initialization script)
 
-# 4. 启动服务
+# 4. Start the services
 docker-compose up -d
 
-# 5. 访问应用
-# 打开浏览器访问 http://localhost:8000
+# 5. Open the app
+# Visit http://localhost:8000 in your browser
 ```
 
-> **📌 注意事项**
+> **Important notes**
 >
-> 1. **`.env` 文件挂载**: `docker-compose.yml` 会自动将 `.env` 挂载到容器，确保文件存在
-> 2. **数据库初始化**: `init_postgres.sql` 会在首次启动时自动执行，安装必要的PostgreSQL扩展
-> 3. **自行构建**: 如需从源码构建，请先下载 embedding 模型文件（[加群获取](frontend/public/qq.jpg)）
+> 1. **`.env` mounting**: `docker-compose.yml` automatically mounts `.env` into the container, so ensure the file exists.
+> 2. **Database initialization**: `init_postgres.sql` runs on first startup to install required PostgreSQL extensions.
+> 3. **Custom build**: if you build from source, download the embedding model files first ([join the community](frontend/public/qq.jpg)).
 
-### 使用 Docker Hub 镜像（推荐新手）
+### Using the Docker Hub image
 
 ```bash
-# 1. 拉取最新镜像（已包含模型文件）
 docker pull mumujie/mumuainovel:latest
-
-# 2. 创建 docker-compose.yml（点击下方展开查看完整配置）
 ```
 
+## 🧩 Project structure
+
+```text
+MuMuAINovel/
+├── backend/      # FastAPI backend and AI orchestration services
+├── frontend/     # React + TypeScript + Vite client app
+├── images/       # Screenshots and marketing visuals
+├── docker-compose.yml
+├── Dockerfile
+├── README.md
+└── LICENSE
+```
+
+## 🤝 Community and support
+
+- Open an issue for bugs or feature requests
+- Submit a pull request if you want to contribute
+- Support the project and ongoing development with sponsorship and feedback
+
+
 <details>
-<summary>📄 点击展开 docker-compose.yml 完整配置</summary>
+<summary>📄 Expand the complete docker-compose.yml configuration</summary>
 
 ```yaml
 services:
@@ -286,29 +242,29 @@ services:
       - ./.env:/app/.env:ro
       - ./storage/generated_covers:/app/backend/storage/generated_covers
     environment:
-      # 应用配置
+      # Application configuration
       - APP_NAME=${APP_NAME:-MuMuAINovel}
       - APP_VERSION=${APP_VERSION:-1.5.7}
       - APP_HOST=${APP_HOST:-0.0.0.0}
       - APP_PORT=8000
       - DEBUG=${DEBUG:-false}
-      # 数据库配置
+      # Database configuration
       - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-mumuai}:${POSTGRES_PASSWORD:-123456}@postgres:5432/${POSTGRES_DB:-mumuai_novel}
       - DB_HOST=postgres
       - DB_PORT=5432
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-123456}
-      # PostgreSQL 连接池配置
+      # PostgreSQL connection pool configuration
       - DATABASE_POOL_SIZE=${DATABASE_POOL_SIZE:-30}
       - DATABASE_MAX_OVERFLOW=${DATABASE_MAX_OVERFLOW:-20}
       - DATABASE_POOL_TIMEOUT=${DATABASE_POOL_TIMEOUT:-60}
       - DATABASE_POOL_RECYCLE=${DATABASE_POOL_RECYCLE:-1800}
       - DATABASE_POOL_PRE_PING=${DATABASE_POOL_PRE_PING:-True}
       - DATABASE_POOL_USE_LIFO=${DATABASE_POOL_USE_LIFO:-True}
-      # 全局代理配置（可选）
+      # Global proxy settings (optional)
       - HTTP_PROXY=${HTTP_PROXY:-}
       - HTTPS_PROXY=${HTTPS_PROXY:-}
       - NO_PROXY=${NO_PROXY:-localhost,127.0.0.1}
-      # AI 服务配置
+      # AI service settings
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com/v1}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
@@ -321,18 +277,18 @@ services:
       - DEFAULT_MAX_TOKENS=${DEFAULT_MAX_TOKENS:-32000}
       - ALLOW_PRIVATE_AI_ENDPOINTS=${ALLOW_PRIVATE_AI_ENDPOINTS:-false}
       - ALLOWED_AI_HOSTS=${ALLOWED_AI_HOSTS:-}
-      # LinuxDO OAuth 配置
+      # LinuxDO OAuth settings
       - LINUXDO_CLIENT_ID=${LINUXDO_CLIENT_ID:-11111}
       - LINUXDO_CLIENT_SECRET=${LINUXDO_CLIENT_SECRET:-11111}
       - LINUXDO_REDIRECT_URI=${LINUXDO_REDIRECT_URI:-http://localhost:8000/api/auth/linuxdo/callback}
       - LINUXDO_PROXY_URL=${LINUXDO_PROXY_URL:-}
       - FRONTEND_URL=${FRONTEND_URL:-http://localhost:8000}
-      # 本地账户登录配置
+      # Local account login settings
       - LOCAL_AUTH_ENABLED=${LOCAL_AUTH_ENABLED:-true}
       - LOCAL_AUTH_USERNAME=${LOCAL_AUTH_USERNAME:-admin}
       - LOCAL_AUTH_PASSWORD=${LOCAL_AUTH_PASSWORD:-admin123}
-      - LOCAL_AUTH_DISPLAY_NAME=${LOCAL_AUTH_DISPLAY_NAME:-本地管理员}
-      # 会话配置
+      - LOCAL_AUTH_DISPLAY_NAME=${LOCAL_AUTH_DISPLAY_NAME:-Local Admin}
+      # Session settings
       - SESSION_EXPIRE_MINUTES=${SESSION_EXPIRE_MINUTES:-120}
       - SESSION_REFRESH_THRESHOLD_MINUTES=${SESSION_REFRESH_THRESHOLD_MINUTES:-30}
       - SESSION_COOKIE_SECURE=${SESSION_COOKIE_SECURE:-true}
@@ -358,13 +314,13 @@ networks:
 </details>
 
 ```bash
-# 3. 启动服务
+# 3. Start the services
 docker-compose up -d
 
-# 4. 查看日志
+# 4. View logs
 docker-compose logs -f
 
-# 5. 更新到最新版本
+# 5. Update to the latest version
 docker-compose pull
 docker-compose up -d
 ```
@@ -497,162 +453,162 @@ OPENAI_BASE_URL=https://api.new-api.com/v1
 OPENAI_BASE_URL=https://your-proxy-service.com/v1
 ```
 
-## 🐳 Docker 部署详情
+## 🐳 Docker deployment details
 
-### 服务架构
+### Service architecture
 
-- **postgres**: PostgreSQL 18 数据库
-  - 端口: 5432
-  - 数据持久化: `postgres_data` volume
-  - 初始化脚本: `backend/scripts/init_postgres.sql`（自动挂载）
-  - 优化配置: 支持 80-150 并发用户
+- **postgres**: PostgreSQL 18 database
+  - Port: 5432
+  - Persistence: `postgres_data` volume
+  - Initialization script: `backend/scripts/init_postgres.sql` (auto-mounted)
+  - Optimized config: supports 80–150 concurrent users
 
-- **mumuainovel**: 主应用服务
-  - 端口: 8000
-  - 日志目录: `./logs`
-  - 配置挂载: `.env` 文件
-  - 自动等待数据库就绪
-  - 健康检查: 每 30 秒检测一次
+- **mumuainovel**: main application service
+  - Port: 8000
+  - Log directory: `./logs`
+  - Config mount: `.env` file
+  - Waits for database readiness automatically
+  - Health checks run every 30 seconds
 
-### 重要文件说明
+### Important files
 
-| 文件 | 说明 | 是否必需 |
-|------|------|---------|
-| `.env` | 环境配置（API Key、数据库密码等） | ✅ 必需 |
-| `docker-compose.yml` | 服务编排配置 | ✅ 必需 |
-| `backend/scripts/init_postgres.sql` | PostgreSQL 扩展安装脚本 | ✅ 自动挂载 |
-| `backend/embedding/models--*/` | Embedding 模型文件 | ⚠️ 自建需要 |
+| File | Description | Required |
+|------|-------------|----------|
+| `.env` | Environment configuration (API keys, database password, etc.) | ✅ Required |
+| `docker-compose.yml` | Service orchestration config | ✅ Required |
+| `backend/scripts/init_postgres.sql` | PostgreSQL extension setup script | ✅ Auto-mounted |
+| `backend/embedding/models--*/` | Embedding model files | ⚠️ Required for source builds |
 
-> **注意**: 使用 Docker Hub 镜像时，模型文件已包含在镜像中，无需额外下载
+> **Note**: When using the Docker Hub image, the model files are already included in the image, so no extra download is needed.
 
-### 常用命令
+### Common commands
 
 ```bash
-# 启动服务
+# Start services
 docker-compose up -d
 
-# 查看状态
+# Check status
 docker-compose ps
 
-# 查看日志
+# View logs
 docker-compose logs -f
 
-# 停止服务
+# Stop services
 docker-compose down
 
-# 重启服务
+# Restart services
 docker-compose restart
 
-# 查看资源使用
+# Check resource usage
 docker stats
 ```
 
-### 数据持久化
+### Data persistence
 
-- `./postgres_data` - PostgreSQL 数据库文件
-- `./logs` - 应用日志文件
+- `./postgres_data` - PostgreSQL database files
+- `./logs` - application log files
 
-### 端口配置
+### Port configuration
 
-修改 `docker-compose.yml` 中的端口映射：
+Change the port mapping in `docker-compose.yml`:
 
 ```yaml
 ports:
-  - "8800:8000"  # 宿主机:容器
+  - "8800:8000"  # host:container
 ```
 
-## 📁 项目结构
+## 📁 Project structure
 
-```
+```text
 MuMuAINovel/
-├── backend/                 # 后端服务
+├── backend/                 # Backend services
 │   ├── app/
-│   │   ├── api/            # API 路由
-│   │   ├── models/         # 数据模型
-│   │   ├── services/       # 业务逻辑
-│   │   ├── middleware/     # 中间件
-│   │   ├── database.py     # 数据库连接
-│   │   └── main.py         # 应用入口
-│   ├── scripts/            # 工具脚本
-│   └── requirements.txt    # Python 依赖
-├── frontend/               # 前端应用
+│   │   ├── api/            # API routes
+│   │   ├── models/         # Data models
+│   │   ├── services/       # Business logic
+│   │   ├── middleware/     # Middleware
+│   │   ├── database.py     # Database connection
+│   │   └── main.py         # Application entry point
+│   ├── scripts/            # Utility scripts
+│   └── requirements.txt    # Python dependencies
+├── frontend/               # Frontend app
 │   ├── src/
-│   │   ├── pages/         # 页面组件
-│   │   ├── components/    # 通用组件
-│   │   ├── services/      # API 服务
-│   │   └── store/         # 状态管理
+│   │   ├── pages/         # Page components
+│   │   ├── components/    # Reusable components
+│   │   ├── services/      # API service layer
+│   │   └── store/         # State management
 │   └── package.json
-├── docker-compose.yml      # Docker Compose 配置
-├── Dockerfile             # Docker 镜像构建
+├── docker-compose.yml      # Docker Compose configuration
+├── Dockerfile              # Docker image build
 └── README.md
 ```
 
-## 🛠️ 技术栈
+## 🛠️ Tech stack
 
-**后端**: FastAPI • PostgreSQL • SQLAlchemy • OpenAI/Claude/Gemini SDK
+**Backend**: FastAPI • PostgreSQL • SQLAlchemy • OpenAI/Claude/Gemini SDK
 
-**前端**: React 18 • TypeScript • Ant Design • Zustand • Vite
+**Frontend**: React 18 • TypeScript • Ant Design • Zustand • Vite
 
-## 📖 使用指南
+## 📖 Usage guide
 
-1. **登录系统** - 使用本地账户或 LinuxDO 账户
-2. **创建项目** - 选择"使用向导创建"
-3. **AI 生成** - 输入基本信息，AI 自动生成大纲和角色
-4. **编辑完善** - 管理角色关系，生成和编辑章节
+1. **Login system** - use either a local account or a LinuxDO account
+2. **Create a project** - choose "Create using the wizard"
+3. **AI generation** - enter the basics and let the AI generate the outline and characters
+4. **Refine and edit** - manage character relationships, generate chapters, and polish the story
 
-### API 文档
+### API docs
 
 - Swagger UI: `http://localhost:8000/docs`
 - ReDoc: `http://localhost:8000/redoc`
 
-## 🤝 贡献
+## 🤝 Contributing
 
-欢迎提交 Issue 和 Pull Request！
+We welcome issues and pull requests!
 
-1. Fork 本项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 提交 Pull Request
+1. Fork this project
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a pull request
 
-### 贡献者
+### Contributors
 
-感谢所有为本项目做出贡献的开发者！
+Thanks to everyone who has contributed to this project!
 
 <a href="https://github.com/xiamuceer-j/MuMuAINovel/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=xiamuceer-j/MuMuAINovel" />
 </a>
 
-## 📝 许可证
+## 📝 License
 
-本项目采用 [GNU General Public License v3.0](LICENSE)
+This project is distributed under the [GNU General Public License v3.0](LICENSE).
 
-**GPL v3 意味着：**
-- ✅ 可自由使用、修改和分发
-- ✅ 可用于商业目的
-- 📝 必须开源修改版本
-- 📝 必须保留原作者版权
-- 📝 衍生作品必须使用 GPL v3 协议
+**GPL v3 means:**
+- ✅ You can use, modify, and distribute it freely
+- ✅ Commercial use is allowed
+- 📝 Modified versions must remain open source
+- 📝 You must keep the original copyright notice
+- 📝 Derivative works must use the GPL v3 license
 
-## 🙏 致谢
+## 🙏 Acknowledgments
 
-- [FastAPI](https://fastapi.tiangolo.com/) - Python Web 框架
-- [React](https://react.dev/) - 前端框架
-- [Ant Design](https://ant.design/) - UI 组件库
-- [PostgreSQL](https://www.postgresql.org/) - 数据库
+- [FastAPI](https://fastapi.tiangolo.com/) - Python web framework
+- [React](https://react.dev/) - Frontend framework
+- [Ant Design](https://ant.design/) - UI component library
+- [PostgreSQL](https://www.postgresql.org/) - Database
 
-## 📧 联系方式
+## 📧 Contact
 
-- 提交 [Issue](https://github.com/xiamuceer-j/MuMuAINovel/issues)
-- Linux DO [讨论](https://linux.do/t/topic/1106333)
-- 加入QQ群 [QQ群](frontend/public/qq.jpg)
-- 加入WX群 [WX群](frontend/public/WX.png)
+- Submit an [Issue](https://github.com/xiamuceer-j/MuMuAINovel/issues)
+- Linux DO [discussion](https://linux.do/t/topic/1106333)
+- Join the QQ group [QQ group](frontend/public/qq.jpg)
+- Join the WeChat group [WeChat group](frontend/public/WX.png)
 
 ---
 
 <div align="center">
 
-**如果这个项目对你有帮助，请给个 ⭐️ Star！**
+**If this project has been helpful, please give it a ⭐️ Star!**
 
 Made with ❤️
 

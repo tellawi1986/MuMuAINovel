@@ -26,17 +26,17 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // 后端会通过 Cookie 自动设置认证信息
-        // 这里只需要验证登录状态
+        // The backend sets auth information automatically via cookie.
+        // We only need to verify the current login state here.
         const currentUser = await authApi.getCurrentUser();
 
-        // 检查是否是首次登录（通过 Cookie 标记）
+        // Check whether this is the user's first login via a cookie flag.
         const isFirstLogin = document.cookie.includes('first_login=true');
         
         setStatus('success');
 
         if (isFirstLogin) {
-          // 首次登录：生成默认密码并显示提示
+          // First login: generate a default password and show a prompt.
           const defaultPassword = `${currentUser.username}@666`;
           const pwdStatus = {
             has_password: false,
@@ -46,41 +46,41 @@ export default function AuthCallback() {
           };
           setPasswordStatus(pwdStatus);
 
-          // 清除首次登录标记 Cookie
+          // Clear the first-login cookie flag.
           document.cookie = 'first_login=; path=/; max-age=0';
 
-          // 显示密码初始化弹窗
+          // Show the password initialization modal.
           setTimeout(() => {
             setShowPasswordModal(true);
           }, 1000);
           return;
         }
 
-        // 非首次登录：正常流程
-        // 从 sessionStorage 获取重定向地址
+        // Not the first login: normal flow.
+        // Read the redirect target from sessionStorage.
         const redirect = sessionStorage.getItem('login_redirect') || '/';
         sessionStorage.removeItem('login_redirect');
 
-        // 检查是否永久隐藏公告或今日已隐藏
+        // Check whether the announcement is permanently hidden or already hidden today.
         const hideForever = localStorage.getItem('announcement_hide_forever');
         const hideToday = localStorage.getItem('announcement_hide_today');
         const today = new Date().toDateString();
 
         if (hideForever === 'true' || hideToday === today) {
-          // 延迟一下再跳转，让用户看到成功提示
+          // Delay slightly so the user sees the success state first.
           setTimeout(() => {
             navigate(redirect);
           }, 1000);
         } else {
-          // 延迟一下再显示公告，让用户看到成功提示
+          // Delay slightly so the user sees the success state before the announcement appears.
           setTimeout(() => {
             setShowAnnouncement(true);
           }, 1000);
         }
       } catch (error) {
-        console.error('登录失败:', error);
+        console.error('Sign-in failed:', error);
         setStatus('error');
-        setErrorMessage('登录失败，请重试');
+        setErrorMessage('Sign-in failed. Please try again.');
       }
     };
 
@@ -99,7 +99,7 @@ export default function AuthCallback() {
         <div style={{ textAlign: 'center' }}>
           <Spin size="large" />
           <div style={{ marginTop: 20, color: token.colorWhite, fontSize: 16 }}>
-            正在处理登录...
+            Processing sign-in...
           </div>
         </div>
       </div>
@@ -117,11 +117,11 @@ export default function AuthCallback() {
       }}>
         <Result
           status="error"
-          title="登录失败"
+          title="Sign-in failed"
           subTitle={errorMessage}
           extra={
             <Button type="primary" onClick={() => navigate('/login')}>
-              返回登录
+              Back to sign-in
             </Button>
           }
           style={{ background: token.colorBgContainer, padding: 40, borderRadius: 8 }}
@@ -138,47 +138,47 @@ export default function AuthCallback() {
   };
 
   const handleDoNotShowToday = () => {
-    // 设置今日不再显示
+    // Hide announcements for today.
     const today = new Date().toDateString();
     localStorage.setItem('announcement_hide_today', today);
   };
 
   const handleNeverShow = () => {
-    // 设置永久不再显示
+    // Hide announcements permanently.
     localStorage.setItem('announcement_hide_forever', 'true');
   };
 
   const handleSetPassword = async () => {
-    // 如果没有输入新密码，使用默认密码
+    // If no new password is entered, use the default password.
     const passwordToSet = newPassword || passwordStatus?.default_password;
     
     if (!passwordToSet) {
-      message.error('请输入新密码');
+      message.error('Please enter a new password');
       return;
     }
     if (passwordToSet.length < 6) {
-      message.error('密码长度至少为6个字符');
+      message.error('Password must be at least 6 characters long');
       return;
     }
     if (newPassword && newPassword !== confirmPassword) {
-      message.error('两次输入的密码不一致');
+      message.error('The two passwords do not match');
       return;
     }
 
     setSettingPassword(true);
     try {
-      // 首次登录使用初始化接口，后续使用修改接口
+      // First login uses the initialize endpoint; later changes use the update endpoint.
       const isFirstLogin = !passwordStatus?.has_password;
       if (isFirstLogin) {
         await authApi.initializePassword(passwordToSet);
-        message.success('密码初始化成功');
+        message.success('Password initialized successfully');
       } else {
         await authApi.setPassword(passwordToSet);
-        message.success('密码设置成功');
+        message.success('Password set successfully');
       }
       setShowPasswordModal(false);
 
-      // 继续后续流程
+      // Continue the rest of the flow.
       const redirect = sessionStorage.getItem('login_redirect') || '/';
       sessionStorage.removeItem('login_redirect');
 
@@ -196,26 +196,26 @@ export default function AuthCallback() {
         }, 500);
       }
     } catch {
-      message.error('密码设置失败，请重试');
+      message.error('Failed to set password. Please try again.');
     } finally {
       setSettingPassword(false);
     }
   };
 
   const handleSkipPasswordSetting = async () => {
-    // 首次登录时，如果跳过设置，使用默认密码初始化
+    // On first login, if skipped, initialize the default password.
     const isFirstLogin = !passwordStatus?.has_password;
     if (isFirstLogin && passwordStatus?.default_password) {
       try {
         await authApi.initializePassword(passwordStatus.default_password);
       } catch (error) {
-        console.error('初始化默认密码失败:', error);
+        console.error('Failed to initialize default password:', error);
       }
     }
 
     setShowPasswordModal(false);
 
-    // 继续后续流程
+    // Continue the rest of the flow.
     const redirect = sessionStorage.getItem('login_redirect') || '/';
     sessionStorage.removeItem('login_redirect');
 
@@ -244,19 +244,19 @@ export default function AuthCallback() {
       />
 
       <Modal
-        title="设置账号密码"
+        title="Set account password"
         open={showPasswordModal}
         centered
         onOk={handleSetPassword}
         onCancel={handleSkipPasswordSetting}
         confirmLoading={settingPassword}
-        okText="设置密码"
-        cancelText="暂不设置"
+        okText="Set password"
+        cancelText="Skip for now"
         width={500}
       >
         <div style={{ marginBottom: 20 }}>
-          <p>您已成功通过 Linux DO 授权登录！</p>
-          <p>系统已为您自动生成默认密码，您可以选择设置自定义密码或继续使用默认密码。</p>
+          <p>You have successfully signed in with Linux DO.</p>
+          <p>The system generated a default password for you. You can set a custom password or continue using the default one.</p>
           {passwordStatus?.default_password && (
             <div style={{
               background: token.colorFillTertiary,
@@ -264,8 +264,8 @@ export default function AuthCallback() {
               borderRadius: 4,
               marginTop: 12
             }}>
-              <strong>账号：</strong>{passwordStatus.username}<br />
-              <strong>默认密码：</strong><code style={{
+              <strong>Username:</strong>{passwordStatus.username}<br />
+              <strong>Default password:</strong><code style={{
                 background: token.colorBgContainer,
                 padding: '2px 8px',
                 borderRadius: 3,
@@ -278,20 +278,20 @@ export default function AuthCallback() {
 
         <div style={{ marginTop: 20 }}>
           <div style={{ marginBottom: 12 }}>
-            <label>新密码（至少6个字符）：</label>
+            <label>New password (at least 6 characters):</label>
             <Input.Password
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="请输入新密码"
+              placeholder="Please enter a new password"
               style={{ marginTop: 4 }}
             />
           </div>
           <div>
-            <label>确认密码：</label>
+            <label>Confirm password:</label>
             <Input.Password
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="请再次输入密码"
+              placeholder="Please re-enter your password"
               style={{ marginTop: 4 }}
             />
           </div>
@@ -307,8 +307,8 @@ export default function AuthCallback() {
       }}>
         <Result
           status="success"
-          title="登录成功"
-          subTitle={showPasswordModal ? "请设置账号密码..." : (showAnnouncement ? "欢迎使用..." : "正在跳转...")}
+          title="Sign-in successful"
+          subTitle={showPasswordModal ? "Set your account password..." : (showAnnouncement ? "Welcome..." : "Redirecting...")}
           style={{ background: alphaColor(token.colorBgContainer, 0.96), padding: 40, borderRadius: 8 }}
         />
       </div>

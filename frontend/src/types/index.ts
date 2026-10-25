@@ -1346,16 +1346,16 @@ export interface AnnouncementStatusResponse {
 
 // 提示词工坊分类常量
 export const PROMPT_CATEGORIES: Record<string, string> = {
-  general: '通用',
-  fantasy: '玄幻/仙侠',
-  martial: '武侠',
-  romance: '言情',
-  scifi: '科幻',
-  horror: '悬疑/惊悚',
-  history: '历史',
-  urban: '都市',
-  game: '游戏/电竞',
-  other: '其他',
+  general: 'General',
+  fantasy: 'Fantasy/Xianxia',
+  martial: 'Wuxia',
+  romance: 'Romance',
+  scifi: 'Sci-Fi',
+  horror: 'Mystery/Thriller',
+  history: 'Historical',
+  urban: 'Urban',
+  game: 'Gaming/Esports',
+  other: 'Other',
 };
 
 

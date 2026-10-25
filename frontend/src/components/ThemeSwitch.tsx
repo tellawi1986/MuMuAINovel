@@ -13,7 +13,7 @@ const options: Array<{ value: ThemeMode; label: ReactNode }> = [
   {
     value: 'light',
     label: (
-      <Tooltip title="浅色模式">
+      <Tooltip title="Light mode">
         <BulbOutlined />
       </Tooltip>
     ),
@@ -21,7 +21,7 @@ const options: Array<{ value: ThemeMode; label: ReactNode }> = [
   {
     value: 'dark',
     label: (
-      <Tooltip title="深色模式">
+      <Tooltip title="Dark mode">
         <MoonOutlined />
       </Tooltip>
     ),
@@ -29,7 +29,7 @@ const options: Array<{ value: ThemeMode; label: ReactNode }> = [
   {
     value: 'system',
     label: (
-      <Tooltip title="跟随系统">
+      <Tooltip title="Follow system">
         <DesktopOutlined />
       </Tooltip>
     ),

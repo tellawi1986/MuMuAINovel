@@ -280,14 +280,14 @@ class MCPTestService:
                 
                 return MCPTestResult(
                     success=True,
-                    message=f"✅ Function Calling测试成功！工具 '{tool_name}' 调用正常",
+                    message=f"✅ Function Calling test succeeded! Tool '{tool_name}' is working.",
                     response_time_ms=total_time,
                     tools_count=len(tools),
                     suggestions=[
-                        f"🤖 AI选择: {tool_name}",
-                        f"📝 参数: {json.dumps(test_arguments, ensure_ascii=False)}",
-                        f"⏱️ 耗时: {call_time}ms",
-                        f"📊 结果:\n{result_preview}"
+                        f"🤖 AI-selected: {tool_name}",
+                        f"📝 Parameters: {json.dumps(test_arguments, ensure_ascii=False)}",
+                        f"⏱️ Duration: {call_time}ms",
+                        f"📊 Result:\n{result_preview}"
                     ]
                 )
                 
@@ -299,16 +299,16 @@ class MCPTestService:
                 
                 return MCPTestResult(
                     success=True,  # 连接成功就算测试通过
-                    message=f"⚠️ 连接成功，但工具调用失败",
+                    message="⚠️ Connection succeeded, but the tool call failed.",
                     response_time_ms=total_time,
                     tools_count=len(tools),
-                    error=f"工具 '{tool_name}' 调用失败: {str(call_error)}",
+                    error=f"Tool '{tool_name}' call failed: {str(call_error)}",
                     suggestions=[
-                        f"✅ 连接测试: 成功",
-                        f"❌ 工具调用测试: 失败",
-                        f"🤖 AI选择: {tool_name}",
-                        f"❌ 错误: {str(call_error)}",
-                        "💡 可能原因: API Key无效、参数错误或服务限制"
+                        "✅ Connection test: passed",
+                        "❌ Tool call test: failed",
+                        f"🤖 AI-selected: {tool_name}",
+                        f"❌ Error: {str(call_error)}",
+                        "💡 Possible reasons: invalid API key, incorrect parameters, or service limits"
                     ]
                 )
                 

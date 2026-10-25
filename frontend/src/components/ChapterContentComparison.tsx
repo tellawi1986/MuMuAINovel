@@ -99,10 +99,10 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
       });
 
       if (!response.ok) {
-        throw new Error('应用新内容失败');
+        throw new Error('Failed to apply new content');
       }
 
-      message.success('新内容已应用！');
+      message.success('New content applied!');
 
       // 先调用 onApply 通知父组件刷新
       onApply();
@@ -118,20 +118,20 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
           });
 
           if (analysisResponse.ok) {
-            message.success('章节分析已开始，请稍后查看结果');
+            message.success('Chapter analysis started. Check back for results shortly.');
           } else {
-            message.warning('章节分析触发失败，您可以手动触发分析');
+            message.warning('Could not start chapter analysis. You can start it manually.');
           }
         } catch (analysisError) {
           console.error('触发分析失败:', analysisError);
-          message.warning('章节分析触发失败，您可以手动触发分析');
+          message.warning('Could not start chapter analysis. You can start it manually.');
         }
       }, 500);
 
       onClose();
     } catch (error: unknown) {
       const err = error as Error;
-      message.error(err.message || '应用失败');
+      message.error(err.message || 'Apply failed');
     } finally {
       setApplying(false);
     }
@@ -139,16 +139,16 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
 
   const handleDiscard = () => {
     modal.confirm({
-      title: '确认放弃',
-      content: '确定要放弃新生成的内容吗？此操作不可恢复。',
+      title: 'Discard new content',
+      content: 'Are you sure you want to discard the newly generated content? This action cannot be undone.',
       centered: true,
-      okText: '确定放弃',
-      cancelText: '取消',
+      okText: 'Discard',
+      cancelText: 'Cancel',
       okButtonProps: { danger: true },
       onOk: () => {
         onDiscard();
         onClose();
-        message.info('已放弃新内容');
+        message.info('New content discarded');
       }
     });
   };
@@ -157,7 +157,7 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
     <>
       {contextHolder}
       <Modal
-      title={`内容对比 - ${chapterTitle}`}
+      title={`Content Comparison - ${chapterTitle}`}
       open={visible}
       onCancel={onClose}
       width="95%"
@@ -170,14 +170,14 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
           icon={<CloseOutlined />}
           onClick={handleDiscard}
         >
-          放弃新内容
+          Discard new content
         </Button>,
         <Button
           key="toggle"
           icon={<SwapOutlined />}
           onClick={() => setViewMode(viewMode === 'split' ? 'unified' : 'split')}
         >
-          切换视图
+          Toggle view
         </Button>,
         <Button
           key="apply"
@@ -186,7 +186,7 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
           loading={applying}
           onClick={handleApply}
         >
-          应用新内容
+          Apply new content
         </Button>
       ]}
     >
@@ -195,30 +195,30 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
         <Row gutter={16}>
           <Col span={6}>
             <Statistic
-              title="原内容字数"
+              title="Original word count"
               value={originalWordCount}
-              suffix="字"
+              suffix="words"
             />
           </Col>
           <Col span={6}>
             <Statistic
-              title="新内容字数"
+              title="New word count"
               value={wordCount}
-              suffix="字"
+              suffix="words"
             />
           </Col>
           <Col span={6}>
             <Statistic
-              title="字数变化"
+              title="Word count change"
               value={wordCountDiff}
-              suffix="字"
+              suffix="words"
               valueStyle={{ color: wordCountDiff > 0 ? 'var(--color-success)' : 'var(--color-error)' }}
               prefix={wordCountDiff > 0 ? '+' : ''}
             />
           </Col>
           <Col span={6}>
             <Statistic
-              title="变化比例"
+              title="Change ratio"
               value={wordCountDiffPercent}
               suffix="%"
               valueStyle={{ color: Math.abs(parseFloat(wordCountDiffPercent)) < 10 ? 'var(--color-primary)' : 'var(--color-warning)' }}
@@ -240,8 +240,8 @@ const ChapterContentComparison: React.FC<ChapterContentComparisonProps> = ({
           oldValue={originalContent}
           newValue={newContent}
           splitView={viewMode === 'split'}
-          leftTitle="原内容"
-          rightTitle="新内容"
+          leftTitle="Original content"
+          rightTitle="New content"
           showDiffOnly={false}
           useDarkTheme={isDarkMode}
           styles={diffViewerStyles}

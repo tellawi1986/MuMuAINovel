@@ -85,7 +85,7 @@ export default function MarkdownRenderer({ content, compact = false }: MarkdownR
         <img
           {...props}
           src={safeSrc}
-          alt={alt || '公告图片'}
+          alt={alt || 'Announcement image'}
           loading="lazy"
         />
       );
@@ -294,7 +294,7 @@ export default function MarkdownRenderer({ content, compact = false }: MarkdownR
           {markdown}
         </ReactMarkdown>
       ) : (
-        <Text type="secondary">暂无内容</Text>
+        <Text type="secondary">No content</Text>
       )}
     </div>
   );

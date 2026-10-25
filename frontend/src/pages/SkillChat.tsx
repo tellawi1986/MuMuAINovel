@@ -51,7 +51,7 @@ const SkillChat: React.FC = () => {
         setActiveCategory((prev) => prev || response.data[0].category);
       }
     } catch {
-      message.error('加载 Skill 列表失败');
+      message.error('Failed to load skills.');
     } finally {
       setSkillsLoading(false);
     }
@@ -92,10 +92,10 @@ const SkillChat: React.FC = () => {
         signal: abortControllerRef.current.signal,
       });
 
-      if (!response.ok) throw new Error('请求失败');
+      if (!response.ok) throw new Error('Request failed');
 
       const reader = response.body?.getReader();
-      if (!reader) throw new Error('无法读取响应流');
+      if (!reader) throw new Error('Unable to read the response stream');
 
       const decoder = new TextDecoder();
       let accumulated = '';
@@ -119,7 +119,7 @@ const SkillChat: React.FC = () => {
                   return updated;
                 });
               } else if (data.type === 'error') {
-                message.error(data.error || '生成失败');
+                message.error(data.error || 'Generation failed');
               }
             } catch {
               // 忽略非 JSON 流片段
@@ -130,7 +130,7 @@ const SkillChat: React.FC = () => {
     } catch (error: unknown) {
       const isAbortError = error instanceof Error && error.name === 'AbortError';
       if (!isAbortError) {
-        message.error('请求失败，请检查 AI 配置');
+        message.error('Request failed. Check your AI settings.');
         setMessages(prev => {
           const updated = [...prev];
           if (updated.length > 0 && updated[updated.length - 1].role === 'assistant' && !updated[updated.length - 1].content) {
@@ -168,7 +168,7 @@ const SkillChat: React.FC = () => {
       <div style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', padding: '0 16px', minWidth: 0, overflow: 'hidden' }}>
         {/* 顶部栏 */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid #f0f0f0' }}>
-          <Button size="small" onClick={() => { setSelectedSkill(null); setMessages([]); }}>← 返回</Button>
+          <Button size="small" onClick={() => { setSelectedSkill(null); setMessages([]); }}>← Back</Button>
           <ThunderboltOutlined style={{ color: '#1890ff' }} />
           <Text strong>{selectedSkill.template_name}</Text>
           <Tag color={categoryColors[selectedSkill.category] || '#default'} style={{ marginLeft: 4 }}>{selectedSkill.category}</Tag>
@@ -193,8 +193,8 @@ const SkillChat: React.FC = () => {
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', padding: '60px 20px', color: '#999' }}>
               <RobotOutlined style={{ fontSize: 48, marginBottom: 16 }} />
-              <div style={{ fontSize: 16, marginBottom: 8 }}>{'已选择「'}{selectedSkill.template_name}{'」'}</div>
-              <div>输入你的需求开始对话，或直接使用触发词：{selectedSkill.triggers.join('、')}</div>
+              <div style={{ fontSize: 16, marginBottom: 8 }}>Selected: {selectedSkill.template_name}</div>
+              <div>Describe what you need to start a conversation, or use a trigger: {selectedSkill.triggers.join(', ')}</div>
             </div>
           )}
           {messages.map((msg, idx) => (
@@ -225,7 +225,7 @@ const SkillChat: React.FC = () => {
             </div>
           ))}
           {loading && messages[messages.length - 1]?.content === '' && (
-            <div style={{ textAlign: 'center', color: '#999', padding: 8 }}><Spin size="small" /> 思考中...</div>
+            <div style={{ textAlign: 'center', color: '#999', padding: 8 }}><Spin size="small" /> Thinking...</div>
           )}
           <div ref={messagesEndRef} />
         </div>
@@ -236,7 +236,7 @@ const SkillChat: React.FC = () => {
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
             onPressEnter={e => { if (!e.shiftKey) { e.preventDefault(); handleSend(); } }}
-            placeholder="输入你的需求..."
+            placeholder="Describe what you need..."
             autoSize={{ minRows: 1, maxRows: 4 }}
             disabled={loading}
           />
@@ -370,8 +370,8 @@ const SkillChat: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden', minWidth: 0 }}>
       <div style={{ flexShrink: 0, minWidth: 0, padding: '16px 0', borderBottom: '1px solid #f0f0f0' }}>
-        <Title level={4} style={{ marginBottom: 8 }}><ThunderboltOutlined /> Skill 工具箱</Title>
-        <Paragraph type="secondary" style={{ marginBottom: 0 }}>选择一个 Skill 开始创作对话。每个 Skill 都有专业的写作工作流和知识库。</Paragraph>
+        <Title level={4} style={{ marginBottom: 8 }}><ThunderboltOutlined /> Skill Toolbox</Title>
+        <Paragraph type="secondary" style={{ marginBottom: 0 }}>Choose a skill to start a guided writing conversation. Each skill includes a specialized workflow and knowledge base.</Paragraph>
       </div>
 
       {skillsLoading ? (
@@ -388,7 +388,7 @@ const SkillChat: React.FC = () => {
               label: (
                 <span>
                   <Tag color={categoryColors[category] || '#default'}>{category}</Tag>
-                  {groupedSkills[category].length} 个 Skill
+                  {groupedSkills[category].length} skills
                 </span>
               ),
             }))}

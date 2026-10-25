@@ -26,11 +26,11 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
 
   const getRoleTypeLabel = (roleType?: string) => {
     const roleLabels: Record<string, string> = {
-      'protagonist': '主角',
-      'supporting': '配角',
-      'antagonist': '反派',
+      'protagonist': 'Protagonist',
+      'supporting': 'Supporting',
+      'antagonist': 'Antagonist',
     };
-    return roleLabels[roleType || ''] || '其他';
+    return roleLabels[roleType || ''] || 'Other';
   };
 
   const isOrganization = character.is_organization;
@@ -39,10 +39,10 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
 
   const getStatusTag = () => {
     const statusConfig: Record<string, { color: string; label: string }> = {
-      deceased: { color: token.colorTextBase, label: '💀 已死亡' },
-      missing: { color: token.colorWarning, label: '❓ 已失踪' },
-      retired: { color: token.colorTextTertiary, label: '📤 已退场' },
-      destroyed: { color: token.colorTextBase, label: '💀 已覆灭' },
+      deceased: { color: token.colorTextBase, label: '💀 Deceased' },
+      missing: { color: token.colorWarning, label: '❓ Missing' },
+      retired: { color: token.colorTextTertiary, label: '📤 Retired' },
+      destroyed: { color: token.colorTextBase, label: '💀 Destroyed' },
     };
     const config = statusConfig[charStatus];
     if (!config) return null;
@@ -72,10 +72,10 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
         ...(onExport ? [<ExportOutlined key="export" onClick={onExport} />] : []),
         <Popconfirm
           key="delete"
-          title={`确定删除这个${isOrganization ? '组织' : '角色'}吗？`}
+          title={`Are you sure you want to delete this ${isOrganization ? 'organization' : 'character'}?`}
           onConfirm={() => onDelete(character.id)}
-          okText="确定"
-          cancelText="取消"
+          okText="Delete"
+          cancelText="Cancel"
         >
           <DeleteOutlined />
         </Popconfirm>,
@@ -93,7 +93,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
           <Space>
             <span style={characterCardStyles.nameEllipsis}>{character.name}</span>
             {isOrganization ? (
-              <Tag color="green">组织</Tag>
+              <Tag color="green">Organization</Tag>
             ) : (
               character.role_type && (
                 <Tag color={getRoleTypeColor(character.role_type)}>
@@ -106,24 +106,24 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
         }
         description={
           <div style={characterCardStyles.descriptionBlock}>
-            {/* 角色特有字段 */}
+            {/* Character-specific fields */}
             {!isOrganization && (
               <>
                 {character.age && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>年龄：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Age:</Text>
                     <Text style={{ flex: 1 }}>{character.age}</Text>
                   </div>
                 )}
                 {character.gender && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>性别：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Gender:</Text>
                     <Text style={{ flex: 1 }}>{character.gender}</Text>
                   </div>
                 )}
                 {character.personality && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>性格：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Personality:</Text>
                     <Text
                       style={{ flex: 1, minWidth: 0 }}
                       ellipsis={{ tooltip: character.personality }}
@@ -134,7 +134,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
                 )}
                 {character.relationships && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>关系：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Relationships:</Text>
                     <Text
                       style={{ flex: 1, minWidth: 0 }}
                       ellipsis={{ tooltip: character.relationships }}
@@ -146,18 +146,18 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
               </>
             )}
 
-            {/* 组织特有字段 */}
+            {/* Organization-specific fields */}
             {isOrganization && (
               <>
                 {character.organization_type && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>类型：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Type:</Text>
                     <Tag color="cyan">{character.organization_type}</Tag>
                   </div>
                 )}
                 {character.power_level !== undefined && character.power_level !== null && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>势力等级：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Power level:</Text>
                     <Tag color={character.power_level >= 70 ? 'red' : character.power_level >= 50 ? 'orange' : 'default'}>
                       {character.power_level}
                     </Tag>
@@ -165,7 +165,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
                 )}
                 {character.location && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>所在地：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Location:</Text>
                     <Text
                       style={{ flex: 1, minWidth: 0 }}
                       ellipsis={{ tooltip: character.location }}
@@ -176,13 +176,13 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
                 )}
                 {character.color && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>代表颜色：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Primary color:</Text>
                     <Text style={{ flex: 1, minWidth: 0 }}>{character.color}</Text>
                   </div>
                 )}
                 {character.motto && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>格言：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Motto:</Text>
                     <Text
                       style={{ flex: 1, minWidth: 0 }}
                       ellipsis={{ tooltip: character.motto }}
@@ -193,7 +193,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
                 )}
                 {character.organization_purpose && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>目的：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Purpose:</Text>
                     <Text
                       style={{ flex: 1, minWidth: 0 }}
                       ellipsis={{ tooltip: character.organization_purpose }}
@@ -204,7 +204,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({ character, onEdit,
                 )}
                 {character.organization_members && (
                   <div style={{ marginBottom: 8, display: 'flex', alignItems: 'flex-start' }}>
-                    <Text type="secondary" style={{ flexShrink: 0 }}>成员：</Text>
+                    <Text type="secondary" style={{ flexShrink: 0 }}>Members:</Text>
                     <Text style={{ flex: 1, minWidth: 0, fontSize: 12, lineHeight: 1.6, wordBreak: 'break-all' }}>
                       {typeof character.organization_members === 'string'
                         ? character.organization_members

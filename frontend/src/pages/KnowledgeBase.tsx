@@ -36,11 +36,11 @@ const { Dragger } = Upload;
 const { Text, Paragraph, Title } = Typography;
 
 const statusMap: Record<string, { label: string; color: string }> = {
-  pending: { label: '等待处理', color: 'default' },
-  parsing: { label: '正在解析', color: 'processing' },
-  embedding: { label: '正在生成向量', color: 'processing' },
-  ready: { label: '已完成', color: 'success' },
-  failed: { label: '处理失败', color: 'error' },
+  pending: { label: 'Pending', color: 'default' },
+  parsing: { label: 'Parsing', color: 'processing' },
+  embedding: { label: 'Generating vectors', color: 'processing' },
+  ready: { label: 'Completed', color: 'success' },
+  failed: { label: 'Processing failed', color: 'error' },
 };
 
 const parseHeadingPath = (value: unknown): string => {
@@ -77,8 +77,8 @@ export default function KnowledgeBasePage() {
       let current = bases.items[0];
       if (!current) {
         current = (await knowledgeApi.createBase(projectId, {
-          name: '项目知识库',
-          description: '用于存放本项目的参考资料和设定文档',
+          name: 'Project knowledge base',
+          description: 'Stores reference materials and setting documents for this project.',
         })).item;
       }
       setBase(current);
@@ -88,8 +88,8 @@ export default function KnowledgeBasePage() {
       setMaxContextChars(current.settings?.max_context_chars ?? 6000);
       setDocuments((await knowledgeApi.listDocuments(current.id)).items);
     } catch (error) {
-      console.error('加载知识库失败', error);
-      message.error('加载知识库失败，请稍后重试');
+      console.error('Failed to load knowledge base', error);
+      message.error('Failed to load the knowledge base. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -111,11 +111,11 @@ export default function KnowledgeBasePage() {
       if (!base) return false;
       try {
         await knowledgeApi.uploadDocument(base.id, file);
-        message.success(`${file.name} 已加入索引队列`);
+        message.success(`${file.name} has been added to the indexing queue`);
         await load();
       } catch (error) {
-        console.error('上传知识库文档失败', error);
-        message.error(error instanceof Error ? error.message : '上传失败，请检查文件格式和大小');
+        console.error('Failed to upload knowledge base document', error);
+        message.error(error instanceof Error ? error.message : 'Upload failed. Please check the file format and size.');
       }
       return false;
     },
@@ -134,10 +134,10 @@ export default function KnowledgeBasePage() {
         },
       });
       setBase(response.item);
-      message.success('检索参数已保存');
+      message.success('Retrieval parameters saved');
     } catch (error) {
-      console.error('保存检索参数失败', error);
-      message.error('保存检索参数失败，请稍后重试');
+      console.error('Failed to save retrieval parameters', error);
+      message.error('Failed to save retrieval parameters. Please try again later.');
     } finally {
       setSavingSettings(false);
     }
@@ -149,8 +149,8 @@ export default function KnowledgeBasePage() {
     try {
       setHits((await knowledgeApi.search(base.id, { query: query.trim(), top_k: topK, min_score: minScore })).items);
     } catch (error) {
-      console.error('检索知识库失败', error);
-      message.error('检索失败，请稍后重试');
+      console.error('Knowledge base search failed', error);
+      message.error('Search failed. Please try again later.');
     } finally {
       setSearching(false);
     }
@@ -159,22 +159,22 @@ export default function KnowledgeBasePage() {
   const remove = async (document: KnowledgeDocument) => {
     try {
       await knowledgeApi.deleteDocument(document.id);
-      message.success('文档已删除');
+      message.success('Document deleted');
       await load();
     } catch (error) {
-      console.error('删除知识库文档失败', error);
-      message.error('删除失败，请稍后重试');
+      console.error('Failed to delete knowledge base document', error);
+      message.error('Deletion failed. Please try again later.');
     }
   };
 
   const reindex = async (document: KnowledgeDocument) => {
     try {
       await knowledgeApi.reindexDocument(document.id);
-      message.success('已重新加入索引队列');
+      message.success('Added back to the indexing queue');
       await load();
     } catch (error) {
-      console.error('重建知识库索引失败', error);
-      message.error('重建索引失败，请稍后重试');
+      console.error('Failed to rebuild the knowledge base index', error);
+      message.error('Reindexing failed. Please try again later.');
     }
   };
 
@@ -196,15 +196,15 @@ export default function KnowledgeBasePage() {
             <DatabaseOutlined style={{ fontSize: 26, color: token.colorPrimary, flexShrink: 0 }} />
             <div style={{ minWidth: 0 }}>
               <Title level={2} style={{ margin: 0, lineHeight: 1.2 }}>
-                {base?.name || '本地知识库'}
+                {base?.name || 'Local knowledge base'}
               </Title>
               <Text type="secondary">
-                上传项目参考资料，AI 会在章节创作和检索时使用这些内容。
+                Upload project reference materials. AI will use them when writing or retrieving chapter content.
               </Text>
             </div>
           </Flex>
           <Button icon={<ReloadOutlined />} loading={loading} onClick={() => void load()}>
-            刷新
+            Refresh
           </Button>
         </Flex>
       </div>
@@ -214,13 +214,13 @@ export default function KnowledgeBasePage() {
           <Card size="small" className="knowledge-base-summary">
             <Row gutter={[16, 12]}>
               <Col xs={12} sm={8}>
-                <Statistic title="文档数量" value={base.document_count} suffix="份" />
+                <Statistic title="Documents" value={base.document_count} suffix="files" />
               </Col>
               <Col xs={12} sm={8}>
-                <Statistic title="文本块" value={base.chunk_count} suffix="块" />
+                <Statistic title="Text chunks" value={base.chunk_count} suffix="chunks" />
               </Col>
               <Col xs={24} sm={8}>
-                <Statistic title="索引方式" value="本地向量" valueStyle={{ fontSize: 20, color: token.colorPrimary }} />
+                <Statistic title="Index method" value="Local vector" valueStyle={{ fontSize: 20, color: token.colorPrimary }} />
               </Col>
             </Row>
           </Card>
@@ -230,26 +230,26 @@ export default function KnowledgeBasePage() {
           <div className="knowledge-base-panel">
             <Card
               className="knowledge-base-panel-card"
-              title={<Space><InboxOutlined />文档管理<Tag>{documents.length}</Tag></Space>}
+              title={<Space><InboxOutlined />Document management<Tag>{documents.length}</Tag></Space>}
               extra={<Button type="text" icon={<ReloadOutlined />} loading={loading} onClick={() => void load()} />}
             >
               <Dragger {...uploadProps} style={{ marginBottom: 18 }}>
                 <p className="ant-upload-drag-icon"><InboxOutlined /></p>
-                <p className="ant-upload-text">点击或拖拽文件到这里上传</p>
-                <p className="ant-upload-hint">支持批量上传，单个文件最大 20MB</p>
+                <p className="ant-upload-text">Click or drag files here to upload</p>
+                <p className="ant-upload-hint">Supports batch uploads; max 20MB per file</p>
               </Dragger>
               <List
                 className="knowledge-base-document-list"
                 dataSource={documents}
                 split
-                locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有文档" /> }}
+                locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No documents yet" /> }}
                 renderItem={(document) => {
                   const status = statusMap[document.status] || statusMap.pending;
                   return (
                     <List.Item
                       actions={[
                         document.status === 'failed' || document.status === 'ready'
-                          ? <Button key="reindex" type="link" size="small" onClick={() => void reindex(document)}>重建索引</Button>
+                          ? <Button key="reindex" type="link" size="small" onClick={() => void reindex(document)}>Rebuild index</Button>
                           : null,
                         <Button key="delete" type="text" danger icon={<DeleteOutlined />} onClick={() => void remove(document)} />,
                       ].filter(Boolean)}
@@ -260,7 +260,7 @@ export default function KnowledgeBasePage() {
                           <Space direction="vertical" size={0}>
                             <Text type="secondary">{document.original_filename}</Text>
                             <Text type="secondary">
-                              {document.chunk_count} 个文本块 · {document.extracted_char_count.toLocaleString()} 字
+                              {document.chunk_count} text chunks · {document.extracted_char_count.toLocaleString()} characters
                             </Text>
                             {document.error_message && <Text type="danger">{document.error_message}</Text>}
                           </Space>
@@ -276,33 +276,33 @@ export default function KnowledgeBasePage() {
           <div className="knowledge-base-panel">
             <Card
               className="knowledge-base-panel-card"
-              title={<Space><SearchOutlined />知识检索</Space>}
+              title={<Space><SearchOutlined />Knowledge search</Space>}
             >
               <Flex gap={8} wrap="wrap" align="center" style={{ marginBottom: 12 }}>
-                <Text type="secondary">自动注入</Text>
+                <Text type="secondary">Auto-inject</Text>
                 <Switch size="small" checked={retrievalEnabled} onChange={setRetrievalEnabled} />
-                <Text type="secondary">召回数量</Text>
+                <Text type="secondary">Recall count</Text>
                 <InputNumber min={1} max={30} value={topK} onChange={(value) => setTopK(value ?? 8)} />
-                <Text type="secondary">最低匹配度</Text>
+                <Text type="secondary">Minimum match score</Text>
                 <InputNumber min={0} max={1} step={0.05} precision={2} value={minScore} onChange={(value) => setMinScore(value ?? 0.25)} />
-                <Text type="secondary">上下文上限</Text>
+                <Text type="secondary">Context cap</Text>
                 <InputNumber min={1000} max={20000} step={500} value={maxContextChars} onChange={(value) => setMaxContextChars(value ?? 6000)} />
-                <Button size="small" loading={savingSettings} onClick={() => void saveRetrievalSettings()}>保存参数</Button>
+                <Button size="small" loading={savingSettings} onClick={() => void saveRetrievalSettings()}>Save settings</Button>
               </Flex>
               <Input.Search
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 onSearch={() => void handleSearch()}
                 loading={searching}
-                enterButton="搜索"
-                placeholder="例如：主角进入禁地需要遵守哪些规则？"
+                enterButton="Search"
+                placeholder="For example: What rules must the protagonist follow when entering the forbidden land?"
                 size="large"
               />
               <List
                 className="knowledge-base-search-list"
                 itemLayout="vertical"
                 dataSource={hits}
-                locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={query ? '暂无匹配内容' : '输入问题开始检索'} /> }}
+                locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={query ? 'No matching content' : 'Enter a question to begin searching'} /> }}
                 renderItem={(hit) => {
                   const metadata = hit.metadata || {};
                   const heading = parseHeadingPath(metadata.heading_path);
@@ -318,8 +318,8 @@ export default function KnowledgeBasePage() {
                         }}
                       >
                         <Flex gap={8} wrap="wrap" align="center" style={{ marginBottom: 8 }}>
-                          <Tag color="blue">匹配度 {(hit.score * 100).toFixed(0)}%</Tag>
-                          <Text strong>{metadata.original_filename || metadata.title || '知识库文档'}</Text>
+                          <Tag color="blue">Match {(hit.score * 100).toFixed(0)}%</Tag>
+                          <Text strong>{metadata.original_filename || metadata.title || 'Knowledge base document'}</Text>
                           {heading && <Text type="secondary">{heading}</Text>}
                         </Flex>
                         <Paragraph style={{ marginBottom: 0, whiteSpace: 'pre-wrap' }}>{hit.content}</Paragraph>
