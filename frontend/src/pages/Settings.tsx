@@ -312,7 +312,7 @@ export default function SettingsPage() {
   const apiProviders = [
     {
       value: 'mumu',
-      label: 'MuMuのAPI',
+      label: 'MuMu API',
       defaultUrl: mumuTextDefaultUrl,
       defaultModel: 'gemini-3-flash-preview'
     },
@@ -324,7 +324,7 @@ export default function SettingsPage() {
       builtInKey: true,
     },
     { value: 'openai', label: 'OpenAI Compatible', defaultUrl: 'https://api.openai.com/v1' },
-    // { value: 'anthropic', label: 'Anthropic (Claude)', defaultUrl: 'https://api.anthropic.com' },
+    { value: 'anthropic', label: 'Anthropic (Claude)', defaultUrl: 'https://api.anthropic.com', defaultModel: 'claude-sonnet-5-5' },
     { value: 'gemini', label: 'Google Gemini', defaultUrl: 'https://generativelanguage.googleapis.com/v1beta' },
   ];
 
@@ -338,6 +338,9 @@ export default function SettingsPage() {
       const nextValues: Record<string, string> = {};
       if (provider.defaultUrl) {
         nextValues.api_base_url = provider.defaultUrl;
+      }
+      if (provider.value === 'anthropic') {
+        nextValues.llm_model = provider.defaultModel || 'claude-sonnet-5-5';
       }
       if (provider.value === 'mumu') {
         nextValues.api_key = '';
@@ -357,7 +360,7 @@ export default function SettingsPage() {
   const coverApiProviders = [
     {
       value: 'mumu',
-      label: 'MuMuのAPI',
+      label: 'MuMu API',
       defaultUrl: mumuCoverBaseUrlOptions[0].value,
       defaultModel: mumuCoverBaseUrlOptions[0].defaultModel,
     },
@@ -638,6 +641,9 @@ export default function SettingsPage() {
       const nextValues: Record<string, string> = {};
       if (provider.defaultUrl) {
         nextValues.api_base_url = provider.defaultUrl;
+      }
+      if (provider.value === 'anthropic') {
+        nextValues.llm_model = provider.defaultModel || 'claude-sonnet-5-5';
       }
       if (provider.value === 'mumu') {
         nextValues.api_key = '';
