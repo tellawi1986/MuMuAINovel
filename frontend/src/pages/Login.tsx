@@ -139,7 +139,7 @@ export default function Login() {
           const config = await authApi.getAuthConfig();
           setAuthConfig(config);
         } catch (error) {
-          console.error('获取认证配置失败:', error);
+          console.error('Failed to load auth config:', error);
           setAuthConfig({
             local_auth_enabled: false,
             linuxdo_enabled: true,
@@ -154,7 +154,7 @@ export default function Login() {
   }, [navigate, searchParams]);
 
   const handleLoginSuccess = () => {
-    message.success('登录成功！');
+    message.success('Login successful!');
 
     const hideForever = localStorage.getItem('announcement_hide_forever');
     const hideToday = localStorage.getItem('announcement_hide_today');
@@ -176,7 +176,7 @@ export default function Login() {
         handleLoginSuccess();
       }
     } catch (error) {
-      console.error('本地登录失败:', error);
+      console.error('Local login failed:', error);
     } finally {
       setLoading(false);
     }
@@ -193,7 +193,7 @@ export default function Login() {
         handleLoginSuccess();
       }
     } catch (error) {
-      console.error('邮箱验证码登录失败:', error);
+      console.error('Email login failed:', error);
     } finally {
       setLoading(false);
     }
@@ -204,10 +204,10 @@ export default function Login() {
       const values = await emailLoginForm.validateFields(['email']);
       setLoginCodeSending(true);
       const result = await authApi.sendEmailCode({ email: values.email, scene: 'login' });
-      message.success(result.message || '验证码已发送');
+      message.success(result.message || 'Verification code sent');
       setLoginCountdown(result.resend_interval_seconds || 60);
     } catch (error) {
-      console.error('发送 login 验证码失败:', error);
+      console.error('Failed to send login code:', error);
     } finally {
       setLoginCodeSending(false);
     }
@@ -218,10 +218,10 @@ export default function Login() {
       const values = await emailRegisterForm.validateFields(['email']);
       setRegisterCodeSending(true);
       const result = await authApi.sendEmailCode({ email: values.email, scene: 'register' });
-      message.success(result.message || '验证码已发送');
+      message.success(result.message || 'Verification code sent');
       setRegisterCountdown(result.resend_interval_seconds || 60);
     } catch (error) {
-      console.error('发送 register 验证码失败:', error);
+      console.error('Failed to send registration code:', error);
     } finally {
       setRegisterCodeSending(false);
     }
@@ -232,10 +232,10 @@ export default function Login() {
       const values = await resetPasswordForm.validateFields(['email']);
       setResetCodeSending(true);
       const result = await authApi.sendEmailCode({ email: values.email, scene: 'reset_password' });
-      message.success(result.message || '验证码已发送');
+      message.success(result.message || 'Verification code sent');
       setResetCountdown(result.resend_interval_seconds || 60);
     } catch (error) {
-      console.error('发送 reset_password 验证码失败:', error);
+      console.error('Failed to send reset code:', error);
     } finally {
       setResetCodeSending(false);
     }
@@ -251,13 +251,13 @@ export default function Login() {
         display_name: values.display_name?.trim() || undefined,
       });
       if (response.success) {
-        message.success('注册成功，已自动登录');
+        message.success('Registration successful. You are now signed in.');
         emailRegisterForm.resetFields(['code', 'password', 'confirmPassword']);
         setRegisterCountdown(0);
         handleLoginSuccess();
       }
     } catch (error) {
-      console.error('邮箱注册失败:', error);
+      console.error('Email registration failed:', error);
     } finally {
       setLoading(false);
     }
@@ -271,12 +271,12 @@ export default function Login() {
         code: values.code,
         new_password: values.new_password,
       });
-      message.success(result.message || '密码重置成功');
+      message.success(result.message || 'Password reset successful');
       resetPasswordForm.resetFields(['code', 'new_password', 'confirmNewPassword']);
       setResetCountdown(0);
       setShowResetPassword(false);
     } catch (error) {
-      console.error('重置密码失败:', error);
+      console.error('Password reset failed:', error);
     } finally {
       setLoading(false);
     }
@@ -294,8 +294,8 @@ export default function Login() {
 
       window.location.href = response.auth_url;
     } catch (error) {
-      console.error('获取授权地址失败:', error);
-      message.error('获取授权地址失败，请稍后重试');
+      console.error('Failed to get auth URL:', error);
+      message.error('Failed to get authorization URL. Please try again later.');
       setLoading(false);
     }
   };
@@ -317,15 +317,15 @@ export default function Login() {
 
   const loginTips = useMemo(() => {
     const tips = [
-      '首次 LinuxDO 登录会自动创建账号。',
+      'Your first LinuxDO sign-in creates an account automatically.',
     ];
 
     if (localAuthEnabled) {
-      tips.unshift('本地登录默认账号：admin / admin123');
+      tips.unshift('Local login uses the default account: admin / admin123');
     }
 
     if (emailAuthEnabled) {
-      tips.push('邮箱注册用户支持通过邮箱验证码重置密码。');
+      tips.push('Email users can reset their password with a verification code.');
     }
 
     return tips;
@@ -334,23 +334,23 @@ export default function Login() {
   const featureItems = [
     {
       icon: <RobotOutlined />,
-      title: '多 AI 模型协同',
-      description: '支持 OpenAI、Gemini、Claude 等主流模型，按场景灵活切换。',
+      title: 'Multi-model AI collaboration',
+      description: 'Switch seamlessly across OpenAI, Gemini, Claude, and other major providers depending on your workflow.',
     },
     {
       icon: <ThunderboltOutlined />,
-      title: '智能向导驱动',
-      description: '自动生成大纲、角色与世界观，快速搭建完整故事骨架。',
+      title: 'AI-guided planning',
+      description: 'Automatically generate outlines, characters, and settings to build a complete story backbone quickly.',
     },
     {
       icon: <TeamOutlined />,
-      title: '角色组织管理',
-      description: '人物关系、组织架构可视化管理，复杂设定也能清晰掌控。',
+      title: 'Character and organization management',
+      description: 'Visually manage relationships, factions, and world structure without losing track of complex lore.',
     },
     {
       icon: <BookOutlined />,
-      title: '章节创作闭环',
-      description: '支持章节生成、编辑、重写与润色，持续提升内容质量。',
+      title: 'Full chapter workflow',
+      description: 'Create, edit, rewrite, and polish chapters to continuously improve narrative quality.',
     },
   ];
 
@@ -365,24 +365,24 @@ export default function Login() {
       >
         <Form.Item
           name="username"
-          label="管理账号"
-          rules={[{ required: true, message: '请输入管理账号/邮箱' }]}
+          label="Admin account"
+          rules={[{ required: true, message: 'Please enter your admin account or email' }]}
         >
           <Input
             prefix={<UserOutlined style={{ color: token.colorTextTertiary }} />}
-            placeholder="请输入管理账号/邮箱"
+            placeholder="Enter your admin account or email"
             autoComplete="username"
             style={{ height: 46, borderRadius: 12 }}
           />
         </Form.Item>
         <Form.Item
           name="password"
-          label="访问密钥"
-          rules={[{ required: true, message: '请输入访问密钥' }]}
+          label="Access key"
+          rules={[{ required: true, message: 'Please enter your access key' }]}
         >
           <Input.Password
             prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
-            placeholder="请输入访问密钥"
+            placeholder="Enter your access key"
             autoComplete="current-password"
             style={{ height: 46, borderRadius: 12 }}
           />
@@ -403,14 +403,14 @@ export default function Login() {
               boxShadow: primaryButtonShadow,
             }}
           >
-            登录系统
+            Sign in
           </Button>
         </Form.Item>
       </Form>
 
       {linuxdoEnabled ? (
         <>
-          <Divider style={{ margin: '18px 0 16px' }}>第三方登录</Divider>
+          <Divider style={{ margin: '18px 0 16px' }}>Third-party sign-in</Divider>
           {renderLinuxDOLogin()}
         </>
       ) : null}
@@ -423,9 +423,9 @@ export default function Login() {
         <div style={{ marginTop: 16 }}>
           <Space direction="vertical" size={12} style={{ width: '100%' }}>
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-              <Title level={5} style={{ margin: 0 }}>忘记密码 / 重置密码</Title>
+              <Title level={5} style={{ margin: 0 }}>Forgot password / reset password</Title>
               <Button type="link" style={{ paddingInline: 0 }} onClick={() => setShowResetPassword(false)}>
-                返回验证码登录
+                Back to code sign-in
               </Button>
             </Space>
 
@@ -438,65 +438,65 @@ export default function Login() {
               >
                 <Form.Item
                   name="email"
-                  label="注册邮箱"
+                  label="Registered email"
                   rules={[
-                    { required: true, message: '请输入注册邮箱' },
-                    { type: 'email', message: '请输入有效的邮箱地址' },
+                    { required: true, message: 'Please enter your registered email' },
+                    { type: 'email', message: 'Please enter a valid email address' },
                   ]}
                 >
-                  <Input prefix={<MailOutlined />} placeholder="请输入注册邮箱" />
+                  <Input prefix={<MailOutlined />} placeholder="Please enter your registered email" />
                 </Form.Item>
-                <Form.Item label="重置验证码" required style={{ marginBottom: 12 }}>
+                <Form.Item label="Reset code" required style={{ marginBottom: 12 }}>
                   <Space.Compact style={{ width: '100%' }}>
                     <Form.Item
                       name="code"
                       noStyle
                       rules={[
-                        { required: true, message: '请输入重置验证码' },
-                        { len: 6, message: '验证码长度为 6 位' },
+                        { required: true, message: 'Please enter the reset code' },
+                        { len: 6, message: 'The verification code must be 6 digits' },
                       ]}
                     >
-                      <Input placeholder="请输入重置验证码" maxLength={6} />
+                      <Input placeholder="Please enter the reset code" maxLength={6} />
                     </Form.Item>
                     <Button
                       onClick={sendResetCode}
                       loading={resetCodeSending}
                       disabled={resetCountdown > 0}
                     >
-                      {resetCountdown > 0 ? `${resetCountdown}s 后重发` : '发送验证码'}
+                      {resetCountdown > 0 ? `${resetCountdown}s later` : 'Send code'}
                     </Button>
                   </Space.Compact>
                 </Form.Item>
                 <Form.Item
                   name="new_password"
-                  label="新密码"
+                  label="New password"
                   rules={[
-                    { required: true, message: '请输入新密码' },
-                    { min: 6, message: '密码长度至少为 6 个字符' },
+                    { required: true, message: 'Please enter a new password' },
+                    { min: 6, message: 'Password must be at least 6 characters' },
                   ]}
                 >
-                  <Input.Password prefix={<LockOutlined />} placeholder="请输入新密码" />
+                  <Input.Password prefix={<LockOutlined />} placeholder="Please enter a new password" />
                 </Form.Item>
                 <Form.Item
                   name="confirmNewPassword"
-                  label="确认新密码"
+                  label="Confirm new password"
                   dependencies={['new_password']}
                   rules={[
-                    { required: true, message: '请再次输入新密码' },
+                    { required: true, message: 'Please re-enter your new password' },
                     ({ getFieldValue }) => ({
                       validator(_, value) {
                         if (!value || getFieldValue('new_password') === value) {
                           return Promise.resolve();
                         }
-                        return Promise.reject(new Error('两次输入的新密码不一致'));
+                        return Promise.reject(new Error('The two new passwords do not match'));
                       },
                     }),
                   ]}
                 >
-                  <Input.Password prefix={<LockOutlined />} placeholder="请再次输入新密码" />
+                  <Input.Password prefix={<LockOutlined />} placeholder="Please confirm the new password" />
                 </Form.Item>
                 <Button type="default" htmlType="submit" loading={loading} block>
-                  重置密码
+                  Reset password
                 </Button>
               </Form>
             </Card>
@@ -515,33 +515,33 @@ export default function Login() {
       >
         <Form.Item
           name="email"
-          label="邮箱地址"
+          label="Email address"
           rules={[
-            { required: true, message: '请输入邮箱地址' },
-            { type: 'email', message: '请输入有效的邮箱地址' },
+            { required: true, message: 'Please enter your email address' },
+            { type: 'email', message: 'Please enter a valid email address' },
           ]}
         >
           <Input
             prefix={<MailOutlined style={{ color: token.colorTextTertiary }} />}
-            placeholder="请输入已注册邮箱"
+            placeholder="Enter your registered email"
             autoComplete="email"
             style={{ height: 46, borderRadius: 12 }}
           />
         </Form.Item>
 
-        <Form.Item label="登录验证码" required style={{ marginBottom: 24 }}>
+        <Form.Item label="Login code" required style={{ marginBottom: 24 }}>
           <Space.Compact style={{ width: '100%' }}>
             <Form.Item
               name="code"
               noStyle
               rules={[
-                { required: true, message: '请输入登录验证码' },
-                { len: 6, message: '验证码长度为 6 位' },
+                { required: true, message: 'Please enter your login code' },
+                { len: 6, message: 'Verification code must be 6 digits' },
               ]}
             >
               <Input
                 prefix={<SafetyCertificateOutlined style={{ color: token.colorTextTertiary }} />}
-                placeholder="请输入 6 位登录验证码"
+                placeholder="Enter the 6-digit login code"
                 maxLength={6}
                 style={{ height: 46, borderRadius: '12px 0 0 12px' }}
               />
@@ -552,7 +552,7 @@ export default function Login() {
               loading={loginCodeSending}
               disabled={loginCountdown > 0}
             >
-              {loginCountdown > 0 ? `${loginCountdown}s 后重发` : '发送验证码'}
+              {loginCountdown > 0 ? `${loginCountdown}s later` : 'Send code'}
             </Button>
           </Space.Compact>
         </Form.Item>
@@ -573,13 +573,13 @@ export default function Login() {
               boxShadow: primaryButtonShadow,
             }}
           >
-            验证码登录
+            Sign in with code
           </Button>
         </Form.Item>
 
         <div style={{ marginTop: 12, textAlign: 'right' }}>
           <Button type="link" style={{ paddingInline: 0 }} onClick={() => setShowResetPassword(true)}>
-            忘记密码？点击重置
+            Forgot password? Reset it
           </Button>
         </div>
       </Form>
@@ -596,33 +596,33 @@ export default function Login() {
     >
       <Form.Item
         name="email"
-        label="注册邮箱"
+        label="Registered email"
         rules={[
-          { required: true, message: '请输入注册邮箱' },
-          { type: 'email', message: '请输入有效的邮箱地址' },
+          { required: true, message: 'Please enter your registration email' },
+          { type: 'email', message: 'Please enter a valid email address' },
         ]}
       >
         <Input
           prefix={<MailOutlined style={{ color: token.colorTextTertiary }} />}
-          placeholder="请输入注册邮箱"
+          placeholder="Enter your registration email"
           autoComplete="email"
           style={{ height: 46, borderRadius: 12 }}
         />
       </Form.Item>
 
-      <Form.Item label="邮箱验证码" required style={{ marginBottom: 12 }}>
+      <Form.Item label="Email verification code" required style={{ marginBottom: 12 }}>
         <Space.Compact style={{ width: '100%' }}>
           <Form.Item
             name="code"
             noStyle
             rules={[
-              { required: true, message: '请输入邮箱验证码' },
-              { len: 6, message: '验证码长度为 6 位' },
+              { required: true, message: 'Please enter your email verification code' },
+              { len: 6, message: 'Verification code must be 6 digits' },
             ]}
           >
             <Input
               prefix={<SafetyCertificateOutlined style={{ color: token.colorTextTertiary }} />}
-              placeholder="请输入 6 位验证码"
+              placeholder="Enter the 6-digit code"
               maxLength={6}
               style={{ height: 46, borderRadius: '12px 0 0 12px' }}
             />
@@ -633,19 +633,19 @@ export default function Login() {
             loading={registerCodeSending}
             disabled={registerCountdown > 0}
           >
-            {registerCountdown > 0 ? `${registerCountdown}s 后重发` : '发送验证码'}
+            {registerCountdown > 0 ? `${registerCountdown}s later` : 'Send code'}
           </Button>
         </Space.Compact>
       </Form.Item>
 
       <Form.Item
         name="display_name"
-        label="昵称"
-        rules={[{ max: 50, message: '昵称长度不能超过 50 个字符' }]}
+        label="Nickname"
+        rules={[{ max: 50, message: 'Nickname cannot exceed 50 characters' }]}
       >
         <Input
           prefix={<UserOutlined style={{ color: token.colorTextTertiary }} />}
-          placeholder="选填，默认使用邮箱前缀"
+          placeholder="Optional; defaults to the email prefix"
           autoComplete="nickname"
           style={{ height: 46, borderRadius: 12 }}
         />
@@ -653,15 +653,15 @@ export default function Login() {
 
       <Form.Item
         name="password"
-        label="登录密码"
+        label="Password"
         rules={[
-          { required: true, message: '请输入登录密码' },
-          { min: 6, message: '密码长度至少为 6 个字符' },
+          { required: true, message: 'Please enter your password' },
+          { min: 6, message: 'Password must be at least 6 characters' },
         ]}
       >
         <Input.Password
           prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
-          placeholder="请输入登录密码"
+          placeholder="Enter your password"
           autoComplete="new-password"
           style={{ height: 46, borderRadius: 12 }}
         />
@@ -669,23 +669,23 @@ export default function Login() {
 
       <Form.Item
         name="confirmPassword"
-        label="确认密码"
+        label="Confirm password"
         dependencies={['password']}
         rules={[
-          { required: true, message: '请再次输入登录密码' },
+          { required: true, message: 'Please re-enter your password' },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue('password') === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error('两次输入的密码不一致'));
+              return Promise.reject(new Error('The two passwords do not match'));
             },
           }),
         ]}
       >
         <Input.Password
           prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
-          placeholder="请再次输入登录密码"
+          placeholder="Please re-enter your password"
           autoComplete="new-password"
           style={{ height: 46, borderRadius: 12 }}
         />
@@ -707,12 +707,12 @@ export default function Login() {
             boxShadow: primaryButtonShadow,
           }}
         >
-          注册并登录
+          Register and sign in
         </Button>
       </Form.Item>
 
       <Text type="secondary" style={{ marginTop: 12, display: 'block' }}>
-        验证码将发送到你填写的邮箱，若未收到请检查垃圾箱或稍后重试。注册后可通过邮箱验证码登录，也支持邮箱重置密码。
+        A verification code will be sent to the email you provide. If you do not receive it, check your spam folder or try again later. After registration, you can sign in with your email code or reset your password with email verification.
       </Text>
     </Form>
   );
@@ -756,7 +756,7 @@ export default function Login() {
           e.currentTarget.style.boxShadow = primaryButtonShadow;
         }}
       >
-        使用 LinuxDO OAuth 登录
+        Sign in with LinuxDO OAuth
       </Button>
     </div>
   );
@@ -766,7 +766,7 @@ export default function Login() {
       ? [
           {
             key: 'local-login',
-            label: '本地登录',
+            label: 'Local sign-in',
             children: renderLocalLogin(),
           },
         ]
@@ -775,7 +775,7 @@ export default function Login() {
       ? [
           {
             key: 'email-login',
-            label: '邮箱登录',
+            label: 'Email sign-in',
             children: renderEmailLogin(),
           },
         ]
@@ -784,7 +784,7 @@ export default function Login() {
       ? [
           {
             key: 'email-register',
-            label: '邮箱注册',
+            label: 'Email registration',
             children: renderEmailRegister(),
           },
         ]
@@ -903,7 +903,7 @@ export default function Login() {
                         fontSize: 'clamp(52px, 3vw, 78px)',
                       }}
                     >
-                      基于 AI 的
+                      AI-powered
                       <br />
                       <span
                         style={{
@@ -914,7 +914,7 @@ export default function Login() {
                           color: token.colorPrimary,
                         }}
                       >
-                        智能小说创作助手
+                        novel writing assistant
                       </span>
                     </Title>
                     <Paragraph
@@ -926,7 +926,7 @@ export default function Login() {
                         maxWidth: 800,
                       }}
                     >
-                      从灵感到成稿，围绕「多模型协同、创作流程自动化、角色关系管理、章节精修」构建一体化创作工作台。
+                      From inspiration to final draft, build an integrated writing workspace around multi-model collaboration, automated workflows, character relationship management, and chapter refinement.
                     </Paragraph>
                   </div>
 
@@ -998,10 +998,10 @@ export default function Login() {
               <div style={{ width: '100%', maxWidth: 520 }}>
                 <Space direction="vertical" size={4}>
                   <Title level={2} style={{ marginBottom: 0, fontWeight: 700, color: token.colorText }}>
-                    欢迎回来
+                    Welcome back
                   </Title>
                   <Paragraph style={{ marginBottom: 0, color: token.colorTextSecondary }}>
-                    登录 MuMuAINovel，继续你的小说创作项目。
+                    Sign in to MuMuAINovel and continue your novel-writing project.
                   </Paragraph>
                 </Space>
 
@@ -1014,8 +1014,8 @@ export default function Login() {
                     <Alert
                       type="warning"
                       showIcon
-                      message="当前未启用可用登录方式"
-                      description="请联系管理员在系统配置中启用本地登录、邮箱认证或 LinuxDO OAuth 登录。"
+                      message="No sign-in methods are currently enabled"
+                      description="Please contact an administrator to enable local sign-in, email verification, or LinuxDO OAuth in system settings."
                     />
                   ) : null}
 
@@ -1024,8 +1024,8 @@ export default function Login() {
                       type="info"
                       showIcon
                       style={{ marginTop: 12, borderRadius: 12 }}
-                      message="邮箱注册暂未开放"
-                      description="当前仅开放邮箱验证码登录与找回密码，如需注册请联系管理员。"
+                      message="Email registration is currently closed"
+                      description="Only email verification sign-in and password reset are open right now. Contact an administrator if you need to register."
                     />
                   ) : null}
 
@@ -1035,7 +1035,7 @@ export default function Login() {
                     showIcon
                     icon={<SafetyCertificateOutlined />}
                     style={{ background: alphaColor(token.colorPrimary, 0.06), borderRadius: 12 }}
-                    message="登录说明"
+                    message="Sign-in notes"
                     description={(
                       <ul style={{ margin: 0, paddingLeft: 18 }}>
                         {loginTips.map((tip) => (

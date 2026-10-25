@@ -278,9 +278,9 @@ export default function ChapterAnalysis({ chapterId, visible, onClose }: Chapter
             marginTop: 16,
             color: task.status === 'failed' ? 'var(--color-error)' : 'var(--color-text-primary)'
           }}>
-            {task.status === 'pending' && '等待分析...'}
-            {task.status === 'running' && 'AI正在分析中...'}
-            {task.status === 'failed' && '分析失败'}
+            {task.status === 'pending' && 'Waiting for analysis...'}
+            {task.status === 'running' && 'AI is analyzing...'}
+            {task.status === 'failed' && 'Analysis failed'}
           </div>
         </div>
 
@@ -334,14 +334,14 @@ export default function ChapterAnalysis({ chapterId, visible, onClose }: Chapter
           minHeight: 24,
           marginBottom: 16
         }}>
-          {task.status === 'pending' && '分析任务已创建，正在队列中...'}
-          {task.status === 'running' && '正在提取关键信息和记忆片段...'}
+          {task.status === 'pending' && 'The analysis task has been created and is queued...'}
+          {task.status === 'running' && 'Extracting key details and memory snippets...'}
         </div>
 
-        {/* 错误信息 */}
+        {/* Error info */}
         {task.status === 'failed' && task.error_message && (
           <Alert
-            message="分析失败"
+            message="Analysis failed"
             description={task.error_message}
             type="error"
             showIcon
@@ -353,7 +353,7 @@ export default function ChapterAnalysis({ chapterId, visible, onClose }: Chapter
           />
         )}
 
-        {/* 提示文字 */}
+        {/* Helpful text */}
         {task.status !== 'failed' && (
           <div style={{
             textAlign: 'center',
@@ -361,7 +361,7 @@ export default function ChapterAnalysis({ chapterId, visible, onClose }: Chapter
             color: 'var(--color-text-tertiary)',
             marginTop: 16
           }}>
-            分析过程需要一定时间，请耐心等待
+            The analysis may take a moment, please be patient.
           </div>
         )}
       </div>

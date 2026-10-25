@@ -21,7 +21,7 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
   const alphaColor = (color: string, alpha: number) => `color-mix(in srgb, ${color} ${(alpha * 100).toFixed(0)}%, transparent)`;
 
   useEffect(() => {
-    // 检查版本更新（每次都重新检查）
+    // Check for version updates (every load)
     const checkVersion = async () => {
       try {
         const result = await checkLatestVersion();
@@ -29,23 +29,23 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
         setLatestVersion(result.latestVersion);
         setReleaseUrl(result.releaseUrl);
       } catch {
-        // 静默失败
+        // Silently fail
       }
     };
 
-    // 延迟3秒后检查，避免影响首次加载
+    // Wait 3 seconds to avoid blocking initial load
     const timer = setTimeout(checkVersion, 3000);
     return () => clearTimeout(timer);
   }, []);
 
-  // 点击版本号查看更新
+  // Click the version number to view updates
   const handleVersionClick = () => {
     if (hasUpdate && releaseUrl) {
       window.open(releaseUrl, '_blank');
     }
   };
 
-  // 计算左边距：桌面端有侧边栏时需要偏移
+  // Calculate left offset: desktop layout needs to account for the sidebar
   const leftOffset = isMobile ? 0 : sidebarWidth;
 
   return (
@@ -92,7 +92,7 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
                   color: token.colorPrimary,
                   cursor: hasUpdate ? 'pointer' : 'default',
                 }}
-                title={hasUpdate ? `发现新版本 v${latestVersion}，点击查看` : '当前版本'}
+                title={hasUpdate ? `New version v${latestVersion} found — click to view` : 'Current version'}
               >
                 <strong style={{ color: token.colorText }}>{VERSION_INFO.projectName}</strong>
                 <span>{getVersionString()}</span>
@@ -114,7 +114,7 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
                 gap: 4,
               }}
             >
-              赞助
+              Sponsor
             </Button>
             <Divider type="vertical" style={{ margin: '0 4px', borderColor: token.colorBorder }} />
             <Link
@@ -177,7 +177,7 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
                     e.currentTarget.style.transform = 'scale(1)';
                   }
                 }}
-                title={hasUpdate ? `发现新版本 v${latestVersion}，点击查看` : '当前版本'}
+                title={hasUpdate ? `New version v${latestVersion} found — click to view` : 'Current version'}
               >
                 <strong style={{ color: token.colorText }}>{VERSION_INFO.projectName}</strong>
                 <span>{getVersionString()}</span>
@@ -201,7 +201,7 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
               <span>GitHub</span>
             </Link>
 
-            {/* LinuxDO 社区 */}
+            {/* LinuxDO community */}
             <Link
               href={VERSION_INFO.linuxDoUrl}
               target="_blank"
@@ -211,10 +211,10 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
                 color: token.colorTextSecondary,
               }}
             >
-              LinuxDO 社区
+              LinuxDO Community
             </Link>
 
-            {/* 赞助按钮 */}
+            {/* Sponsor button */}
             <Button
               type="primary"
               icon={<GiftOutlined style={{ fontSize: 14 }} />}
@@ -241,10 +241,10 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
                 e.currentTarget.style.boxShadow = `0 4px 12px ${alphaColor(token.colorPrimary, 0.35)}`;
               }}
             >
-              赞助支持
+              Support
             </Button>
 
-            {/* 许可证 */}
+            {/* License */}
             <Link
               href={VERSION_INFO.licenseUrl}
               target="_blank"
@@ -261,7 +261,7 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
               <span>{VERSION_INFO.license}</span>
             </Link>
 
-            {/* 更新时间 */}
+            {/* Build time */}
             <Text
               style={{
                 fontSize: 12,
@@ -275,7 +275,7 @@ export default function AppFooter({ sidebarWidth = 0 }: AppFooterProps) {
               <span>{VERSION_INFO.buildTime}</span>
             </Text>
 
-            {/* 致谢信息 */}
+            {/* Credits */}
             <Text
               style={{
                 fontSize: 12,

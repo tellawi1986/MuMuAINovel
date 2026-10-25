@@ -34,7 +34,7 @@ export default function ProjectWizardNew() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // 检查URL参数,如果有project_id则恢复生成
+  // Check the URL parameters; if a project_id is present, resume generation
   useEffect(() => {
     if (!requestedProjectId) return;
 
@@ -55,7 +55,7 @@ export default function ProjectWizardNew() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestedProjectId]);
 
-  // 恢复未完成项目的生成
+  // Resume generation for an unfinished project
   const handleResumeGeneration = async (projectId: string, signal?: AbortSignal) => {
     try {
       const response = await fetch(`/api/projects/${projectId}`, {
@@ -63,7 +63,7 @@ export default function ProjectWizardNew() {
         signal,
       });
       if (!response.ok) {
-        throw new Error('获取项目信息失败');
+        throw new Error('Failed to load project information');
       }
       const project = await response.json();
 
@@ -72,7 +72,7 @@ export default function ProjectWizardNew() {
         description: project.description || '',
         theme: project.theme || '',
         genre: project.genre || '',
-        narrative_perspective: project.narrative_perspective || '第三人称',
+        narrative_perspective: project.narrative_perspective || 'Third person',
         target_words: project.target_words || 100000,
         chapter_count: 3,
         character_count: project.character_count || 5,
@@ -90,13 +90,13 @@ export default function ProjectWizardNew() {
         return;
       }
 
-      console.error('恢复生成失败:', error);
-      message.error('恢复生成失败,请重试');
+      console.error('Failed to resume generation:', error);
+      message.error('Failed to resume generation. Please try again.');
       navigate('/');
     }
   };
 
-  // 开始生成流程
+  // Start the generation flow
   const handleAutoGenerate = async (values: WizardBasicInfo) => {
     const config: GenerationConfig = {
       title: values.title,
@@ -129,10 +129,10 @@ export default function ProjectWizardNew() {
   const renderForm = () => (
     <Card>
       <Title level={isMobile ? 4 : 3} style={{ marginBottom: 24 }}>
-        创建新项目
+        Create a new project
       </Title>
       <Paragraph type="secondary" style={{ marginBottom: 32 }}>
-        填写基本信息后，AI将自动为您生成世界观、角色和大纲节点（大纲可在项目内手动展开为章节）
+        After you fill in the basics, AI will generate the worldbuilding, characters, and outline nodes for you. Outline nodes can be expanded into chapters inside the project.
       </Paragraph>
 
       <Form
@@ -140,76 +140,76 @@ export default function ProjectWizardNew() {
         layout="vertical"
         onFinish={handleAutoGenerate}
         initialValues={{
-          genre: ['玄幻'],
+          genre: ['Fantasy'],
           chapter_count: 30,
-          narrative_perspective: '第三人称',
+          narrative_perspective: 'Third person',
           character_count: 5,
           target_words: 100000,
-          outline_mode: 'one-to-one', // 默认为传统模式（1-1）
+          outline_mode: 'one-to-one',
         }}
       >
         <Form.Item
-          label="书名"
+          label="Book title"
           name="title"
-          rules={[{ required: true, message: '请输入书名' }]}
+          rules={[{ required: true, message: 'Please enter the book title' }]}
         >
-          <Input placeholder="输入你的小说标题" size="large" />
+          <Input placeholder="Enter your novel title" size="large" />
         </Form.Item>
 
         <Form.Item
-          label="小说简介"
+          label="Book synopsis"
           name="description"
-          rules={[{ required: true, message: '请输入小说简介' }]}
+          rules={[{ required: true, message: 'Please enter the synopsis' }]}
         >
           <TextArea
             rows={3}
-            placeholder="用一段话介绍你的小说..."
+            placeholder="Introduce your novel in one paragraph..."
             showCount
           />
         </Form.Item>
 
         <Form.Item
-          label="主题"
+          label="Theme"
           name="theme"
-          rules={[{ required: true, message: '请输入主题' }]}
+          rules={[{ required: true, message: 'Please enter the theme' }]}
         >
           <TextArea
             rows={4}
-            placeholder="描述你的小说主题..."
+            placeholder="Describe the central theme of your novel..."
             showCount
           />
         </Form.Item>
 
         <Form.Item
-          label="类型"
+          label="Genre"
           name="genre"
-          rules={[{ required: true, message: '请选择小说类型' }]}
+          rules={[{ required: true, message: 'Please select a genre' }]}
         >
           <Select
             mode="tags"
-            placeholder="选择或输入类型标签（如：玄幻、都市、修仙）"
+            placeholder="Choose or enter genre tags (e.g. fantasy, urban, xianxia)"
             size="large"
             tokenSeparators={[',']}
             maxTagCount={5}
           >
-            <Select.Option value="玄幻">玄幻</Select.Option>
-            <Select.Option value="都市">都市</Select.Option>
-            <Select.Option value="历史">历史</Select.Option>
-            <Select.Option value="科幻">科幻</Select.Option>
-            <Select.Option value="武侠">武侠</Select.Option>
-            <Select.Option value="仙侠">仙侠</Select.Option>
-            <Select.Option value="奇幻">奇幻</Select.Option>
-            <Select.Option value="悬疑">悬疑</Select.Option>
-            <Select.Option value="言情">言情</Select.Option>
-            <Select.Option value="修仙">修仙</Select.Option>
+            <Select.Option value="Fantasy">Fantasy</Select.Option>
+            <Select.Option value="Urban">Urban</Select.Option>
+            <Select.Option value="Historical">Historical</Select.Option>
+            <Select.Option value="Science fiction">Science fiction</Select.Option>
+            <Select.Option value="Wuxia">Wuxia</Select.Option>
+            <Select.Option value="Xianxia">Xianxia</Select.Option>
+            <Select.Option value="Fantasy">Mythic fantasy</Select.Option>
+            <Select.Option value="Mystery">Mystery</Select.Option>
+            <Select.Option value="Romance">Romance</Select.Option>
+            <Select.Option value="Cultivation">Cultivation</Select.Option>
           </Select>
         </Form.Item>
 
         <Form.Item
-          label="大纲章节模式"
+          label="Outline chapter mode"
           name="outline_mode"
-          rules={[{ required: true, message: '请选择大纲章节模式' }]}
-          tooltip="创建后不可更改，请根据创作习惯选择"
+          rules={[{ required: true, message: 'Please choose an outline mode' }]}
+          tooltip="This cannot be changed after creation; choose the workflow that matches your writing style."
         >
           <Radio.Group size="large">
             <Row gutter={16}>
@@ -217,7 +217,6 @@ export default function ProjectWizardNew() {
                 <Card
                   hoverable
                   style={{
-                    // borderColor: form.getFieldValue('outline_mode') === 'one-to-one' ? token.colorPrimary : token.colorBorder,
                     borderWidth: 2,
                     height: '100%',
                   }}
@@ -227,13 +226,13 @@ export default function ProjectWizardNew() {
                     <Space direction="vertical" size={4} style={{ width: '100%' }}>
                       <div style={{ fontSize: 16, fontWeight: 'bold' }}>
                         <CheckCircleOutlined style={{ marginRight: 8, color: token.colorSuccess }} />
-                        传统模式 (1→1)
+                        Traditional mode (1→1)
                       </div>
                       <div style={{ fontSize: 12, color: token.colorTextSecondary }}>
-                        一个大纲对应一个章节，简单直接
+                        One outline matches one chapter, simple and direct.
                       </div>
                       <div style={{ fontSize: 11, color: token.colorTextTertiary }}>
-                        💡 适合：简单剧情、快速创作、短篇小说
+                        💡 Best for: simple plots, fast drafting, short stories.
                       </div>
                     </Space>
                   </Radio>
@@ -244,7 +243,6 @@ export default function ProjectWizardNew() {
                 <Card
                   hoverable
                   style={{
-                    // borderColor: form.getFieldValue('outline_mode') === 'one-to-many' ? token.colorPrimary : token.colorBorder,
                     borderWidth: 2,
                     height: '100%',
                   }}
@@ -254,13 +252,13 @@ export default function ProjectWizardNew() {
                     <Space direction="vertical" size={4} style={{ width: '100%' }}>
                       <div style={{ fontSize: 16, fontWeight: 'bold' }}>
                         <CheckCircleOutlined style={{ marginRight: 8, color: token.colorSuccess }} />
-                        细化模式 (1→N) 推荐
+                        Detailed mode (1→N) recommended
                       </div>
                       <div style={{ fontSize: 12, color: token.colorTextSecondary }}>
-                        一个大纲可展开为多个章节，灵活控制
+                        One outline can expand into multiple chapters with flexible control.
                       </div>
                       <div style={{ fontSize: 11, color: token.colorTextTertiary }}>
-                        💡 适合：复杂剧情、长篇创作、需要细化控制
+                        💡 Best for: complex plots, long-form narratives, fine-grained control.
                       </div>
                     </Space>
                   </Radio>
@@ -273,46 +271,46 @@ export default function ProjectWizardNew() {
         <Row gutter={16}>
           <Col xs={24} sm={12}>
             <Form.Item
-              label="叙事视角"
+              label="Narrative perspective"
               name="narrative_perspective"
-              rules={[{ required: true, message: '请选择叙事视角' }]}
+              rules={[{ required: true, message: 'Please select a narrative perspective' }]}
             >
-              <Select size="large" placeholder="选择小说的叙事视角">
-                <Select.Option value="第一人称">第一人称</Select.Option>
-                <Select.Option value="第三人称">第三人称</Select.Option>
-                <Select.Option value="全知视角">全知视角</Select.Option>
+              <Select size="large" placeholder="Choose the novel's narrative perspective">
+                <Select.Option value="First person">First person</Select.Option>
+                <Select.Option value="Third person">Third person</Select.Option>
+                <Select.Option value="Omniscient">Omniscient</Select.Option>
               </Select>
             </Form.Item>
           </Col>
           <Col xs={24} sm={12}>
             <Form.Item
-              label="角色数量"
+              label="Character count"
               name="character_count"
-              rules={[{ required: true, message: '请输入角色数量' }]}
+              rules={[{ required: true, message: 'Please enter the character count' }]}
             >
               <InputNumber
                 min={3}
                 max={20}
                 style={{ width: '100%' }}
                 size="large"
-                addonAfter="个"
-                placeholder="AI生成的角色数量"
+                addonAfter="people"
+                placeholder="AI-generated character count"
               />
             </Form.Item>
           </Col>
         </Row>
 
         <Form.Item
-          label="目标字数"
+          label="Target word count"
           name="target_words"
-          rules={[{ required: true, message: '请输入目标字数' }]}
+          rules={[{ required: true, message: 'Please enter the target word count' }]}
         >
           <InputNumber
             min={10000}
             style={{ width: '100%' }}
             size="large"
-            addonAfter="字"
-            placeholder="整部小说的目标字数"
+            addonAfter="words"
+            placeholder="Target word count for the entire novel"
           />
         </Form.Item>
 
@@ -325,14 +323,14 @@ export default function ProjectWizardNew() {
               block
               icon={<RocketOutlined />}
             >
-              开始创建项目
+              Start creating the project
             </Button>
             <Button
               size="large"
               block
               onClick={() => navigate('/')}
             >
-              返回首页
+              Back to home
             </Button>
           </Space>
         </Form.Item>
@@ -372,7 +370,7 @@ export default function ProjectWizardNew() {
               color: token.colorWhite,
             }}
           >
-            {isMobile ? '返回' : '返回首页'}
+            {isMobile ? 'Back' : 'Back to home'}
           </Button>
 
           <Title level={isMobile ? 4 : 2} style={{
@@ -381,7 +379,7 @@ export default function ProjectWizardNew() {
             textShadow: '0 2px 4px color-mix(in srgb, var(--ant-color-black) 18%, transparent)',
           }}>
             <RocketOutlined style={{ marginRight: 8 }} />
-            项目创建向导
+            Project creation wizard
           </Title>
 
           <div style={{ width: isMobile ? 60 : 120 }}></div>
